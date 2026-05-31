@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, type ComponentType, type SVGProps } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import {
   ArrowRight,
@@ -25,13 +25,43 @@ const containerVariants = {
   },
 };
 
+const easeInOut = [0.4, 0, 0.2, 1] as const;
+
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] },
+    transition: { duration: 0.8, ease: easeInOut },
   },
+};
+
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+
+type Feature = {
+  icon: IconComponent;
+  title: string;
+  description: string;
+  color: string;
+};
+
+type Testimonial = {
+  name: string;
+  role: string;
+  company: string;
+  image: string;
+  quote: string;
+  stars: number;
+};
+
+type Tier = {
+  name: string;
+  price: string;
+  period: string;
+  description: string;
+  features: string[];
+  cta: string;
+  highlighted: boolean;
 };
 
 // ============================================================================
@@ -103,7 +133,7 @@ function HeroSection() {
             variants={itemVariants}
             className="mb-8 max-w-2xl text-lg text-orin-text-secondary md:text-xl"
           >
-            Empower your team with intelligent workflows that feel natural, intuitive, and genuinely enjoyable. ORIN isn't just another tool—it's your creative partner.
+            Empower your team with intelligent workflows that feel natural, intuitive, and genuinely enjoyable. ORIN isn&apos;t just another tool—it&apos;s your creative partner.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -193,7 +223,7 @@ function HeroSection() {
 // FEATURES SECTION
 // ============================================================================
 function FeaturesSection() {
-  const features = [
+  const features: Feature[] = [
     {
       icon: Zap,
       title: 'Lightning Fast',
@@ -257,8 +287,8 @@ function FeatureCard({
   Icon,
   index,
 }: {
-  feature: any;
-  Icon: any;
+  feature: Feature;
+  Icon: IconComponent;
   index: number;
 }) {
   const ref = useRef(null);
@@ -272,7 +302,7 @@ function FeatureCard({
       transition={{
         duration: 0.6,
         delay: index * 0.1,
-        ease: [0.4, 0, 0.2, 1],
+        ease: easeInOut,
       }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className="group relative rounded-2xl border border-orin-border-light bg-white p-8 shadow-sm-soft transition-all duration-300 hover:border-orin-teal hover:shadow-md-soft"
@@ -308,7 +338,7 @@ function FeatureCard({
 // TESTIMONIALS SECTION
 // ============================================================================
 function TestimonialsSection() {
-  const testimonials = [
+  const testimonials: Testimonial[] = [
     {
       name: 'Sarah Chen',
       role: 'Product Lead',
@@ -366,7 +396,7 @@ function TestimonialsSection() {
   );
 }
 
-function TestimonialCard({ testimonial, index }: { testimonial: any; index: number }) {
+function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; index: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
@@ -396,7 +426,9 @@ function TestimonialCard({ testimonial, index }: { testimonial: any; index: numb
         ))}
       </div>
 
-      <p className="mb-6 italic text-orin-text-secondary">"{testimonial.quote}"</p>
+      <p className="mb-6 italic text-orin-text-secondary">
+        &ldquo;{testimonial.quote}&rdquo;
+      </p>
 
       <div className="flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-orin-teal to-orin-blue text-2xl">
@@ -417,7 +449,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: any; index: numb
 // PRICING SECTION
 // ============================================================================
 function PricingSection() {
-  const tiers = [
+  const tiers: Tier[] = [
     {
       name: 'Starter',
       price: '$29',
@@ -497,7 +529,7 @@ function PricingSection() {
   );
 }
 
-function PricingCard({ tier, index }: { tier: any; index: number }) {
+function PricingCard({ tier, index }: { tier: Tier; index: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
