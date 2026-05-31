@@ -20,7 +20,7 @@ export function Navigation() {
         aria-label="Main navigation"
       >
         <Link href="/" className="text-lg font-semibold text-[var(--color-primary-teal)]">
-          ProofLoop
+          Orin
         </Link>
         <div className="hidden gap-6 md:flex">
           {links.map((link) => (

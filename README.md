@@ -1,6 +1,6 @@
-# ProofLoop Frontend
+# Orin Frontend
 
-ProofLoop frontend built with Next.js, TypeScript, and Tailwind CSS.
+Orin frontend built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Implemented screens
 

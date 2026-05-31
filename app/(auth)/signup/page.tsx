@@ -88,7 +88,7 @@ export default function SignupPage() {
           <h2 className="text-xl font-semibold">Student outcomes</h2>
           {[
             "I turned my internship and Codeforces profile into one proof link recruiters understood.",
-            "My first ProofLoop profile helped me get 4 interview callbacks in 2 weeks.",
+            "My first Orin profile helped me get 4 interview callbacks in 2 weeks.",
             "The daily coach note gave me a focused plan instead of random prep.",
           ].map((item) => (
             <article key={item} className="rounded border border-[var(--color-neutral-border)] p-4">

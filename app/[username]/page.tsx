@@ -58,7 +58,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
       </section>
 
       <footer className="mt-10 border-t border-[var(--color-neutral-border)] py-6 text-sm text-[var(--color-neutral-text-secondary)]">
-        <p>Create your own proof profile on ProofLoop.</p>
+        <p>Create your own proof profile on Orin.</p>
       </footer>
     </main>
   );

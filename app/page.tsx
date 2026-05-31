@@ -7,7 +7,7 @@ export default function LandingPage() {
       id="main-content"
       className="mx-auto flex min-h-screen w-full max-w-[1200px] flex-col justify-center gap-8 px-4 py-12 md:px-8"
     >
-      <p className="text-sm font-medium text-[var(--color-primary-teal)]">ProofLoop</p>
+      <p className="text-sm font-medium text-[var(--color-primary-teal)]">Orin</p>
       <h1 className="max-w-3xl text-4xl font-semibold leading-tight md:text-5xl">
         Show the world what you can actually do.
       </h1>
