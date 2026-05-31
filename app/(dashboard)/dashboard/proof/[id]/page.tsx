@@ -21,16 +21,16 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
   const statusMeta = {
     verified: {
       label: "✓ Verified",
-      className: "bg-[var(--color-success)]/15 text-[var(--color-success)]",
+      className: "bg-[var(--color-accent-green)]/15 text-[var(--color-accent-green)]",
     },
     pending: {
       label: "⏳ Pending",
-      className: "bg-[var(--color-warning)]/15 text-[var(--color-warning)]",
+      className: "bg-[var(--color-accent-gold)]/15 text-[var(--color-accent-gold)]",
     },
     draft: {
       label: "◯ Draft",
       className:
-        "bg-[var(--color-neutral-bg)] text-[var(--color-neutral-text-secondary)]",
+        "bg-[var(--color-neutral-surface-alt)] text-[var(--color-neutral-text-secondary)]",
     },
   }[proof.status];
 
@@ -48,7 +48,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
         </div>
         <div className="flex gap-2">
           <Button variant="secondary">Share</Button>
-          <Button variant="tertiary">More</Button>
+          <Button variant="ghost">More</Button>
         </div>
       </header>
 
@@ -104,7 +104,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
                   </p>
                   <p>Primary language: JavaScript · Last commit 14 days ago</p>
                 </div>
-                <Button variant="tertiary" size="sm">
+                <Button variant="ghost" size="sm">
                   View
                 </Button>
               </div>
@@ -115,7 +115,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
                   </p>
                   <p>Built a scalable service with caching and monitoring.</p>
                 </div>
-                <Button variant="tertiary" size="sm">
+                <Button variant="ghost" size="sm">
                   Expand
                 </Button>
               </div>
@@ -126,7 +126,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
                   </p>
                   <p>demo.orin.app/microservice</p>
                 </div>
-                <Button variant="tertiary" size="sm">
+                <Button variant="ghost" size="sm">
                   Open
                 </Button>
               </div>
@@ -145,7 +145,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
               <Button variant="secondary" size="sm">
                 Email recruiter
               </Button>
-              <Button variant="tertiary" size="sm">
+              <Button variant="ghost" size="sm">
                 Post to LinkedIn
               </Button>
             </div>

@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "tertiary" | "danger";
+type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -13,18 +13,18 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-[var(--color-primary-teal)] text-white hover:bg-[var(--color-primary-teal-light)]",
+    "bg-gradient-to-r from-[var(--color-primary-teal)] to-[var(--color-primary-blue)] text-white hover:from-[var(--color-primary-teal-strong)] hover:to-[var(--color-primary-blue-strong)]",
   secondary:
-    "border border-[var(--color-primary-teal)] bg-white text-[var(--color-primary-teal)] hover:bg-[var(--color-neutral-bg)]",
-  tertiary: "bg-transparent text-[var(--color-primary-teal)] hover:bg-[var(--color-neutral-bg)]",
-  danger:
-    "bg-[var(--color-accent-coral)] text-white hover:bg-[var(--color-accent-coral-light)]",
+    "border-2 border-[var(--color-primary-teal)] bg-transparent text-[var(--color-primary-teal)] hover:bg-[var(--color-primary-soft)]",
+  ghost:
+    "bg-transparent text-[var(--color-primary-teal)] hover:bg-[var(--color-primary-soft)]",
+  danger: "bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger-strong)]",
 };
 
 const sizeClasses: Record<Size, string> = {
   sm: "h-9 px-3 text-sm",
-  md: "h-11 px-4 text-sm",
-  lg: "h-12 px-5 text-base",
+  md: "h-11 px-5 text-base",
+  lg: "h-12 px-6 text-base",
 };
 
 export function Button({
@@ -40,7 +40,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] font-medium transition duration-200 hover:scale-[1.02] active:scale-100 disabled:cursor-not-allowed disabled:opacity-60",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] font-semibold transition duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent-magenta)] active:scale-[0.98] active:shadow-inner disabled:cursor-not-allowed disabled:opacity-50",
         variantClasses[variant],
         sizeClasses[size],
         className,
@@ -49,7 +49,7 @@ export function Button({
       {...props}
     >
       {loading ? (
-        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/70 border-t-transparent" />
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
       ) : (
         icon
       )}
