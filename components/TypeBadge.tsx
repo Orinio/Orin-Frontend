@@ -21,7 +21,7 @@ export function TypeBadge({ type }: { type: Proof["type"] }) {
   const icon = iconPaths[meta.icon];
 
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-[var(--color-neutral-border)] bg-[var(--color-neutral-bg)] px-2 py-1 text-xs font-medium text-[var(--color-neutral-text-secondary)]">
+    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary-teal)]/10 px-2.5 py-1 text-xs font-medium text-[var(--color-primary-teal)]">
       <svg
         aria-hidden="true"
         className="h-3.5 w-3.5"

@@ -10,6 +10,7 @@ const links = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/dashboard#my-proof", label: "My Proof" },
   { href: "/dashboard#opportunities", label: "Opportunities" },
+  { href: "/settings", label: "Settings" },
 ];
 
 export function Navigation() {
@@ -17,7 +18,7 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)]">
+    <header className="sticky top-0 z-40 border-b border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
       <nav
         className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4 px-4 md:px-6 lg:px-8"
         aria-label="Main navigation"
@@ -76,8 +77,9 @@ export function Navigation() {
                 key={link.label}
                 href={link.href}
                 className={cn(
-                  "text-sm font-medium text-[var(--color-neutral-text-secondary)] transition hover:text-[var(--color-primary-teal)]",
-                  pathname === link.href && "text-[var(--color-primary-teal)]",
+                  "border-b-2 border-transparent pb-1 text-sm font-medium text-[var(--color-neutral-text-secondary)] transition hover:text-[var(--color-primary-teal)]",
+                  pathname === link.href &&
+                    "border-[var(--color-primary-teal)] text-[var(--color-primary-teal)]",
                 )}
               >
                 {link.label}
@@ -92,7 +94,7 @@ export function Navigation() {
             aria-label="Notifications"
             type="button"
           >
-            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[var(--color-accent-coral)]" />
+          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[var(--color-accent-magenta)]" />
             <svg
               aria-hidden="true"
               className="h-4 w-4"
@@ -129,7 +131,7 @@ export function Navigation() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="rounded-md px-3 py-2 text-sm font-medium text-[var(--color-neutral-text-secondary)] hover:bg-[var(--color-neutral-bg)]"
+                className="rounded-md px-3 py-2 text-sm font-medium text-[var(--color-neutral-text-secondary)] hover:bg-[var(--color-primary-soft)]"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.label}

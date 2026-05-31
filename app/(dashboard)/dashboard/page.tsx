@@ -36,7 +36,7 @@ export default function DashboardPage() {
             },
             {
               label: "Settings",
-              href: "#settings",
+              href: "/settings",
               icon: "M12 8a4 4 0 100 8 4 4 0 000-8zm8 4l-2 1 1 2-2 2-2-1-1 2h-2l-1-2-2 1-2-2 1-2-2-1V10l2-1-1-2 2-2 2 1 1-2h2l1 2 2-1 2 2-1 2 2 1v2z",
             },
             {
@@ -67,6 +67,35 @@ export default function DashboardPage() {
       </aside>
 
       <section id="dashboard-home" className="space-y-6 lg:col-span-7">
+        <header className="space-y-2">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary-teal)]">
+            Dashboard
+          </p>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-3xl font-semibold md:text-4xl">Welcome back, Aditi</h1>
+            <Button>New proof</Button>
+          </div>
+          <p className="text-sm text-[var(--color-neutral-text-secondary)]">
+            Track verified proof and stay on top of your next opportunity.
+          </p>
+        </header>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            { label: "Proof cards", value: proofs.length, delta: "+3 this week" },
+            { label: "Skills verified", value: 18, delta: "+5 new skills" },
+            { label: "Profile views", value: "1.4k", delta: "+18% growth" },
+          ].map((stat) => (
+            <Card key={stat.label}>
+              <p className="text-sm text-[var(--color-neutral-text-secondary)]">{stat.label}</p>
+              <p className="mt-2 text-3xl font-semibold text-[var(--color-primary-teal)]">
+                {stat.value}
+              </p>
+              <p className="mt-2 text-xs text-[var(--color-accent-green)]">{stat.delta}</p>
+            </Card>
+          ))}
+        </div>
+
         <CoachNote note={coachNote} />
 
         <div className="flex flex-wrap items-center justify-between gap-3">

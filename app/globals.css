@@ -30,7 +30,7 @@ h4 {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-primary-teal);
+  outline: 2px solid var(--color-accent-magenta);
   outline-offset: 4px;
 }
 

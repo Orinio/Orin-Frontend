@@ -14,16 +14,16 @@ interface ProofCardProps {
 const statusMap = {
   verified: {
     label: "✓ Verified",
-    className: "bg-[var(--color-success)]/15 text-[var(--color-success)]",
+    className: "bg-[var(--color-accent-green)]/15 text-[var(--color-accent-green)]",
   },
   pending: {
     label: "⏳ Pending",
-    className: "bg-[var(--color-warning)]/15 text-[var(--color-warning)]",
+    className: "bg-[var(--color-accent-gold)]/15 text-[var(--color-accent-gold)]",
   },
   draft: {
     label: "◯ Draft",
     className:
-      "bg-[var(--color-neutral-bg)] text-[var(--color-neutral-text-secondary)]",
+      "bg-[var(--color-neutral-surface-alt)] text-[var(--color-neutral-text-secondary)]",
   },
 };
 
@@ -74,7 +74,7 @@ export function ProofCard({
             <Button size="sm" variant="secondary">
               Share
             </Button>
-            <Button size="sm" variant="tertiary">
+            <Button size="sm" variant="ghost">
               Edit
             </Button>
             <Link href={`/dashboard/proof/${proof.id}`}>

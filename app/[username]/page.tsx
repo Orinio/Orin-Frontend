@@ -13,7 +13,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
 
   return (
     <main id="main-content" className="mx-auto w-full max-w-[1200px] px-4 py-8 md:px-8">
-      <section className="rounded-[var(--radius-lg)] bg-gradient-to-b from-white to-[var(--color-neutral-bg)] p-6">
+      <section className="rounded-[var(--radius-lg)] bg-gradient-to-br from-white to-[var(--color-neutral-surface-alt)] p-6">
         <p className="text-sm text-[var(--color-primary-teal)]">@{username}</p>
         <h1 className="mt-2 text-4xl font-semibold md:text-5xl">{currentUser.fullName}</h1>
         <p className="mt-2 text-[var(--color-neutral-text-secondary)]">

@@ -83,7 +83,7 @@ export function AddProofSourceCard() {
 
             <div className="mt-6 flex flex-wrap gap-2">
               <Button>Continue</Button>
-              <Button variant="tertiary" onClick={() => setIsOpen(false)}>
+              <Button variant="ghost" onClick={() => setIsOpen(false)}>
                 Maybe later
               </Button>
             </div>
