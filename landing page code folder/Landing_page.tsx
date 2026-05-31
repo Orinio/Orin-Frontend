@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import {
   ArrowRight,
   Zap,
@@ -325,7 +324,7 @@ function TestimonialsSection() {
       company: 'BuildSync',
       image: '👨‍💼',
       quote:
-        'The best productivity tool we've ever used. Seriously game-changing for our workflow.',
+        "The best productivity tool we've ever used. Seriously game-changing for our workflow.",
       stars: 5,
     },
     {
@@ -691,7 +690,7 @@ function Footer() {
 // ============================================================================
 export default function Home() {
   return (
-    <main className="w-full overflow-hidden bg-white">
+    <main id="main-content" className="w-full overflow-hidden bg-white">
       <HeroSection />
       <FeaturesSection />
       <TestimonialsSection />
