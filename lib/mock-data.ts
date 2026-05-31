@@ -1,4 +1,4 @@
-import type { CoachNote, Proof, User } from "@/lib/types";
+import type { CoachNote, Opportunity, Proof, User } from "@/lib/types";
 
 export const currentUser: User = {
   id: "u1",
@@ -40,6 +40,10 @@ export const proofs: Proof[] = [
     viewCount: 124,
     publicLink: "/aarav-gupta-cse#p1",
     isPublic: true,
+    sharedWith: [
+      { email: "recruiter@amazon.com", sharedAt: new Date("2024-10-05") },
+      { email: "talent@startups.in", sharedAt: new Date("2024-10-12") },
+    ],
     createdAt: new Date("2024-08-20"),
     updatedAt: new Date("2024-10-01"),
   },
@@ -74,5 +78,70 @@ export const proofs: Proof[] = [
     isPublic: false,
     createdAt: new Date("2024-07-01"),
     updatedAt: new Date("2024-10-10"),
+  },
+  {
+    id: "p4",
+    userId: "u1",
+    title: "Kaggle NLP Challenge",
+    description: "Placed in the top 8% using transformer fine-tuning.",
+    type: "kaggle",
+    url: "https://kaggle.com/aarav/nlp-challenge",
+    skillsExtracted: ["Python", "Transformers", "ML Ops"],
+    whatItProves: ["Model experimentation", "Data pipeline skills"],
+    status: "verified",
+    verifiedAt: new Date("2024-09-28"),
+    viewCount: 64,
+    publicLink: "/aarav-gupta-cse#p4",
+    isPublic: true,
+    createdAt: new Date("2024-09-01"),
+    updatedAt: new Date("2024-09-28"),
+  },
+  {
+    id: "p5",
+    userId: "u1",
+    title: "Cloud Certification (AWS)",
+    description: "AWS Certified Cloud Practitioner credential.",
+    type: "certificate",
+    url: "https://drive.example/aws-certificate",
+    skillsExtracted: ["AWS", "Cloud Foundations", "Security Basics"],
+    whatItProves: ["Cloud fundamentals", "Infrastructure literacy"],
+    status: "verified",
+    verifiedAt: new Date("2024-08-12"),
+    viewCount: 34,
+    publicLink: "/aarav-gupta-cse#p5",
+    isPublic: true,
+    createdAt: new Date("2024-08-10"),
+    updatedAt: new Date("2024-08-12"),
+  },
+];
+
+export const opportunities: Opportunity[] = [
+  {
+    id: "o1",
+    title: "Backend Engineering Intern",
+    company: "Amazon",
+    type: "internship",
+    requiredSkills: ["Node.js", "PostgreSQL"],
+    matchPercentage: 82,
+    link: "https://amazon.jobs/backend-intern",
+    deadline: new Date("2024-11-15"),
+  },
+  {
+    id: "o2",
+    title: "Software Engineer - New Grad",
+    company: "Flipkart",
+    type: "job",
+    requiredSkills: ["System Design", "REST APIs"],
+    matchPercentage: 76,
+    link: "https://flipkart.careers/new-grad",
+  },
+  {
+    id: "o3",
+    title: "ML Research Apprenticeship",
+    company: "Google",
+    type: "mentorship",
+    requiredSkills: ["Python", "Transformers"],
+    matchPercentage: 69,
+    link: "https://careers.google.com/ml-apprenticeship",
   },
 ];

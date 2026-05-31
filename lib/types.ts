@@ -18,12 +18,14 @@ export interface Proof {
   type: "github" | "kaggle" | "certificate" | "hackathon" | "custom";
   url: string;
   skillsExtracted: string[];
+  skillsUserAdded?: string[];
   whatItProves?: string[];
   status: "verified" | "pending" | "draft";
   verifiedAt?: Date;
   viewCount: number;
   publicLink: string;
   isPublic: boolean;
+  sharedWith?: { email: string; sharedAt: Date }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,4 +37,15 @@ export interface CoachNote {
   type: "daily" | "weekly" | "milestone";
   actionSuggestion: string;
   createdAt: Date;
+}
+
+export interface Opportunity {
+  id: string;
+  title: string;
+  company: string;
+  type: "internship" | "job" | "scholarship" | "mentorship";
+  requiredSkills: string[];
+  matchPercentage: number;
+  link: string;
+  deadline?: Date;
 }
