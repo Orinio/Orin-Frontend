@@ -10,28 +10,28 @@ export default function DashboardPage() {
       <aside className="hidden lg:col-span-2 lg:block">
         <nav className="sticky top-20 space-y-3 text-sm">
           {[
-            "Dashboard",
-            `My Proof (${proofs.length})`,
-            "Skills Map",
-            "Opportunities",
-            "Settings",
-            "Help",
+            { label: "Dashboard", href: "#dashboard-home" },
+            { label: `My Proof (${proofs.length})`, href: "#my-proof" },
+            { label: "Skills Map", href: "#skills-map" },
+            { label: "Opportunities", href: "#opportunities" },
+            { label: "Settings", href: "#settings" },
+            { label: "Help", href: "#help" },
           ].map((item) => (
             <a
               className="block rounded px-3 py-2 text-[var(--color-neutral-text-secondary)] hover:bg-white"
-              href="#"
-              key={item}
+              href={item.href}
+              key={item.label}
             >
-              {item}
+              {item.label}
             </a>
           ))}
         </nav>
       </aside>
 
-      <section className="space-y-6 lg:col-span-7">
+      <section id="dashboard-home" className="space-y-6 lg:col-span-7">
         <CoachNote note={coachNote} />
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div id="my-proof" className="grid gap-4 md:grid-cols-2">
           {proofs.map((proof) => (
             <ProofCard key={proof.id} proof={proof} compact />
           ))}
@@ -51,14 +51,14 @@ export default function DashboardPage() {
         </Card>
       </section>
 
-      <aside className="space-y-4 lg:col-span-3">
+      <aside id="skills-map" className="space-y-4 lg:col-span-3">
         <Card>
           <h2 className="text-base font-semibold">Skill Summary</h2>
           <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
             Node.js, Express, PostgreSQL, System Design, DSA
           </p>
         </Card>
-        <Card>
+        <Card id="opportunities">
           <h2 className="text-base font-semibold">Proof Completion</h2>
           <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
             3/5 proof types complete
@@ -67,6 +67,12 @@ export default function DashboardPage() {
             <div className="h-2 w-3/5 rounded bg-[var(--color-primary-teal)]" />
           </div>
         </Card>
+        <div id="settings" className="sr-only">
+          Settings panel coming soon
+        </div>
+        <div id="help" className="sr-only">
+          Help center coming soon
+        </div>
       </aside>
     </div>
   );

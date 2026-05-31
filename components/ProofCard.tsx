@@ -49,7 +49,7 @@ export function ProofCard({ proof, compact }: ProofCardProps) {
           ))}
         </div>
         <p className="mt-4 text-sm text-[var(--color-neutral-text-secondary)]">
-          {proof.viewCount} views • Updated {proof.updatedAt.toLocaleDateString()}
+          {proof.viewCount} views. Updated {proof.updatedAt.toLocaleDateString()}
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
           <Button size="sm" variant="secondary">

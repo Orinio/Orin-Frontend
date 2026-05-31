@@ -49,7 +49,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold">Your Proof ({proofs.length} total)</h2>
+        <h2 className="text-2xl font-semibold">{`${currentUser.fullName}'s Proof (${proofs.length} total)`}</h2>
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           {proofs.slice(0, 4).map((proof) => (
             <ProofCard key={proof.id} proof={proof} />
