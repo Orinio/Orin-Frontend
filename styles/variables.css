@@ -1,0 +1,31 @@
+:root {
+  --color-primary-teal: #0f766e;
+  --color-primary-teal-light: #1b7875;
+  --color-accent-coral: #ea6a47;
+  --color-accent-coral-light: #f97316;
+  --color-neutral-bg: #fafafa;
+  --color-neutral-surface: #ffffff;
+  --color-neutral-text: #1f2937;
+  --color-neutral-text-secondary: #6b7280;
+  --color-neutral-border: #e5e7eb;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+
+  --font-heading: Inter, Geist, sans-serif;
+  --font-body: Outfit, "DM Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-neutral-bg: #1a1a1a;
+    --color-neutral-surface: #2d2d2d;
+    --color-neutral-text: #e0e0e0;
+    --color-neutral-text-secondary: #999999;
+    --color-neutral-border: #444444;
+  }
+}
