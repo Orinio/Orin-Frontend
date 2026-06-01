@@ -251,7 +251,7 @@ function FeaturesSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-white to-slate-50 py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-orin-bg-light via-white to-orin-bg-light py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -263,7 +263,7 @@ function FeaturesSection() {
           <h2 className="mb-4 text-5xl font-bold text-orin-text-primary md:text-6xl">
             Superpowers Built In
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-orin-text-secondary">
+          <p className="mx-auto max-w-2xl text-lg text-orin-text-primary">
             ORIN comes packed with features that just work. No configuration. No complexity.
             Pure productivity.
           </p>
@@ -369,7 +369,7 @@ function TestimonialsSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-white to-blue-50 py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-orin-bg-light to-white py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -381,7 +381,7 @@ function TestimonialsSection() {
           <h2 className="mb-4 text-5xl font-bold text-orin-text-primary md:text-6xl">
             Loved by Teams
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-orin-text-secondary">
+          <p className="mx-auto max-w-2xl text-lg text-orin-text-primary">
             See what users are saying about ORIN
           </p>
         </motion.div>
@@ -502,7 +502,7 @@ function PricingSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-slate-50 to-white py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-white to-orin-bg-light py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -514,7 +514,7 @@ function PricingSection() {
           <h2 className="mb-4 text-5xl font-bold text-orin-text-primary md:text-6xl">
             Simple, Transparent Pricing
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-orin-text-secondary">
+          <p className="mx-auto max-w-2xl text-lg text-orin-text-primary">
             Choose the plan that fits your needs. No hidden fees. No surprises.
           </p>
         </motion.div>
@@ -722,7 +722,7 @@ function Footer() {
 // ============================================================================
 export default function Home() {
   return (
-    <main id="main-content" className="w-full overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-100">
+    <main id="main-content" className="w-full overflow-hidden bg-white">
       <HeroSection />
       <FeaturesSection />
       <TestimonialsSection />
