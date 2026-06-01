@@ -35,7 +35,7 @@ export default function OpportunitiesPage() {
             <p className="text-[var(--color-neutral-text-secondary)]">No opportunities found. Add more proof to get matched!</p>
           </div>
         ) : (
-          opportunities.map((opp) => (
+          opportunities.map((opp: any) => (
             <div key={opp.id} className="rounded-lg border border-[var(--color-neutral-border)] bg-white p-4">
               <div className="flex items-start justify-between">
                 <div>

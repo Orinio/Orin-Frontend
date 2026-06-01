@@ -55,7 +55,7 @@ export default function SettingsPage() {
           Settings
         </h2>
         <nav className="space-y-1 text-sm">
-          {settingsNav.map((item) => (
+          {settingsNav.map((item: string) => (
             <button
               key={item}
               type="button"
@@ -134,7 +134,7 @@ export default function SettingsPage() {
               "Weekly proof summary",
               "New recruiter view alerts",
               "Verification status updates",
-            ].map((item) => (
+            ].map((item: string) => (
               <label key={item} className="flex items-center gap-3">
                 <input type="checkbox" className="h-4 w-4 accent-[var(--color-primary-emerald)]" />
                 {item}

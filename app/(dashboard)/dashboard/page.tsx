@@ -53,7 +53,7 @@ export default async function DashboardPage() {
               href: "#help",
               icon: "M12 18h.01M12 14a3 3 0 10-3-3",
             },
-          ].map((item) => (
+          ].map((item: any) => (
             <a
               className="flex items-center gap-2 rounded-md px-3 py-2 text-[var(--color-neutral-text-secondary)] transition hover:bg-[var(--color-neutral-bg)] hover:text-[var(--color-primary-emerald)]"
               href={item.href}
@@ -94,7 +94,7 @@ export default async function DashboardPage() {
             { label: "Proof cards", value: proofs.length, delta: "+3 this week" },
             { label: "Skills verified", value: 18, delta: "+5 new skills" },
             { label: "Profile views", value: "1.4k", delta: "+18% growth" },
-          ].map((stat) => (
+          ].map((stat: any) => (
             <div key={stat.label} className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-4">
               <p className="text-sm text-[var(--color-neutral-text-secondary)]">{stat.label}</p>
               <p className="mt-2 text-3xl font-semibold text-[var(--color-primary-emerald)]">
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div id="my-proof" className="grid gap-4 md:grid-cols-2">
-            {proofs.slice(0, 6).map((proof) => (
+            {proofs.slice(0, 6).map((proof: any) => (
               <div key={proof.id} className="rounded-lg border border-[var(--color-neutral-border)] bg-white p-4">
                 <div className="flex items-start justify-between">
                   <div>
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
                   </span>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-1">
-                  {(proof.skills_extracted || []).slice(0, 3).map((skill) => (
+                  {(proof.skills_extracted || []).slice(0, 3).map((skill: string) => (
                     <span key={skill} className="text-xs bg-[var(--color-neutral-surface-alt)] px-2 py-1 rounded">
                       {skill}
                     </span>
@@ -195,7 +195,7 @@ export default async function DashboardPage() {
             {opportunities.length} opportunities match your proof.
           </p>
           <div className="mt-3 space-y-2">
-            {opportunities.slice(0, 2).map((opportunity) => (
+            {opportunities.slice(0, 2).map((opportunity: any) => (
               <div
                 key={opportunity.id}
                 className="rounded-[var(--radius-md)] border border-[var(--color-neutral-border)] p-3"
