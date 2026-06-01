@@ -1,17 +1,49 @@
 'use client';
 
-import Link from "next/link";
-import { useState } from "react";
+import Link from 'next/link';
+import { useState } from 'react';
 import styled from 'styled-components';
+import { supabase } from '@/lib/supabase';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+    } else if (data.user) {
+      window.location.href = '/dashboard';
+    }
+    setLoading(false);
+  };
+
+  const handleSocialLogin = async (provider: 'github' | 'google') => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+    if (error) setError(error.message);
+  };
 
   return (
     <StyledWrapper>
-      <form className="form">
+      <form className="form" onSubmit={handleSignIn}>
         <p id="heading">Sign In</p>
+        {error && <p className="error">{error}</p>}
         <div className="field">
           <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
@@ -23,6 +55,7 @@ export default function SignInPage() {
             type="email" 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
         <div className="field">
@@ -35,13 +68,30 @@ export default function SignInPage() {
             type="password" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
         <div className="btn">
-          <button className="button1" type="submit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sign In&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-          <button className="button2" type="button" onClick={() => window.location.href = '/auth/signup'}>Sign Up</button>
+          <button className="button1" type="submit" disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
+          </button>
         </div>
-        <Link href="/auth/reset-password" className="button3">Forgot Password</Link>
+        <div className="social-section">
+          <div className="divider">
+            <div className="line"></div>
+            <span className="text">Or continue with</span>
+          </div>
+          <div className="social-buttons">
+            <button type="button" className="social-btn" onClick={() => handleSocialLogin('github')}>GitHub</button>
+            <button type="button" className="social-btn" onClick={() => handleSocialLogin('google')}>Google</button>
+          </div>
+        </div>
+        <div className="links">
+          <Link href="/auth/reset-password" className="button3">Forgot Password</Link>
+          <p className="signup-link">
+            Don&apos;t have an account? <Link href="/auth/signup">Sign Up</Link>
+          </p>
+        </div>
       </form>
     </StyledWrapper>
   );
@@ -59,6 +109,7 @@ const StyledWrapper = styled.div`
     border-radius: 25px;
     transition: .4s ease-in-out;
     box-shadow: 0 10px 40px rgba(16, 185, 129, 0.15);
+    width: 100%;
   }
 
   .form:hover {
@@ -68,10 +119,17 @@ const StyledWrapper = styled.div`
 
   #heading {
     text-align: center;
-    margin: 2em 0;
+    margin: 0.5em 0 0;
     color: rgb(255, 255, 255);
     font-size: 1.5em;
     font-weight: 600;
+  }
+
+  .error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 0.5em;
   }
 
   .field {
@@ -111,7 +169,7 @@ const StyledWrapper = styled.div`
     display: flex;
     justify-content: center;
     flex-direction: row;
-    margin-top: 2.5em;
+    margin-top: 1em;
   }
 
   .button1 {
@@ -119,7 +177,6 @@ const StyledWrapper = styled.div`
     padding-left: 2em;
     padding-right: 2em;
     border-radius: 10px;
-    margin-right: 0.5em;
     border: none;
     outline: none;
     transition: .4s ease-in-out;
@@ -129,38 +186,78 @@ const StyledWrapper = styled.div`
     cursor: pointer;
   }
 
-  .button1:hover {
+  .button1:hover:not(:disabled) {
     background: linear-gradient(135deg, #047857, #059669);
     transform: translateY(-2px);
   }
 
-  .button2 {
-    padding: 0.7em;
-    padding-left: 2em;
-    padding-right: 2em;
-    border-radius: 10px;
-    border: 1px solid #10b981;
-    outline: none;
-    transition: .4s ease-in-out;
-    background-color: transparent;
-    color: #10b981;
-    font-weight: 500;
-    cursor: pointer;
+  .button1:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
-  .button2:hover {
-    background-color: rgba(16, 185, 129, 0.1);
+  .social-section {
+    margin-top: 1em;
+  }
+
+  .divider {
+    position: relative;
+    margin: 1em 0;
+    text-align: center;
+  }
+
+  .line {
+    width: 100%;
+    height: 1px;
+    background-color: #334155;
+  }
+
+  .divider .text {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 0 10px;
+    color: #9ca3af;
+    font-size: 0.85rem;
+  }
+
+  .social-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .social-btn {
+    padding: 0.7em;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    color: #d3d3d3;
+    font-weight: 500;
+    cursor: pointer;
+    transition: .3s ease;
+  }
+
+  .social-btn:hover {
+    background-color: #334155;
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    margin-top: 1em;
   }
 
   .button3 {
-    display: block;
-    width: fit-content;
-    margin: 1.5em auto 2em;
     padding: 0.5em 1em;
     border-radius: 10px;
     border: none;
     outline: none;
-    transition: .4s ease-in-out;
+    transition: .3s ease;
     background-color: transparent;
     color: #f97316;
     font-size: 0.9rem;
@@ -169,4 +266,18 @@ const StyledWrapper = styled.div`
 
   .button3:hover {
     color: #ea580c;
+  }
+
+  .signup-link {
+    font-size: 0.9rem;
+    color: #9ca3af;
+  }
+
+  .signup-link a {
+    color: #10b981;
+    text-decoration: none;
+  }
+
+  .signup-link a:hover {
+    color: #059669;
   }`;

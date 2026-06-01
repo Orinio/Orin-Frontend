@@ -3,19 +3,55 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { supabase } from '@/lib/supabase';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+    } else if (data.user) {
+      window.location.href = '/dashboard';
+    }
+    setLoading(false);
+  };
+
+  const handleSocialLogin = async (provider: 'github' | 'google') => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+    if (error) setError(error.message);
+  };
 
   return (
     <StyledWrapper>
       {!showEmailForm ? (
         <div className="social-buttons">
-          <button type="button" className="social-btn">Continue with GitHub</button>
-          <button type="button" className="social-btn">Continue with Google</button>
+          <button type="button" className="social-btn" onClick={() => handleSocialLogin('github')}>Continue with GitHub</button>
+          <button type="button" className="social-btn" onClick={() => handleSocialLogin('google')}>Continue with Google</button>
           
           <div className="divider">
             <div className="line"></div>
@@ -35,8 +71,9 @@ export default function SignupPage() {
           </p>
         </div>
       ) : (
-        <form className="form">
+        <form className="form" onSubmit={handleSignUp}>
           <p id="heading">Create Account</p>
+          {error && <p className="error">{error}</p>}
           <div className="field">
             <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" viewBox="0 0 16 16">
               <path d="M8 7a3 3 0 1 0-6 0 3 3 0 0 0 6 0zM2 12a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm12-4a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
@@ -48,12 +85,13 @@ export default function SignupPage() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               className="input-field"
+              required
             />
           </div>
           <div className="field">
             <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" viewBox="0 0 16 16">
               <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
-          </svg>
+            </svg>
             <input
               id="email"
               type="email"
@@ -61,6 +99,7 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="input-field"
+              required
             />
           </div>
           <div className="field">
@@ -74,10 +113,13 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input-field"
+              required
             />
           </div>
           <div className="btn">
-            <button className="button1" type="submit">Create Account</button>
+            <button className="button1" type="submit" disabled={loading}>
+              {loading ? 'Creating...' : 'Create Account'}
+            </button>
           </div>
           <button
             type="button"
@@ -104,17 +146,16 @@ const StyledWrapper = styled.div`
     width: 100%;
     padding: 0.7em;
     border-radius: 10px;
-    border: 1px solid #cbd5e1;
-    background-color: white;
-    color: #374151;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    color: #d3d3d3;
     font-weight: 500;
     cursor: pointer;
     transition: .3s ease;
   }
 
   .social-btn:hover {
-    background-color: #f9fafb;
-    border-color: #9ca3af;
+    background-color: #334155;
   }
 
   .divider {
@@ -126,7 +167,7 @@ const StyledWrapper = styled.div`
   .line {
     width: 100%;
     height: 1px;
-    background-color: #e5e7eb;
+    background-color: #334155;
   }
 
   .divider .text {
@@ -134,9 +175,9 @@ const StyledWrapper = styled.div`
     top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    background: white;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     padding: 0 10px;
-    color: #6b7280;
+    color: #9ca3af;
     font-size: 0.85rem;
   }
 
@@ -158,20 +199,20 @@ const StyledWrapper = styled.div`
   }
 
   .signin-link {
-    margin-top: 1em;
+    margin-top: 0.5em;
     text-align: center;
     font-size: 0.9rem;
-    color: #6b7280;
+    color: #9ca3af;
   }
 
   .signin-link a {
-    color: #f97316;
+    color: #10b981;
     text-decoration: none;
     font-weight: 500;
   }
 
   .signin-link a:hover {
-    color: #ea580c;
+    color: #059669;
   }
 
   .form {
@@ -183,6 +224,7 @@ const StyledWrapper = styled.div`
     border-radius: 25px;
     transition: .4s ease-in-out;
     box-shadow: 0 10px 40px rgba(16, 185, 129, 0.15);
+    width: 100%;
   }
 
   .form:hover {
@@ -192,10 +234,17 @@ const StyledWrapper = styled.div`
 
   #heading {
     text-align: center;
-    margin: 0.5em 0 1em;
+    margin: 0.5em 0 0;
     color: rgb(255, 255, 255);
     font-size: 1.5em;
     font-weight: 600;
+  }
+
+  .error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 0.5em;
   }
 
   .field {
@@ -252,9 +301,14 @@ const StyledWrapper = styled.div`
     cursor: pointer;
   }
 
-  .button1:hover {
+  .button1:hover:not(:disabled) {
     background: linear-gradient(135deg, #047857, #059669);
     transform: translateY(-2px);
+  }
+
+  .button1:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   .back-btn {
@@ -262,7 +316,7 @@ const StyledWrapper = styled.div`
     margin: 0.5em auto 0;
     padding: 0.5em 1em;
     border-radius: 10px;
-    border: 1px solid #9ca3af;
+    border: 1px solid #334155;
     outline: none;
     transition: .3s ease;
     background-color: transparent;
@@ -272,6 +326,6 @@ const StyledWrapper = styled.div`
   }
 
   .back-btn:hover {
-    border-color: #d1d5db;
-    color: #e5e7eb;
+    border-color: #475569;
+    color: #cbd5e1;
   }`;

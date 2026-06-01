@@ -1,0 +1,46 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const company = searchParams.get('company');
+
+  let query = supabase.from('opportunities').select('*');
+
+  if (company) {
+    query = query.ilike('company', `%${company}%`);
+  }
+
+  const { data: opportunities, error } = await query.order('created_at', { ascending: false });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ opportunities });
+}
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { title, company, match_percentage } = body;
+
+  if (!title || !company) {
+    return NextResponse.json({ error: 'Title and company are required' }, { status: 400 });
+  }
+
+  const { data: opportunity, error } = await supabase
+    .from('opportunities')
+    .insert({
+      title,
+      company,
+      match_percentage: match_percentage || 0,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ opportunity }, { status: 201 });
+}

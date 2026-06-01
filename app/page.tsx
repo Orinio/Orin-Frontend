@@ -1,10 +1,35 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import styled from 'styled-components';
+import { supabase } from '@/lib/supabase';
 
 export default function Home() {
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        router.push('/dashboard');
+      }
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        router.push('/dashboard');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
+
   return (
-    <div className="w-full bg-white text-gray-900">
+    <StyledWrapper>
       {/* NAV */}
       <nav className="fixed top-0 w-full z-50 bg-glass border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -27,7 +52,7 @@ export default function Home() {
             <div className="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-bold mb-6">
               AI Coach For Students
             </div>
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 leading-tight text-gray-900">
               Your scattered work becomes career proof
             </h1>
             <p className="text-lg text-gray-600 mb-8">
@@ -49,28 +74,42 @@ export default function Home() {
             </p>
           </div>
           <div>
-            <div className="bg-gradient-to-br from-emerald-50 to-orange-50 rounded-2xl p-6 border border-gray-200 shadow-lg">
-              <p className="font-semibold text-gray-900 mb-4">Your proof cards:</p>
-              <div className="space-y-3">
-                <div className="bg-white rounded-lg p-4 border-l-4 border-emerald-500">
-                  <p className="text-xs font-semibold text-gray-900">ML Competition Winner</p>
-                  <p className="text-xs text-gray-500">Skills: Python, ML, Data Analysis</p>
-                </div>
-                <div className="bg-white rounded-lg p-4 border-l-4 border-orange-500">
-                  <p className="text-xs font-semibold text-gray-900">Kaggle 1st Place</p>
-                  <p className="text-xs text-gray-500">Skills: Competition-level expertise</p>
-                </div>
-                <div className="bg-white rounded-lg p-4 border-l-4 border-emerald-500">
-                  <p className="text-xs font-semibold text-gray-900">AWS Certificate</p>
-                  <p className="text-xs text-gray-500">Skills: Cloud Architecture</p>
+            <div className="relative mx-auto w-64 h-96 animate-float-slow">
+              <div className="absolute inset-0 rounded-[2.5rem] bg-white shadow-2xl border-4 border-emerald-200 overflow-hidden">
+                <div className="p-5 space-y-4 bg-gradient-to-b from-emerald-50/30 to-white">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold grad-emerald">ORIN</span>
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                      <div className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="h-3 w-20 mx-auto rounded-full bg-emerald-200"></div>
+                    <div className="h-2 w-16 mx-auto rounded-full bg-orange-200 mt-2"></div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-14 rounded-2xl border-l-8 border-emerald-400 bg-white p-3 shadow-md transform rotate-1">
+                      <div className="h-2 w-3/4 rounded bg-gray-900 mb-1"></div>
+                      <div className="h-1.5 w-1/2 rounded bg-gray-300"></div>
+                    </div>
+                    <div className="h-14 rounded-2xl border-l-8 border-orange-400 bg-white p-3 shadow-md transform -rotate-1">
+                      <div className="h-2 w-2/3 rounded bg-gray-900 mb-1"></div>
+                      <div className="h-1.5 w-2/5 rounded bg-gray-300"></div>
+                    </div>
+                    <div className="h-12 rounded-2xl border-l-8 border-emerald-400 bg-white p-3 shadow-md transform rotate-1">
+                      <div className="h-2 w-3/5 rounded bg-gray-900"></div>
+                    </div>
+                  </div>
+                  <div className="flex justify-center">
+                    <div className="rounded-full bg-gradient-to-r from-emerald-400 to-orange-400 px-4 py-2 shadow-lg">
+                      <div className="h-2 w-16 rounded-full bg-white"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="mt-2 bg-white rounded-xl border border-gray-200 p-4 shadow-lg max-w-xs">
-              <p className="text-xs text-gray-500">AI Coach Message:</p>
-              <p className="font-semibold text-sm text-gray-900">
-                &ldquo;You need one live deployment. Ship it this week.&rdquo;
-              </p>
+              <div className="absolute -bottom-6 -left-4 w-64 h-12 bg-emerald-200/30 rounded-full blur-xl"></div>
+              <div className="absolute -bottom-4 -right-6 w-48 h-10 bg-orange-200/30 rounded-full blur-lg"></div>
             </div>
           </div>
         </div>
@@ -80,7 +119,7 @@ export default function Home() {
       <section className="py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
           <div>
-            <h2 className="text-4xl font-serif font-bold mb-6">
+            <h2 className="text-4xl font-serif font-bold mb-6 text-gray-900">
               The problem students face
             </h2>
             <div className="space-y-4">
@@ -122,32 +161,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <p className="font-bold text-gray-900 mb-4">
-              Without ORIN (scattered across 5 places):
-            </p>
-            <div className="space-y-2 text-sm">
-              <div className="p-3 bg-gray-50 rounded flex gap-3">
-                <span>🐱</span>
-                <span className="text-gray-600">github.com/you/repo-1</span>
-              </div>
-              <div className="p-3 bg-gray-50 rounded flex gap-3">
-                <span>🏆</span>
-                <span className="text-gray-600">kaggle.com/notebooks/ml</span>
-              </div>
-              <div className="p-3 bg-gray-50 rounded flex gap-3">
-                <span>📜</span>
-                <span className="text-gray-600">certificate.pdf (drive)</span>
-              </div>
-              <div className="p-3 bg-gray-50 rounded flex gap-3">
-                <span>🎨</span>
-                <span className="text-gray-600">figma link (private)</span>
-              </div>
-              <div className="text-center text-xs text-gray-400 py-4">
-                ... and 15 more scattered items
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -155,7 +168,7 @@ export default function Home() {
       <section id="features" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-serif font-bold mb-4">
+            <h2 className="text-5xl font-serif font-bold mb-4 text-gray-900">
               Everything in one place
             </h2>
             <p className="text-lg text-gray-600">
@@ -197,10 +210,10 @@ export default function Home() {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition"
+                className="rounded-lg border border-gray-200 bg-white p-8 hover:shadow-lg transition"
               >
                 <p className="text-4xl mb-4">{feature.icon}</p>
-                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+                <h3 className="font-bold text-lg mb-2 text-gray-900">{feature.title}</h3>
                 <p className="text-gray-600 text-sm">{feature.desc}</p>
               </div>
             ))}
@@ -211,7 +224,7 @@ export default function Home() {
       {/* HOW IT WORKS */}
       <section id="how" className="py-20 px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-5xl font-serif font-bold text-center mb-16">
+          <h2 className="text-5xl font-serif font-bold text-center mb-16 text-gray-900">
             4 steps to proof
           </h2>
           <div className="space-y-8">
@@ -271,7 +284,7 @@ export default function Home() {
       {/* TESTIMONIALS */}
       <section className="py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-5xl font-serif font-bold text-center mb-16">
+          <h2 className="text-5xl font-serif font-bold text-center mb-16 text-gray-900">
             Stories from students
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -295,7 +308,7 @@ export default function Home() {
                 org: 'Bootcamp Grad',
               },
             ].map((testimonial, i) => (
-              <div key={i} className="bg-white border border-gray-200 rounded-lg p-8">
+              <div key={i} className="rounded-lg border border-gray-200 bg-white p-8">
                 <p className="text-sm text-gray-700 mb-4 italic">{testimonial.quote}</p>
                 <p className="font-semibold text-gray-900">
                   {testimonial.author} • {testimonial.org}
@@ -309,17 +322,17 @@ export default function Home() {
       {/* PRICING */}
       <section id="pricing" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-5xl font-serif font-bold text-center mb-16">
+          <h2 className="text-5xl font-serif font-bold text-center mb-16 text-gray-900">
             Simple, transparent pricing
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {/* Free Plan */}
-            <div className="bg-white border border-gray-200 rounded-lg p-8">
-              <h3 className="font-bold text-lg mb-6">Free Proof</h3>
-              <p className="text-3xl font-bold mb-6">Free</p>
-              <button className="border-2 border-gray-300 w-full py-3 rounded-lg font-semibold hover:bg-gray-50 mb-6">
-                Get Started
-              </button>
+            <div className="rounded-lg border border-gray-200 bg-white p-8">
+              <h3 className="font-bold text-lg mb-6 text-gray-900">Free Proof</h3>
+              <p className="text-3xl font-bold mb-6 text-gray-900">Free</p>
+              <Link href="/auth/signup" className="rounded-md border-2 border-gray-300 w-full py-3 text-center font-semibold hover:bg-gray-50 mb-6 block">
+                Get Started Free
+              </Link>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li>✓ 5 proof cards</li>
                 <li>✓ Basic coach (3x/week)</li>
@@ -329,17 +342,17 @@ export default function Home() {
             </div>
 
             {/* Pro Plan */}
-            <div className="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-8 relative">
+            <div className="rounded-lg border-2 border-emerald-500 bg-emerald-50 p-8 relative">
               <div className="absolute -top-4 left-6 bg-emerald-500 text-white px-4 py-1 rounded-full text-sm font-bold">
                 Most Popular
               </div>
-              <h3 className="font-bold text-lg mb-6">Pro Proof</h3>
-              <p className="text-3xl font-bold mb-2">
+              <h3 className="font-bold text-lg mb-6 text-gray-900">Pro Proof</h3>
+              <p className="text-3xl font-bold mb-2 text-gray-900">
                 ₹299<span className="text-gray-600 text-lg">/month</span>
               </p>
-              <button className="btn-green w-full py-3 rounded-lg font-semibold mb-6">
+              <Link href="/auth/signup" className="btn-green w-full py-3 rounded-lg font-semibold mb-6 block text-center">
                 Start Free Trial
-              </button>
+              </Link>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li>✓ Unlimited proof cards</li>
                 <li>✓ Daily AI coach</li>
@@ -351,12 +364,12 @@ export default function Home() {
             </div>
 
             {/* Enterprise Plan */}
-            <div className="bg-white border border-gray-200 rounded-lg p-8">
-              <h3 className="font-bold text-lg mb-6">Institutions</h3>
-              <p className="text-3xl font-bold mb-6">Custom</p>
-              <button className="border-2 border-gray-300 w-full py-3 rounded-lg font-semibold hover:bg-gray-50 mb-6">
+            <div className="rounded-lg border border-gray-200 bg-white p-8">
+              <h3 className="font-bold text-lg mb-6 text-gray-900">Institutions</h3>
+              <p className="text-3xl font-bold mb-6 text-gray-900">Custom</p>
+              <Link href="/contact" className="rounded-md border-2 border-gray-300 w-full py-3 text-center font-semibold hover:bg-gray-50 mb-6 block">
                 Contact
-              </button>
+              </Link>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li>✓ All Pro features</li>
                 <li>✓ Cohort dashboard</li>
@@ -372,7 +385,7 @@ export default function Home() {
       {/* FINAL CTA */}
       <section className="py-24 px-6 bg-gradient-to-br from-emerald-50 via-white to-orange-50">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-serif font-bold mb-6">
+          <h2 className="text-5xl font-serif font-bold mb-6 text-gray-900">
             Stop scattering. Start proving.
           </h2>
           <p className="text-xl text-gray-600 mb-8">
@@ -405,81 +418,33 @@ export default function Home() {
           <div>
             <p className="font-bold text-white text-sm mb-4">Product</p>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-white">
-                  Features
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Security
-                </a>
-              </li>
+              <li><a href="#features" className="hover:text-white">Features</a></li>
+              <li><a href="#pricing" className="hover:text-white">Pricing</a></li>
+              <li><a href="#" className="hover:text-white">Security</a></li>
             </ul>
           </div>
           <div>
             <p className="font-bold text-white text-sm mb-4">Company</p>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-white">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Careers
-                </a>
-              </li>
+              <li><a href="#" className="hover:text-white">About</a></li>
+              <li><a href="#" className="hover:text-white">Blog</a></li>
+              <li><a href="#" className="hover:text-white">Careers</a></li>
             </ul>
           </div>
           <div>
             <p className="font-bold text-white text-sm mb-4">Legal</p>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-white">
-                  Privacy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Terms
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Cookies
-                </a>
-              </li>
+              <li><a href="#" className="hover:text-white">Privacy</a></li>
+              <li><a href="#" className="hover:text-white">Terms</a></li>
+              <li><a href="#" className="hover:text-white">Cookies</a></li>
             </ul>
           </div>
           <div>
             <p className="font-bold text-white text-sm mb-4">Connect</p>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-white">
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Discord
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  LinkedIn
-                </a>
-              </li>
+              <li><a href="#" className="hover:text-white">Twitter</a></li>
+              <li><a href="#" className="hover:text-white">Discord</a></li>
+              <li><a href="#" className="hover:text-white">LinkedIn</a></li>
             </ul>
           </div>
         </div>
@@ -487,6 +452,31 @@ export default function Home() {
           © 2025 ORIN. Career proof for students building futures.
         </div>
       </footer>
-    </div>
+    </StyledWrapper>
   );
 }
+
+const StyledWrapper = styled.div`
+  .grad-emerald {
+    background: linear-gradient(135deg, #059669 0%, #d97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+  }
+
+  .btn-green {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    font-weight: 500;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .btn-green:hover {
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+  }
+`;
