@@ -18,7 +18,6 @@ const config: Config = {
           sage: "#84CC16",
           sand: "#FFF7ED",
           cream: "#FFFBEB",
-          emerald: "#10B981",
           orange: "#F97316",
           "bg-light": "#F8FAFC",
           "bg-dark": "#0F172A",
@@ -66,7 +65,7 @@ const config: Config = {
         "sm-soft": "0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)",
         "md-soft": "0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)",
         "lg-soft": "0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05)",
-        glow: "0 0 30px rgba(14, 165, 233, 0.4)",
+        glow: "0 0 30px rgba(251, 113, 133, 0.4)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

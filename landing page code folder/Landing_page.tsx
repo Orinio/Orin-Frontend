@@ -540,7 +540,7 @@ function PricingCard({ tier, index }: { tier: Tier; index: number }) {
       className={`relative rounded-2xl border p-8 transition-all duration-300 ${
         tier.highlighted
           ? 'border-orin-coral bg-gradient-to-br from-white to-orin-cream shadow-lg-soft ring-2 ring-orin-coral/20'
-          : 'border-orin-border-light bg-white shadow-md-soft'
+          : 'border-orin-border-light bg-white/90 shadow-md-soft'
       }`}
     >
       {tier.highlighted && (
