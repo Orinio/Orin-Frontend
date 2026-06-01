@@ -97,9 +97,9 @@ export default function SignInPage() {
           </div>
         </div>
         <div className="links">
-          <Link href="/auth/reset-password" className="button3">Forgot Password</Link>
+          <Link href="/reset-password" className="button3">Forgot Password</Link>
           <p className="signup-link">
-            Don&apos;t have an account? <Link href="/auth/signup">Sign Up</Link>
+            Don&apos;t have an account? <Link href="/signup">Sign Up</Link>
           </p>
         </div>
       </form>

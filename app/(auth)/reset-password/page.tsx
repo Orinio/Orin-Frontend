@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/signin`,
+      redirectTo: `${window.location.origin}/signin`,
     });
 
     if (error) {
@@ -63,7 +63,7 @@ export default function ResetPasswordPage() {
             {loading ? 'Sending...' : 'Send reset link'}
           </button>
         </div>
-        <Link href="/auth/signin" className="button3">Back to Sign In</Link>
+        <Link href="/signin" className="button3">Back to Sign In</Link>
       </form>
     </StyledWrapper>
   );

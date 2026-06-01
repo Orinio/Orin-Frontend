@@ -77,7 +77,7 @@ export default function SignupPage() {
           </button>
           
           <p className="signin-link">
-            Already have an account? <Link href="/auth/signin">Sign in</Link>
+            Already have an account? <Link href="/signin">Sign in</Link>
           </p>
         </div>
       ) : (

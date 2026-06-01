@@ -23,7 +23,7 @@ export default function SettingsPage() {
       }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/auth/signin');
+        router.push('/signin');
         return;
       }
       setUser(user);

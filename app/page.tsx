@@ -42,9 +42,9 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any,
             <a href="#how" className="hover:text-emerald-700">How It Works</a>
             <a href="#pricing" className="hover:text-emerald-700">Pricing</a>
           </div>
-          <Link href="/auth/signin" className="btn-green px-6 py-2 rounded-lg font-medium">
-            Get Started
-          </Link>
+<Link href="/signin" className="btn-green px-6 py-2 rounded-lg font-medium">
+             Get Started
+           </Link>
         </div>
       </nav>
 
@@ -333,7 +333,7 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any,
             <div className="rounded-lg border border-gray-200 bg-white p-8">
               <h3 className="font-bold text-lg mb-6 text-gray-900">Free Proof</h3>
               <p className="text-3xl font-bold mb-6 text-gray-900">Free</p>
-              <Link href="/auth/signup" className="rounded-md border-2 border-gray-300 w-full py-3 text-center font-semibold hover:bg-gray-50 mb-6 block">
+              <Link href="/signup" className="rounded-md border-2 border-gray-300 w-full py-3 text-center font-semibold hover:bg-gray-50 mb-6 block">
                 Get Started Free
               </Link>
               <ul className="space-y-2 text-sm text-gray-700">
@@ -353,7 +353,7 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any,
               <p className="text-3xl font-bold mb-2 text-gray-900">
                 ₹299<span className="text-gray-600 text-lg">/month</span>
               </p>
-              <Link href="/auth/signup" className="btn-green w-full py-3 rounded-lg font-semibold mb-6 block text-center">
+              <Link href="/signup" className="btn-green w-full py-3 rounded-lg font-semibold mb-6 block text-center">
                 Start Free Trial
               </Link>
               <ul className="space-y-2 text-sm text-gray-700">

@@ -38,7 +38,7 @@ export function Navigation() {
   const handleSignOut = async () => {
     if (!supabase) return;
     await supabase.auth.signOut();
-    router.push('/auth/signin');
+    router.push('/signin');
   };
 
   return (
