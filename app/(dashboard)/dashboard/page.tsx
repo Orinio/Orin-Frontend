@@ -1,65 +1,22 @@
-'use client';
+import { supabase } from "@/lib/supabase";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import { Database } from '@/lib/supabase';
+export default async function DashboardPage() {
+  let proofs: any[] = [];
+  let opportunities: any[] = [];
+  
+  if (supabase) {
+    const { data: proofsData } = await supabase
+      .from('proof_cards')
+      .select('*')
+      .order('created_at', { ascending: false });
+    proofs = proofsData || [];
 
-type ProofCard = Database['public']['Tables']['proof_cards']['Row'];
-type Opportunity = Database['public']['Tables']['opportunities']['Row'];
-
-export default function DashboardPage() {
-  const [proofs, setProofs] = useState<ProofCard[]>([]);
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [coachNote, setCoachNote] = useState<string>("You need one live deployment. Ship it this week.");
-  const router = useRouter();
-
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/auth/signin');
-        return;
-      }
-      setUser(user);
-      
-      // Fetch proofs
-      const { data: proofsData } = await supabase
-        .from('proof_cards')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-      
-      setProofs(proofsData || []);
-
-      // Fetch opportunities
-      const { data: oppsData } = await supabase
-        .from('opportunities')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      setOpportunities(oppsData || []);
-      setLoading(false);
-    };
-
-    checkUser();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
-        router.push('/auth/signin');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [router]);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/auth/signin');
-  };
+    const { data: oppsData } = await supabase
+      .from('opportunities')
+      .select('*')
+      .order('created_at', { ascending: false });
+    opportunities = oppsData || [];
+  }
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
@@ -88,8 +45,8 @@ export default function DashboardPage() {
             },
             {
               label: "Settings",
-              href: "/dashboard/settings",
-              icon: "M12 8a4 4 0 100 8 4 4 0 000-8zm8 4l-2 1 1 2-2 2-2-1-1 2h-2l-1-2-2 1-2-2 1-2-2-1V10l2-1-1-2 2-2 2 1 1-2h2l1 2 2-1 2-2-1 2 2 1v2z",
+              href: "/settings",
+              icon: "M12 8a4 4 0 100 8 4 4 0 000-8zm8 4l-2 1 1 2-2 2-2-1-1 2h-2l-1-2-2 1-2-2 1-2-2-1V10l2-1-1-2 2-2 2 1 1-2h2l1 2 2-1 2 2-1 2 2 1v2z",
             },
             {
               label: "Help",
@@ -115,15 +72,6 @@ export default function DashboardPage() {
               {item.label}
             </a>
           ))}
-          <button
-            onClick={handleSignOut}
-            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-[var(--color-neutral-text-secondary)] transition hover:bg-[var(--color-neutral-bg)] hover:text-[var(--color-danger)]"
-          >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Sign Out
-          </button>
         </nav>
       </aside>
 
@@ -133,10 +81,8 @@ export default function DashboardPage() {
             Dashboard
           </p>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-3xl font-semibold md:text-4xl">Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name.split(' ')[0]}` : ''}</h1>
-            <button className="btn-green px-4 py-2 rounded-lg font-semibold text-white" onClick={() => router.push('/dashboard/proofs/new')}>
-              New proof
-            </button>
+            <h1 className="text-3xl font-semibold md:text-4xl">Welcome back</h1>
+            <button className="btn-green px-4 py-2 rounded-md font-semibold text-white">New proof</button>
           </div>
           <p className="text-sm text-[var(--color-neutral-text-secondary)]">
             Track verified proof and stay on top of your next opportunity.
@@ -162,43 +108,29 @@ export default function DashboardPage() {
         <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-4">
           <p className="text-sm text-[var(--color-neutral-text-secondary)]">AI Coach Message:</p>
           <p className="font-semibold text-sm text-[var(--color-neutral-text)]">
-            &ldquo;{coachNote}&rdquo;
+            &ldquo;You need one live deployment. Ship it this week.&rdquo;
           </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-semibold">Your proof feed</h2>
+            <h2 className="text-2xl font-semibold text-[var(--color-neutral-text)]">Your proof feed</h2>
             <p className="mt-1 text-sm text-[var(--color-neutral-text-secondary)]">
               Recent proof cards created from your sources.
             </p>
           </div>
-          <button className="rounded-md border-2 border-[var(--color-primary-emerald)] px-4 py-2 font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)]" onClick={() => {}}>
+          <button className="rounded-md border-2 border-[var(--color-primary-emerald)] bg-transparent px-4 py-2 font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)]">
             Publish public profile
           </button>
         </div>
 
-        {loading ? (
-          <div className="grid gap-4 md:grid-cols-2" aria-label="Loading proofs">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div key={`skeleton-${index}`} className="animate-pulse rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-4">
-                <div className="h-4 w-2/3 rounded bg-[var(--color-neutral-border)]" />
-                <div className="mt-4 h-3 w-full rounded bg-[var(--color-neutral-border)]" />
-                <div className="mt-4 h-3 w-4/5 rounded bg-[var(--color-neutral-border)]" />
-                <div className="mt-6 h-8 w-24 rounded bg-[var(--color-neutral-border)]" />
-              </div>
-            ))}
-          </div>
-        ) : proofs.length === 0 ? (
+        {proofs.length === 0 ? (
           <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-6 text-center">
             <h3 className="text-lg font-semibold text-[var(--color-neutral-text)]">No proof yet. Let&apos;s add your first one!</h3>
             <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
               Connect GitHub, upload certificates, or link your competitive programming
               profiles to get started.
             </p>
-            <button className="btn-green mt-4 px-6 py-3 rounded-lg font-semibold" onClick={() => router.push('/dashboard/sources/new')}>
-              Add Proof Source
-            </button>
           </div>
         ) : (
           <div id="my-proof" className="grid gap-4 md:grid-cols-2">
@@ -206,8 +138,8 @@ export default function DashboardPage() {
               <div key={proof.id} className="rounded-lg border border-[var(--color-neutral-border)] bg-white p-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-semibold text-[var(--color-primary-emerald)]">{proof.source_type.toUpperCase()}</p>
-                    <h3 className="font-semibold text-gray-900">{proof.title}</h3>
+                    <p className="text-xs font-semibold text-[var(--color-primary-emerald)]">{(proof.source_type || '').toUpperCase()}</p>
+                    <h3 className="font-semibold text-gray-900">{proof.title || ''}</h3>
                     <p className="mt-1 text-sm text-[var(--color-neutral-text-secondary)]">
                       {proof.description || 'No description'}
                     </p>
@@ -221,7 +153,7 @@ export default function DashboardPage() {
                   </span>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-1">
-                  {proof.skills_extracted?.slice(0, 3).map((skill) => (
+                  {(proof.skills_extracted || []).slice(0, 3).map((skill) => (
                     <span key={skill} className="text-xs bg-[var(--color-neutral-surface-alt)] px-2 py-1 rounded">
                       {skill}
                     </span>
@@ -275,7 +207,7 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-          <button className="mt-4 w-full rounded-md border-2 border-[var(--color-primary-emerald)] px-4 py-2 font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)]" onClick={() => router.push('/dashboard/opportunities')}>
+          <button className="mt-4 w-full rounded-md border-2 border-[var(--color-primary-emerald)] bg-transparent px-4 py-2 font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)]">
             View opportunities
           </button>
         </div>

@@ -16,6 +16,12 @@ export default function SignInPage() {
     setLoading(true);
     setError(null);
 
+    if (!supabase) {
+      setError('Authentication not configured');
+      setLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -30,6 +36,10 @@ export default function SignInPage() {
   };
 
   const handleSocialLogin = async (provider: 'github' | 'google') => {
+    if (!supabase) {
+      setError('Authentication not configured');
+      return;
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {

@@ -12,6 +12,7 @@ export default function Home() {
 
   useEffect(() => {
     const checkUser = async () => {
+      if (!supabase) return;
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         router.push('/dashboard');
@@ -19,6 +20,8 @@ export default function Home() {
     };
     checkUser();
 
+    if (!supabase) return;
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         router.push('/dashboard');

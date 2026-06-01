@@ -1,7 +1,4 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 interface UserProfile {
@@ -21,52 +18,48 @@ interface Proof {
   verification_status: string;
 }
 
-export default function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [proofs, setProofs] = useState<Proof[]>([]);
-  const [skills, setSkills] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+interface PublicProfilePageProps {
+  params: Promise<{ username: string }>;
+}
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      const resolvedParams = await params;
-      const username = resolvedParams.username;
-      
-      const response = await fetch(`/api/users/${username}`);
-      const data = await response.json();
-      
-      if (data.user) {
-        setUser(data.user);
-        setProofs(data.proofs || []);
-        setSkills(data.skills || []);
-      }
-      setLoading(false);
-    };
-
-    fetchUserProfile();
-  }, [params]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-[var(--color-neutral-text-secondary)]">Loading profile...</p>
-      </div>
-    );
+export default async function PublicProfilePage({ params }: PublicProfilePageProps) {
+  const { username } = await params;
+  
+  if (!supabase) {
+    return <div className="p-8">Supabase not configured</div>;
   }
+
+  // Find the user
+  const { data: user } = await supabase
+    .from('users')
+    .select('*')
+    .or(`email.eq.${username},id.eq.${username}`)
+    .single();
 
   if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-[var(--color-neutral-text-secondary)]">User not found</p>
-      </div>
-    );
+    notFound();
   }
+
+  // Fetch proofs
+  const { data: proofs } = await supabase
+    .from('proof_cards')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+
+  // Fetch unique skills
+  const { data: skills } = await supabase
+    .from('proof_cards')
+    .select('skills_extracted')
+    .eq('user_id', user.id);
+
+  const allSkills = skills?.flatMap(s => s.skills_extracted || []).filter((v, i, a) => a.indexOf(v) === i) || [];
 
   return (
     <main id="main-content" className="mx-auto w-full max-w-[1200px] px-4 py-8 md:px-8">
       <section className="rounded-[var(--radius-lg)] bg-gradient-to-br from-white to-[var(--color-neutral-surface-alt)] p-6">
         <p className="text-sm text-[var(--color-primary-emerald)]">@{user.email?.split('@')[0]}</p>
-        <h1 className="mt-2 text-4xl font-semibold md:text-5xl">{user.full_name}</h1>
+        <h1 className="mt-2 text-4xl font-semibold md:text-5xl">{user.full_name || ''}</h1>
         <p className="mt-2 text-[var(--color-neutral-text-secondary)]">
           3rd year CSE @ {user.college || 'College'}
         </p>
@@ -89,7 +82,7 @@ export default function PublicProfilePage({ params }: { params: Promise<{ userna
       <section className="mt-8">
         <h2 className="text-2xl font-semibold text-[var(--color-neutral-text)]">Verified Skills</h2>
         <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-          {skills.slice(0, 8).map((skill) => (
+          {allSkills.slice(0, 8).map((skill: string) => (
             <div key={skill} className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-4">
               <h3 className="text-base font-semibold text-[var(--color-neutral-text)]">{skill}</h3>
               <p className="mt-1 text-sm text-[var(--color-neutral-text-secondary)]">
@@ -106,14 +99,14 @@ export default function PublicProfilePage({ params }: { params: Promise<{ userna
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold text-[var(--color-neutral-text)]">{`${user.full_name || 'User'}'s Proof (${proofs.length} total)`}</h2>
+        <h2 className="text-2xl font-semibold text-[var(--color-neutral-text)]">{`${user.full_name || 'User'}'s Proof (${(proofs?.length || 0)} total)`}</h2>
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          {proofs.slice(0, 4).map((proof) => (
+          {(proofs || []).slice(0, 4).map((proof: Proof) => (
             <div key={proof.id} className="rounded-lg border border-[var(--color-neutral-border)] bg-white p-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-[var(--color-primary-emerald)]">{proof.source_type.toUpperCase()}</p>
-                  <h3 className="font-semibold text-gray-900">{proof.title}</h3>
+                  <p className="text-xs font-semibold text-[var(--color-primary-emerald)]">{(proof.source_type || '').toUpperCase()}</p>
+                  <h3 className="font-semibold text-gray-900">{proof.title || ''}</h3>
                   <p className="mt-1 text-sm text-[var(--color-neutral-text-secondary)]">
                     {proof.description || 'No description'}
                   </p>
@@ -127,7 +120,7 @@ export default function PublicProfilePage({ params }: { params: Promise<{ userna
                 </span>
               </div>
               <div className="mt-3 flex flex-wrap gap-1">
-                {proof.skills_extracted?.slice(0, 3).map((skill) => (
+                {(proof.skills_extracted || []).slice(0, 3).map((skill) => (
                   <span key={skill} className="text-xs bg-[var(--color-neutral-surface-alt)] px-2 py-1 rounded">
                     {skill}
                   </span>

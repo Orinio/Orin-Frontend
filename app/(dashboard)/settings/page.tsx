@@ -17,6 +17,10 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const fetchUser = async () => {
+      if (!supabase) {
+        console.warn('Supabase not configured');
+        return;
+      }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push('/auth/signin');
@@ -29,6 +33,7 @@ export default function SettingsPage() {
   }, [router]);
 
   const handleSave = async () => {
+    if (!supabase) return;
     setLoading(true);
     const { error } = await supabase.auth.updateUser({
       data: {

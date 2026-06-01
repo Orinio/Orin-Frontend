@@ -20,11 +20,14 @@ export function Navigation() {
 
   useEffect(() => {
     const getUser = async () => {
+      if (!supabase) return;
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
     };
     getUser();
 
+    if (!supabase) return;
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
     });
