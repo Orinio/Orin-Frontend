@@ -17,7 +17,7 @@ export default function SignInPage() {
             Sign in
           </h1>
           <p className="text-gray-600">
-            Welcome back. Let's get back to building your proof.
+            Welcome back. Let&apos;s get back to building your proof.
           </p>
         </div>
 
@@ -98,7 +98,7 @@ export default function SignInPage() {
             </Link>
           </div>
           <div className="text-gray-600">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/auth/signup" className="text-emerald-600 hover:text-emerald-700 font-semibold">
               Sign up
             </Link>

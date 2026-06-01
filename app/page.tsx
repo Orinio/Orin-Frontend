@@ -1,11 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
 
 export default function Home() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   return (
     <div className="w-full bg-white text-gray-900">
       {/* NAV */}
@@ -72,7 +69,7 @@ export default function Home() {
             <div className="mt-2 bg-white rounded-xl border border-gray-200 p-4 shadow-lg max-w-xs">
               <p className="text-xs text-gray-500">AI Coach Message:</p>
               <p className="font-semibold text-sm text-gray-900">
-                "You need one live deployment. Ship it this week."
+                &ldquo;You need one live deployment. Ship it this week.&rdquo;
               </p>
             </div>
           </div>
@@ -101,7 +98,7 @@ export default function Home() {
                 <div>
                   <strong className="text-gray-900">No feedback</strong>
                   <p className="text-gray-600">
-                    Don't know if what you built actually matters.
+                    Don&apos;t know if what you built actually matters.
                   </p>
                 </div>
               </div>
@@ -281,19 +278,19 @@ export default function Home() {
             {[
               {
                 quote:
-                  '"I had 20 GitHub repos scattered. ORIN turned them into a proof profile. Got 3 internship offers in 2 weeks."',
+                  '&ldquo;I had 20 GitHub repos scattered. ORIN turned them into a proof profile. Got 3 internship offers in 2 weeks.&rdquo;',
                 author: 'Priya S.',
                 org: 'IIT Delhi',
               },
               {
                 quote:
-                  '"The AI coach is like having a mentor. It tells me exactly what I\'m doing wrong and what to fix next."',
+                  '&ldquo;The AI coach is like having a mentor. It tells me exactly what I\'m doing wrong and what to fix next.&rdquo;',
                 author: 'Arjun M.',
                 org: 'Self-taught Dev',
               },
               {
                 quote:
-                  '"Instead of tweaking my resume, I focused on building proof. ORIN made sharing it so easy."',
+                  '&ldquo;Instead of tweaking my resume, I focused on building proof. ORIN made sharing it so easy.&rdquo;',
                 author: 'Sophia W.',
                 org: 'Bootcamp Grad',
               },
