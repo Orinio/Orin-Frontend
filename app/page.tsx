@@ -404,11 +404,11 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
       transition={{ duration: 0.6, delay: index * 0.15 }}
-      className="group relative rounded-2xl border border-orin-border-light bg-white p-8 shadow-md-soft"
+      className="group relative rounded-2xl border border-orin-border-light bg-white/90 p-8 shadow-md-soft"
     >
       {/* Elevated card indicator */}
-      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-orin-magenta/10 px-3 py-1">
-        <span className="text-xs font-medium text-orin-magenta">Verified User</span>
+      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-orin-coral/10 px-3 py-1">
+        <span className="text-xs font-medium text-orin-coral">Verified User</span>
       </div>
 
       <div className="mb-4 flex gap-1">
