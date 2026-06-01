@@ -80,7 +80,7 @@ function HeroSection() {
   return (
     <motion.section
       ref={ref}
-      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-20 pb-20"
+      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-orin-bg-dark via-orin-bg-dark to-orin-blue pt-20 pb-20"
     >
       {/* Animated gradient background */}
       <div className="absolute inset-0 overflow-hidden">
@@ -131,7 +131,7 @@ function HeroSection() {
           {/* Subheading */}
           <motion.p
             variants={itemVariants}
-            className="mb-8 max-w-2xl text-lg text-gray-300 md:text-xl"
+            className="mb-8 max-w-2xl text-lg text-white md:text-xl"
           >
             Empower your team with intelligent workflows that feel natural, intuitive, and genuinely enjoyable. ORIN isn&apos;t just another tool—it&apos;s your creative partner.
           </motion.p>
@@ -653,7 +653,7 @@ function CTASection() {
 // ============================================================================
 function Footer() {
   return (
-    <footer className="w-full bg-slate-900 text-white">
+    <footer className="w-full bg-orin-bg-dark text-white">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-4">
           <div>
