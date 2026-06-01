@@ -251,7 +251,7 @@ function FeaturesSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-orin-bg-light via-white to-orin-bg-light py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-white via-orin-teal/5 to-white py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -369,7 +369,7 @@ function TestimonialsSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-orin-bg-light to-white py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-white via-orin-blue/5 to-white py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -502,7 +502,7 @@ function PricingSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-white to-orin-bg-light py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-white via-orin-magenta/5 to-white py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
