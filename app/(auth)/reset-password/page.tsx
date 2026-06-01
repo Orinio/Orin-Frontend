@@ -10,7 +10,7 @@ export default function ResetPasswordPage() {
         <Card className="w-full max-w-md">
           <div className="flex flex-col gap-4">
             <div>
-              <p className="text-sm font-semibold text-[var(--color-primary-teal)]">ORIN</p>
+              <p className="font-serif font-bold text-[var(--color-primary-emerald)]">ORIN</p>
               <h1 className="mt-2 text-2xl font-semibold">Reset your password</h1>
               <p className="mt-1 text-sm text-[var(--color-neutral-text-secondary)]">
                 We&apos;ll email you a secure reset link in seconds.
@@ -31,7 +31,7 @@ export default function ResetPasswordPage() {
 
             <p className="text-sm text-[var(--color-neutral-text-secondary)]">
               Remembered your password?{" "}
-              <Link href="/signin" className="text-[var(--color-primary-teal)]">
+              <Link href="/auth/signin" className="text-[var(--color-primary-emerald)]">
                 Sign in
               </Link>
             </p>

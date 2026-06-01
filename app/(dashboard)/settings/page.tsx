@@ -13,7 +13,7 @@ export default function SettingsPage() {
   return (
     <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
       <aside className="space-y-2">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary-teal)]">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary-emerald)]">
           Settings
         </h2>
         <nav className="space-y-1 text-sm">
@@ -21,10 +21,10 @@ export default function SettingsPage() {
             <button
               key={item}
               type="button"
-              className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[var(--color-neutral-text-secondary)] transition hover:bg-[var(--color-neutral-surface-alt)] hover:text-[var(--color-primary-teal)]"
+              className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-[var(--color-neutral-text-secondary)] transition hover:bg-[var(--color-neutral-surface-alt)] hover:text-[var(--color-primary-emerald)]"
             >
               {item}
-              <span className="h-2 w-2 rounded-full bg-[var(--color-accent-magenta)]/70" />
+              <span className="h-2 w-2 rounded-full bg-[var(--color-accent-orange)]/70" />
             </button>
           ))}
         </nav>
@@ -75,7 +75,7 @@ export default function SettingsPage() {
               "Verification status updates",
             ].map((item) => (
               <label key={item} className="flex items-center gap-3">
-                <input type="checkbox" className="h-4 w-4 accent-[var(--color-primary-teal)]" />
+                <input type="checkbox" className="h-4 w-4 accent-[var(--color-primary-emerald)]" />
                 {item}
               </label>
             ))}

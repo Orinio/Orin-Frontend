@@ -42,7 +42,7 @@ export function Navigation() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <Link href="/" className="text-lg font-semibold text-[var(--color-primary-teal)]">
+          <Link href="/" className="text-lg font-semibold text-[var(--color-primary-emerald)]">
             Orin
           </Link>
         </div>
@@ -77,9 +77,9 @@ export function Navigation() {
                 key={link.label}
                 href={link.href}
                 className={cn(
-                  "border-b-2 border-transparent pb-1 text-sm font-medium text-[var(--color-neutral-text-secondary)] transition hover:text-[var(--color-primary-teal)]",
+                  "border-b-2 border-transparent pb-1 text-sm font-medium text-[var(--color-neutral-text-secondary)] transition hover:text-[var(--color-primary-emerald)]",
                   pathname === link.href &&
-                    "border-[var(--color-primary-teal)] text-[var(--color-primary-teal)]",
+                    "border-[var(--color-primary-emerald)] text-[var(--color-primary-emerald)]",
                 )}
               >
                 {link.label}
@@ -94,7 +94,7 @@ export function Navigation() {
             aria-label="Notifications"
             type="button"
           >
-          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[var(--color-accent-magenta)]" />
+          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[var(--color-danger)]" />
             <svg
               aria-hidden="true"
               className="h-4 w-4"

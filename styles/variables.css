@@ -2,7 +2,9 @@
   /* Primary Colors - Emerald & Orange (from landing page) */
   --color-primary-emerald: #059669;
   --color-primary-emerald-light: #10b981;
+  --color-primary-emerald-strong: #047857;
   --color-primary-orange: #d97706;
+  --color-primary-orange-light: #f59e0b;
   
   /* Secondary Colors */
   --color-accent-green: #10b981;
@@ -11,6 +13,11 @@
   --color-accent-gold-light: #fcd34d;
   --color-danger: #ef4444;
   --color-danger-strong: #dc2626;
+  
+  /* Soft variants for backgrounds */
+  --color-primary-soft: rgba(16, 185, 129, 0.1);
+  --color-accent-orange: #f97316;
+  --color-accent-orange-light: #fb923c;
   
   /* Neutral Colors */
   --color-neutral-bg: #ffffff;

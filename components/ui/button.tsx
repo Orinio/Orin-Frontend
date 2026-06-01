@@ -13,11 +13,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-gradient-to-r from-[var(--color-primary-teal)] to-[var(--color-primary-blue)] text-white hover:from-[var(--color-primary-teal-strong)] hover:to-[var(--color-primary-blue-strong)]",
+    "bg-gradient-to-r from-[var(--color-primary-emerald)] to-[var(--color-primary-orange)] text-white hover:from-[var(--color-primary-emerald-strong)] hover:to-[var(--color-primary-orange-light)]",
   secondary:
-    "border-2 border-[var(--color-primary-teal)] bg-transparent text-[var(--color-primary-teal)] hover:bg-[var(--color-primary-soft)]",
+    "border-2 border-[var(--color-primary-emerald)] bg-transparent text-[var(--color-primary-emerald)] hover:bg-[var(--color-primary-soft)]",
   ghost:
-    "bg-transparent text-[var(--color-primary-teal)] hover:bg-[var(--color-primary-soft)]",
+    "bg-transparent text-[var(--color-primary-emerald)] hover:bg-[var(--color-primary-soft)]",
   danger: "bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger-strong)]",
 };
 
@@ -40,7 +40,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] font-semibold transition duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent-magenta)] active:scale-[0.98] active:shadow-inner disabled:cursor-not-allowed disabled:opacity-50",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] font-semibold transition duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-primary-emerald)] active:scale-[0.98] active:shadow-inner disabled:cursor-not-allowed disabled:opacity-50",
         variantClasses[variant],
         sizeClasses[size],
         className,

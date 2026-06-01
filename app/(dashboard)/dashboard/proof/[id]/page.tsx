@@ -40,7 +40,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
     <article className="mx-auto max-w-5xl space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 text-sm text-[var(--color-neutral-text-secondary)]">
-          <Link href="/dashboard" className="text-[var(--color-primary-teal)]">
+          <Link href="/dashboard" className="text-[var(--color-primary-emerald)]">
             ← Back
           </Link>
           <span>/</span>
@@ -72,7 +72,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
               {proof.description}
             </p>
             <p className="mt-3 text-sm">
-              <a className="text-[var(--color-primary-teal)]" href={proof.url}>
+              <a className="text-[var(--color-primary-emerald)]" href={proof.url}>
                 {proof.url}
               </a>
             </p>
@@ -184,7 +184,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
                   </span>
                   <div className="h-2 flex-1 rounded-full bg-[var(--color-neutral-border)]">
                     <div
-                      className="h-2 rounded-full bg-[var(--color-primary-teal)]"
+                      className="h-2 rounded-full bg-[var(--color-primary-emerald)]"
                       style={{ width: `${value}%` }}
                     />
                   </div>

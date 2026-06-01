@@ -46,7 +46,7 @@ export default function DashboardPage() {
             },
           ].map((item) => (
             <a
-              className="flex items-center gap-2 rounded-md px-3 py-2 text-[var(--color-neutral-text-secondary)] transition hover:bg-[var(--color-neutral-bg)] hover:text-[var(--color-primary-teal)]"
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-[var(--color-neutral-text-secondary)] transition hover:bg-[var(--color-neutral-bg)] hover:text-[var(--color-primary-emerald)]"
               href={item.href}
               key={item.label}
             >
@@ -68,7 +68,7 @@ export default function DashboardPage() {
 
       <section id="dashboard-home" className="space-y-6 lg:col-span-7">
         <header className="space-y-2">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary-teal)]">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--color-primary-emerald)]">
             Dashboard
           </p>
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -88,7 +88,7 @@ export default function DashboardPage() {
           ].map((stat) => (
             <Card key={stat.label}>
               <p className="text-sm text-[var(--color-neutral-text-secondary)]">{stat.label}</p>
-              <p className="mt-2 text-3xl font-semibold text-[var(--color-primary-teal)]">
+              <p className="mt-2 text-3xl font-semibold text-[var(--color-primary-emerald)]">
                 {stat.value}
               </p>
               <p className="mt-2 text-xs text-[var(--color-accent-green)]">{stat.delta}</p>
@@ -153,8 +153,8 @@ export default function DashboardPage() {
         <Card>
           <h2 className="text-base font-semibold">Skill Summary</h2>
           <div className="mt-4 flex items-center gap-4">
-            <div className="relative h-20 w-20 rounded-full border-[10px] border-[var(--color-primary-teal)]/20">
-              <div className="absolute inset-2 rounded-full border-[6px] border-[var(--color-primary-teal)]" />
+            <div className="relative h-20 w-20 rounded-full border-[10px] border-[var(--color-primary-emerald)]/20">
+              <div className="absolute inset-2 rounded-full border-[6px] border-[var(--color-primary-emerald)]" />
             </div>
             <div>
               <p className="text-sm font-medium">Top skills</p>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
             3/5 proof types complete
           </p>
           <div className="mt-3 h-2 rounded-full bg-[var(--color-neutral-border)]">
-            <div className="h-2 w-3/5 rounded-full bg-[var(--color-primary-teal)]" />
+            <div className="h-2 w-3/5 rounded-full bg-[var(--color-primary-emerald)]" />
           </div>
         </Card>
         <Card>

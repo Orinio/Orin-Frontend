@@ -10,15 +10,16 @@ const config: Config = {
     extend: {
       colors: {
         orin: {
-          teal: "#14B8A6",
+          emerald: "#10B981",
+          "emerald-dark": "#059669",
+          "orange": "#F97316",
+          "orange-dark": "#D97706",
           amber: "#F59E0B",
           coral: "#FB7185",
-          gold: "#EAB308",
-          emerald: "#10B981",
+          gold: "#F59E0B",
           sage: "#84CC16",
           sand: "#FFF7ED",
           cream: "#FFFBEB",
-          orange: "#F97316",
           "bg-light": "#F8FAFC",
           "bg-dark": "#0F172A",
           "text-primary": "#0F172A",
@@ -54,8 +55,8 @@ const config: Config = {
           "50%": { transform: "translateY(-20px)" },
         },
         "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(14, 165, 233, 0.3)" },
-          "50%": { boxShadow: "0 0 40px rgba(14, 165, 233, 0.6)" },
+          "0%, 100%": { boxShadow: "0 0 20px rgba(16, 185, 129, 0.3)" },
+          "50%": { boxShadow: "0 0 40px rgba(16, 185, 129, 0.6)" },
         },
         shimmer: {
           "0%": { backgroundPosition: "-1000px 0" },
@@ -66,11 +67,11 @@ const config: Config = {
         "sm-soft": "0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)",
         "md-soft": "0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)",
         "lg-soft": "0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05)",
-        glow: "0 0 30px rgba(251, 113, 133, 0.4)",
+        glow: "0 0 30px rgba(249, 115, 18, 0.4)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-mesh": "linear-gradient(135deg, #FB7185 0%, #F59E0B 24%, #F97316 48%, #EAB308 72%, #10B981 100%)",
+        "gradient-mesh": "linear-gradient(135deg, #F97316 0%, #FB7185 24%, #F59E0B 48%, #EAB308 72%, #10B981 100%)",
       },
     },
   },

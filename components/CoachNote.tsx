@@ -9,7 +9,7 @@ export function CoachNote({ note }: CoachNoteProps) {
   return (
     <section
       aria-label="Today's coach note"
-      className="sticky top-20 z-20 rounded-[var(--radius-lg)] bg-gradient-to-r from-[var(--color-primary-teal)] to-[var(--color-primary-blue)] p-6 text-white shadow-[0_16px_32px_rgba(14,165,233,0.25)]"
+      className="sticky top-20 z-20 rounded-[var(--radius-lg)] bg-gradient-to-r from-[var(--color-primary-emerald)] to-[var(--color-primary-orange)] p-6 text-white shadow-[0_16px_32px_rgba(5,150,105,0.25)]"
     >
       <div className="flex items-start justify-between gap-4">
         <div>

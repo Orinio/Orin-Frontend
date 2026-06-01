@@ -13,7 +13,7 @@ export function Input({ className, hasError, ...props }: InputProps) {
         hasError
           ? "border-[var(--color-danger)]"
           : "border-[var(--color-neutral-border)]",
-        "focus:border-[var(--color-primary-teal)] focus:shadow-[0_0_0_3px_rgba(14,165,233,0.1)] focus:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-neutral-surface-alt)] disabled:text-[var(--color-neutral-text-secondary)]",
+        "focus:border-[var(--color-primary-emerald)] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)] focus:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-neutral-surface-alt)] disabled:text-[var(--color-neutral-text-secondary)]",
         className,
       )}
       {...props}

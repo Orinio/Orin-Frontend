@@ -156,37 +156,3 @@ export default function SignupPage() {
     </div>
   );
 }
-                    <option value="first">1st</option>
-                    <option value="second">2nd</option>
-                    <option value="third">3rd</option>
-                    <option value="fourth">4th</option>
-                    <option value="graduate">Graduate</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="password" className="mb-2 block text-sm font-medium">
-                    Password<span className="text-[var(--color-danger)]">*</span>
-                  </label>
-                  <Input id="password" type="password" required placeholder="Use 8+ characters" />
-                </div>
-                <Button size="lg" className="w-full">
-                  Create account
-                </Button>
-                <p className="text-xs text-[var(--color-neutral-text-secondary)]">
-                  By continuing, you agree to ORIN&apos;s Terms and Privacy policy.
-                </p>
-              </form>
-            ) : null}
-
-            <p className="text-sm text-[var(--color-neutral-text-secondary)]">
-              Already have an account?{" "}
-              <Link href="/signin" className="text-[var(--color-primary-teal)]">
-                Sign in
-              </Link>
-            </p>
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-}
