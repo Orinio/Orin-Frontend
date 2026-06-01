@@ -4,17 +4,17 @@
   --color-primary-blue: #3b82f6;
   --color-primary-blue-strong: #2563eb;
   --color-primary-soft: #f0f9ff;
-  --color-accent-magenta: #ec4899;
-  --color-accent-purple: #a855f7;
-  --color-accent-green: #10b981;
-  --color-accent-green-light: #a7f3d0;
+  --color-accent-coral: #fb7185;
   --color-accent-gold: #f59e0b;
   --color-accent-gold-light: #fcd34d;
+  --color-accent-green: #10b981;
+  --color-accent-green-light: #a7f3d0;
   --color-danger: #ef4444;
   --color-danger-strong: #dc2626;
-  --color-neutral-bg: #f8fafc;
-  --color-neutral-surface: #ffffff;
-  --color-neutral-surface-alt: #f1f5f9;
+  /* Use a warmer neutral background to match the landing palette */
+  --color-neutral-bg: #FFF7ED; /* orin-sand */
+  --color-neutral-surface: #FFFBEB; /* orin-cream */
+  --color-neutral-surface-alt: #FFF7ED;
   --color-neutral-text: #0f172a;
   --color-neutral-text-secondary: #64748b;
   --color-neutral-text-tertiary: #94a3b8;

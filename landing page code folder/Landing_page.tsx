@@ -80,7 +80,7 @@ function HeroSection() {
   return (
     <motion.section
       ref={ref}
-      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-orin-cream via-orin-sand to-white pt-20 pb-20"
+      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-orin-cream via-orin-sand to-orin-cream pt-20 pb-20"
     >
       {/* Animated gradient background */}
       <div className="absolute inset-0 overflow-hidden">
@@ -251,7 +251,7 @@ function FeaturesSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-orin-cream via-orin-sand to-white py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-orin-cream via-orin-sand to-orin-cream py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -367,7 +367,7 @@ function TestimonialsSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-white via-orin-cream to-orin-sand py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-orin-cream via-orin-sand to-orin-cream py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -500,7 +500,7 @@ function PricingSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-orin-sand via-white to-orin-cream py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-orin-sand via-orin-cream to-orin-cream py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
