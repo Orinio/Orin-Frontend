@@ -4,17 +4,22 @@ const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./landing page code folder/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
         orin: {
-          teal: "#0EA5E9",
-          blue: "#3B82F6",
-          magenta: "#EC4899",
-          purple: "#A855F7",
+          teal: "#14B8A6",
+          amber: "#F59E0B",
+          coral: "#FB7185",
+          gold: "#EAB308",
           emerald: "#10B981",
-          orange: "#F59E0B",
+          sage: "#84CC16",
+          sand: "#FFF7ED",
+          cream: "#FFFBEB",
+          emerald: "#10B981",
+          orange: "#F97316",
           "bg-light": "#F8FAFC",
           "bg-dark": "#0F172A",
           "text-primary": "#0F172A",
@@ -65,7 +70,7 @@ const config: Config = {
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-mesh": "linear-gradient(135deg, #0EA5E9 0%, #3B82F6 25%, #EC4899 50%, #A855F7 75%, #0EA5E9 100%)",
+        "gradient-mesh": "linear-gradient(135deg, #FB7185 0%, #F59E0B 24%, #F97316 48%, #EAB308 72%, #10B981 100%)",
       },
     },
   },

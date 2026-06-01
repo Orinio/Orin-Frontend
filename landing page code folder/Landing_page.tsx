@@ -80,7 +80,7 @@ function HeroSection() {
   return (
     <motion.section
       ref={ref}
-      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-orin-bg-light via-white to-blue-50 pt-20 pb-20"
+      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-orin-cream via-orin-sand to-white pt-20 pb-20"
     >
       {/* Animated gradient background */}
       <div className="absolute inset-0 overflow-hidden">
@@ -90,7 +90,7 @@ function HeroSection() {
             rotate: [0, 5, 0],
           }}
           transition={{ duration: 20, repeat: Infinity }}
-          className="absolute -right-1/4 -top-1/4 h-1/2 w-1/2 rounded-full bg-gradient-to-br from-orin-teal via-orin-blue to-transparent opacity-20 blur-3xl"
+          className="absolute -right-1/4 -top-1/4 h-1/2 w-1/2 rounded-full bg-gradient-to-br from-orin-coral via-orin-amber to-transparent opacity-25 blur-3xl"
         />
         <motion.div
           animate={{
@@ -98,7 +98,7 @@ function HeroSection() {
             rotate: [0, -5, 0],
           }}
           transition={{ duration: 20, repeat: Infinity, delay: 1 }}
-          className="absolute -left-1/4 -bottom-1/4 h-1/2 w-1/2 rounded-full bg-gradient-to-tr from-orin-magenta via-orin-purple to-transparent opacity-20 blur-3xl"
+          className="absolute -left-1/4 -bottom-1/4 h-1/2 w-1/2 rounded-full bg-gradient-to-tr from-orin-gold via-orin-sage to-transparent opacity-25 blur-3xl"
         />
       </div>
 
@@ -112,9 +112,9 @@ function HeroSection() {
           {/* Badge */}
           <motion.div
             variants={itemVariants}
-            className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm-soft"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-orin-border-light bg-white/90 px-4 py-2 shadow-sm-soft backdrop-blur"
           >
-            <Sparkles className="h-4 w-4 text-orin-magenta" />
+            <Sparkles className="h-4 w-4 text-orin-coral" />
             <span className="text-sm font-medium text-orin-text-primary">
               Welcome to the future of work
             </span>
@@ -123,7 +123,7 @@ function HeroSection() {
           {/* Main Heading */}
           <motion.h1
             variants={itemVariants}
-            className="mb-6 bg-gradient-to-r from-orin-teal via-orin-blue to-orin-purple bg-clip-text py-4 text-5xl font-bold leading-tight text-transparent md:text-7xl"
+            className="mb-6 bg-gradient-to-r from-orin-coral via-orin-amber to-orin-gold bg-clip-text py-4 text-5xl font-bold leading-tight text-transparent md:text-7xl"
           >
             Transform How You Work
           </motion.h1>
@@ -141,11 +141,11 @@ function HeroSection() {
             variants={itemVariants}
             className="mb-16 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center"
           >
-            <button className="group relative inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orin-teal to-orin-blue px-8 py-4 font-semibold text-white transition-all duration-200 hover:shadow-lg hover:shadow-orin-teal/30 active:scale-95">
+            <button className="group relative inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orin-coral to-orin-amber px-8 py-4 font-semibold text-white transition-all duration-200 hover:shadow-lg hover:shadow-orin-coral/30 active:scale-95">
               Get Started Free
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-orin-teal px-8 py-3 font-semibold text-orin-teal transition-all hover:bg-orin-teal/5">
+            <button className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-orin-coral px-8 py-3 font-semibold text-orin-coral transition-all hover:bg-orin-coral/10">
               Watch Demo
               <ChevronDown className="h-5 w-5" />
             </button>
@@ -161,10 +161,10 @@ function HeroSection() {
                 y: [0, -10, 0],
               }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative rounded-2xl border border-orin-border-light bg-white p-8 shadow-lg-soft backdrop-blur-sm"
+              className="group relative rounded-2xl border border-orin-border-light bg-white/90 p-8 shadow-lg-soft backdrop-blur-sm"
             >
               {/* Glow effect behind card */}
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-orin-teal to-orin-magenta opacity-0 blur transition-opacity group-hover:opacity-20" />
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-orin-coral to-orin-amber opacity-0 blur transition-opacity group-hover:opacity-20" />
 
               {/* Card content */}
               <div className="relative space-y-4">
@@ -180,7 +180,7 @@ function HeroSection() {
 
                 {/* Fake UI elements for visual depth */}
                 <div className="space-y-3">
-                  <div className="h-3 w-2/3 rounded-full bg-gradient-to-r from-orin-teal to-transparent" />
+                  <div className="h-3 w-2/3 rounded-full bg-gradient-to-r from-orin-coral to-transparent" />
                   <div className="flex gap-2">
                     <div className="h-2 w-1/3 rounded-full bg-orin-border-light" />
                     <div className="h-2 flex-1 rounded-full bg-orin-border-light" />
@@ -195,7 +195,7 @@ function HeroSection() {
                           delay: i * 0.2,
                           repeat: Infinity,
                         }}
-                        className="h-12 rounded-lg bg-gradient-to-br from-orin-teal/10 to-orin-blue/10"
+                        className="h-12 rounded-lg bg-gradient-to-br from-orin-coral/10 to-orin-amber/10"
                       />
                     ))}
                   </div>
@@ -213,7 +213,7 @@ function HeroSection() {
         className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center"
       >
         <span className="mb-2 text-xs text-orin-text-secondary">Scroll to explore</span>
-        <ChevronDown className="h-5 w-5 text-orin-teal" />
+        <ChevronDown className="h-5 w-5 text-orin-coral" />
       </motion.div>
     </motion.section>
   );
@@ -228,30 +228,30 @@ function FeaturesSection() {
       icon: Zap,
       title: 'Lightning Fast',
       description: 'Real-time collaboration that feels instant. No lag, no delays, pure flow.',
-      color: 'from-orin-orange to-orin-magenta',
+      color: 'from-orin-coral to-orin-amber',
     },
     {
       icon: BarChart3,
       title: 'Smart Analytics',
       description: 'Understand your work patterns. Make data-driven decisions with beautiful insights.',
-      color: 'from-orin-blue to-orin-purple',
+      color: 'from-orin-amber to-orin-gold',
     },
     {
       icon: Users,
       title: 'Team Harmony',
       description: 'Built for collaboration. Every feature designed to bring teams closer.',
-      color: 'from-orin-emerald to-orin-teal',
+      color: 'from-orin-sage to-orin-emerald',
     },
     {
       icon: Lock,
       title: 'Bank-Level Security',
       description: 'Enterprise-grade encryption. Your data is yours. Always protected.',
-      color: 'from-orin-magenta to-orin-purple',
+      color: 'from-orin-gold to-orin-coral',
     },
   ];
 
   return (
-    <section className="relative w-full bg-white py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-orin-cream via-orin-sand to-white py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -305,15 +305,13 @@ function FeatureCard({
         ease: easeInOut,
       }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      className="group relative rounded-2xl border border-orin-border-light bg-white p-8 shadow-sm-soft transition-all duration-300 hover:border-orin-teal hover:shadow-md-soft"
+      className="group relative rounded-2xl border border-orin-border-light bg-white p-8 shadow-sm-soft transition-all duration-300 hover:border-orin-coral hover:shadow-md-soft"
     >
       {/* Gradient background on hover */}
-      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-orin-teal/0 to-orin-magenta/0 opacity-0 blur transition-all duration-300 group-hover:from-orin-teal/10 group-hover:to-orin-magenta/5 group-hover:opacity-100" />
+      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-orin-coral/0 to-orin-amber/0 opacity-0 blur transition-all duration-300 group-hover:from-orin-coral/10 group-hover:to-orin-amber/5 group-hover:opacity-100" />
 
       <div className="relative z-10">
-        <div
-          className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${feature.color} p-3`}
-        >
+        <div className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${feature.color} p-3`}>
           <Icon className="h-6 w-6 text-white" />
         </div>
 
@@ -323,7 +321,7 @@ function FeatureCard({
         <p className="text-orin-text-secondary">{feature.description}</p>
 
         <motion.div
-          className="mt-4 flex items-center gap-2 text-sm font-medium text-orin-teal opacity-0 transition-all group-hover:opacity-100"
+          className="mt-4 flex items-center gap-2 text-sm font-medium text-orin-coral opacity-0 transition-all group-hover:opacity-100"
           animate={{ x: [0, 5, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
@@ -369,7 +367,7 @@ function TestimonialsSection() {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-white to-blue-50 py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-white via-orin-cream to-orin-sand py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -421,7 +419,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 + i * 0.1 }}
           >
-            <Star className="h-4 w-4 fill-orin-orange text-orin-orange" />
+            <Star className="h-4 w-4 fill-orin-gold text-orin-gold" />
           </motion.div>
         ))}
       </div>
@@ -431,7 +429,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
       </p>
 
       <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-orin-teal to-orin-blue text-2xl">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-orin-coral to-orin-amber text-2xl">
           {testimonial.image}
         </div>
         <div>
@@ -502,7 +500,7 @@ function PricingSection() {
   ];
 
   return (
-    <section className="relative w-full bg-white py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-orin-sand via-white to-orin-cream py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -541,13 +539,13 @@ function PricingCard({ tier, index }: { tier: Tier; index: number }) {
       transition={{ duration: 0.6, delay: index * 0.15 }}
       className={`relative rounded-2xl border p-8 transition-all duration-300 ${
         tier.highlighted
-          ? 'border-orin-teal bg-gradient-to-br from-white to-orin-teal/5 shadow-lg-soft ring-2 ring-orin-teal/20'
+          ? 'border-orin-coral bg-gradient-to-br from-white to-orin-cream shadow-lg-soft ring-2 ring-orin-coral/20'
           : 'border-orin-border-light bg-white shadow-md-soft'
       }`}
     >
       {tier.highlighted && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 transform">
-          <div className="rounded-full bg-gradient-to-r from-orin-magenta to-orin-purple px-4 py-1 text-sm font-semibold text-white">
+          <div className="rounded-full bg-gradient-to-r from-orin-coral to-orin-amber px-4 py-1 text-sm font-semibold text-white">
             Most Popular
           </div>
         </div>
@@ -568,8 +566,8 @@ function PricingCard({ tier, index }: { tier: Tier; index: number }) {
       <button
         className={`mb-8 w-full rounded-xl px-6 py-3 font-semibold transition-all ${
           tier.highlighted
-            ? 'bg-gradient-to-r from-orin-teal to-orin-blue text-white hover:shadow-lg hover:shadow-orin-teal/30'
-            : 'border-2 border-orin-teal text-orin-teal hover:bg-orin-teal/5'
+            ? 'bg-gradient-to-r from-orin-coral to-orin-amber text-white hover:shadow-lg hover:shadow-orin-coral/30'
+            : 'border-2 border-orin-coral text-orin-coral hover:bg-orin-coral/5'
         }`}
       >
         {tier.cta}
@@ -598,7 +596,7 @@ function PricingCard({ tier, index }: { tier: Tier; index: number }) {
 // ============================================================================
 function CTASection() {
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-r from-orin-teal via-orin-blue to-orin-purple py-20 md:py-32">
+    <section className="relative w-full overflow-hidden bg-gradient-to-r from-orin-coral via-orin-amber to-orin-gold py-20 md:py-32">
       <div className="absolute inset-0 opacity-10">
         <motion.div
           animate={{
@@ -638,7 +636,7 @@ function CTASection() {
           viewport={{ once: true }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 font-semibold text-orin-blue transition-all hover:shadow-2xl"
+          className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 font-semibold text-orin-coral transition-all hover:shadow-2xl"
         >
           Start Free Trial
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -657,7 +655,7 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-4">
           <div>
-            <h3 className="mb-6 text-2xl font-bold bg-gradient-to-r from-orin-teal to-orin-blue bg-clip-text text-transparent">
+            <h3 className="mb-6 text-2xl font-bold bg-gradient-to-r from-orin-coral to-orin-gold bg-clip-text text-transparent">
               ORIN
             </h3>
             <p className="text-sm text-gray-400">
@@ -684,7 +682,7 @@ function Footer() {
               <ul className="space-y-2">
                 {group.links.map((link, i) => (
                   <li key={i}>
-                    <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    <a href="#" className="text-sm text-gray-400 transition-colors hover:text-white">
                       {link}
                     </a>
                   </li>
@@ -701,11 +699,7 @@ function Footer() {
             </p>
             <div className="flex gap-4">
               {['Twitter', 'GitHub', 'LinkedIn'].map((social) => (
-                <a
-                  key={social}
-                  href="#"
-                  className="text-sm text-gray-400 hover:text-orin-teal transition-colors"
-                >
+                <a key={social} href="#" className="text-sm text-gray-400 transition-colors hover:text-orin-coral">
                   {social}
                 </a>
               ))}
@@ -722,7 +716,7 @@ function Footer() {
 // ============================================================================
 export default function Home() {
   return (
-    <main id="main-content" className="w-full overflow-hidden bg-white">
+    <main id="main-content" className="w-full overflow-hidden bg-orin-sand">
       <HeroSection />
       <FeaturesSection />
       <TestimonialsSection />
