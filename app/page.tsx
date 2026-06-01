@@ -145,7 +145,7 @@ function HeroSection() {
               Get Started Free
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white px-8 py-3 font-semibold text-white transition-all hover:bg-white/10">
+            <button className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white px-8 py-3 font-semibold text-white transition-all hover:bg-white/20 hover:shadow-lg hover:shadow-white/20">
               Watch Demo
               <ChevronDown className="h-5 w-5" />
             </button>
