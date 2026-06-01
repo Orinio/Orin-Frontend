@@ -29,8 +29,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["var(--font-geist-sans)", "sans-serif"],
-        body: ["var(--font-outfit)", "sans-serif"],
+        display: ["Georgia", "serif"],
+        body: ["system-ui", "-apple-system", "sans-serif"],
+        serif: ["Georgia", "serif"],
         mono: ["var(--font-jetbrains-mono)", "monospace"],
       },
       fontSize: {

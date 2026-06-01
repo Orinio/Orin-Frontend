@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIN - Turn Work Into Career Proof</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * { scroll-behavior: smooth; }
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .font-serif { font-family: 'Georgia', serif; }
+        .grad-emerald { background: linear-gradient(135deg, #059669 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .bg-glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); }
+        .btn-green { background: linear-gradient(135deg, #059669, #10b981); color: white; }
+        .btn-green:hover { box-shadow: 0 8px 25px rgba(5,150,105,0.3); }
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+
+<!-- NAV -->
+<nav class="fixed top-0 w-full z-50 bg-glass border-b border-gray-200">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="text-2xl font-serif font-bold grad-emerald">ORIN</div>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-600">
+            <a href="#features" class="hover:text-emerald-700">Features</a>
+            <a href="#how" class="hover:text-emerald-700">How It Works</a>
+            <a href="#pricing" class="hover:text-emerald-700">Pricing</a>
+        </div>
+        <button class="btn-green px-6 py-2 rounded-lg font-medium">Get Started</button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="pt-32 pb-20 px-6">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        <div>
+            <div class="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-bold mb-6">AI Coach For Students</div>
+            <h1 class="text-5xl md:text-6xl font-serif font-bold mb-6 leading-tight">Your scattered work becomes career proof</h1>
+            <p class="text-lg text-gray-600 mb-8">GitHub, Kaggle, certificates, projects—all over the place. ORIN transforms them into verified proof cards, an AI coach who guides you daily, and real opportunities that match your proof.</p>
+            <div class="flex gap-4 flex-wrap mb-6">
+                <button class="btn-green px-6 py-3 rounded-lg font-semibold">Start Building Proof</button>
+                <button class="border-2 border-gray-300 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50">Watch Demo</button>
+            </div>
+            <p class="text-sm text-gray-500">✓ Free forever tier • ✓ No card needed • ✓ 5,000+ active students</p>
+        </div>
+        <div>
+            <div class="bg-gradient-to-br from-emerald-50 to-orange-50 rounded-2xl p-6 border border-gray-200 shadow-lg">
+                <p class="font-semibold text-gray-900 mb-4">Your proof cards:</p>
+                <div class="space-y-3">
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-emerald-500">
+                        <p class="text-xs font-semibold text-gray-900">ML Competition Winner</p>
+                        <p class="text-xs text-gray-500">Skills: Python, ML, Data Analysis</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-orange-500">
+                        <p class="text-xs font-semibold text-gray-900">Kaggle 1st Place</p>
+                        <p class="text-xs text-gray-500">Skills: Competition-level expertise</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-emerald-500">
+                        <p class="text-xs font-semibold text-gray-900">AWS Certificate</p>
+                        <p class="text-xs text-gray-500">Skills: Cloud Architecture</p>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute mt-2 bg-white rounded-xl border border-gray-200 p-4 shadow-lg max-w-xs">
+                <p class="text-xs text-gray-500">AI Coach Message:</p>
+                <p class="font-semibold text-sm text-gray-900">"You need one live deployment. Ship it this week."</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="py-20 px-6 bg-gray-50">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
+        <div>
+            <h2 class="text-4xl font-serif font-bold mb-6">The problem students face</h2>
+            <div class="space-y-4">
+                <div class="flex gap-4"><span class="text-3xl">📌</span><div><strong class="text-gray-900">Scattered proof</strong><p class="text-gray-600">GitHub, Kaggle, Figma, LinkedIn, Drive. Zero cohesion.</p></div></div>
+                <div class="flex gap-4"><span class="text-3xl">😕</span><div><strong class="text-gray-900">No feedback</strong><p class="text-gray-600">Don't know if what you built actually matters.</p></div></div>
+                <div class="flex gap-4"><span class="text-3xl">❌</span><div><strong class="text-gray-900">Unclear story</strong><p class="text-gray-600">30 projects. What do they prove? Unknown.</p></div></div>
+                <div class="flex gap-4"><span class="text-3xl">🔍</span><div><strong class="text-gray-900">Missing guidance</strong><p class="text-gray-600">No one tells you what to build next.</p></div></div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <p class="font-bold text-gray-900 mb-4">Without ORIN (scattered across 5 places):</p>
+            <div class="space-y-2 text-sm">
+                <div class="p-3 bg-gray-50 rounded flex gap-3"><span>🐱</span><span class="text-gray-600">github.com/you/repo-1</span></div>
+                <div class="p-3 bg-gray-50 rounded flex gap-3"><span>🏆</span><span class="text-gray-600">kaggle.com/notebooks/ml</span></div>
+                <div class="p-3 bg-gray-50 rounded flex gap-3"><span>📜</span><span class="text-gray-600">certificate.pdf (drive)</span></div>
+                <div class="p-3 bg-gray-50 rounded flex gap-3"><span>🎨</span><span class="text-gray-600">figma link (private)</span></div>
+                <div class="text-center text-xs text-gray-400 py-4">... and 15 more scattered items</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-serif font-bold mb-4">Everything in one place</h2>
+            <p class="text-lg text-gray-600">Import. Extract. Coach. Share. Opportunities.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+                <p class="text-4xl mb-4">📦</p>
+                <h3 class="font-bold text-lg mb-2">Import Everything</h3>
+                <p class="text-gray-600 text-sm">Connect GitHub, Kaggle, upload certificates, paste project links. All in one place.</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+                <p class="text-4xl mb-4">✨</p>
+                <h3 class="font-bold text-lg mb-2">AI Extracts Skills</h3>
+                <p class="text-gray-600 text-sm">Our AI reads your code and work, extracts real skills, structures them as proof cards.</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+                <p class="text-4xl mb-4">🎯</p>
+                <h3 class="font-bold text-lg mb-2">Daily AI Coach</h3>
+                <p class="text-gray-600 text-sm">Every morning: feedback on progress, gaps you have, one concrete next action.</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+                <p class="text-4xl mb-4">🔗</p>
+                <h3 class="font-bold text-lg mb-2">Public Proof Profile</h3>
+                <p class="text-gray-600 text-sm">Share one link. Your complete proof story. No more scattered links across platforms.</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+                <p class="text-4xl mb-4">🚀</p>
+                <h3 class="font-bold text-lg mb-2">Matched Opportunities</h3>
+                <p class="text-gray-600 text-sm">Get internships, projects, first jobs matched to your actual proof, not self-described skills.</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+                <p class="text-4xl mb-4">📊</p>
+                <h3 class="font-bold text-lg mb-2">Proof Score</h3>
+                <p class="text-gray-600 text-sm">See how strong your proof is. Identify gaps. Real progress metrics that matter.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="py-20 px-6 bg-gray-50">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="text-5xl font-serif font-bold text-center mb-16">4 steps to proof</h2>
+        <div class="space-y-8">
+            <div class="flex gap-6"><div class="w-14 h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 font-serif text-xl">1</div><div><h3 class="font-bold text-lg text-gray-900">Sign up & import</h3><p class="text-gray-600">Connect GitHub, upload certificates, paste project links. Takes 3 minutes.</p></div></div>
+            <div class="flex gap-6"><div class="w-14 h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 font-serif text-xl">2</div><div><h3 class="font-bold text-lg text-gray-900">AI extracts your proof</h3><p class="text-gray-600">Our AI reads your work and creates structured proof cards with verified skills. You review & edit.</p></div></div>
+            <div class="flex gap-6"><div class="w-14 h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 font-serif text-xl">3</div><div><h3 class="font-bold text-lg text-gray-900">Daily coach guides you</h3><p class="text-gray-600">Get one message every morning. It notices gaps, flags what you're repeating, suggests one next action.</p></div></div>
+            <div class="flex gap-6"><div class="w-14 h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 font-serif text-xl">4</div><div><h3 class="font-bold text-lg text-gray-900">Share & get matched</h3><p class="text-gray-600">Publish your proof profile. Get matched to internships, projects, and jobs that fit your actual proof.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="py-20 px-6">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-4 gap-8 text-center">
+        <div><p class="text-5xl font-serif font-bold grad-emerald">5K+</p><p class="text-gray-600 mt-2">Active students</p></div>
+        <div><p class="text-5xl font-serif font-bold grad-emerald">23K+</p><p class="text-gray-600 mt-2">Proof cards created</p></div>
+        <div><p class="text-5xl font-serif font-bold grad-emerald">1.2K+</p><p class="text-gray-600 mt-2">Matched internships</p></div>
+        <div><p class="text-5xl font-serif font-bold grad-emerald">92%</p><p class="text-gray-600 mt-2">Return weekly</p></div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="py-20 px-6 bg-gray-50">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-5xl font-serif font-bold text-center mb-16">Stories from students</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white border border-gray-200 rounded-lg p-8">
+                <p class="text-sm text-gray-700 mb-4 italic">"I had 20 GitHub repos scattered. ORIN turned them into a proof profile. Got 3 internship offers in 2 weeks."</p>
+                <p class="font-semibold text-gray-900">Priya S. • IIT Delhi</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-8">
+                <p class="text-sm text-gray-700 mb-4 italic">"The AI coach is like having a mentor. It tells me exactly what I'm doing wrong and what to fix next."</p>
+                <p class="font-semibold text-gray-900">Arjun M. • Self-taught Dev</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-8">
+                <p class="text-sm text-gray-700 mb-4 italic">"Instead of tweaking my resume, I focused on building proof. ORIN made sharing it so easy."</p>
+                <p class="font-semibold text-gray-900">Sophia W. • Bootcamp Grad</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-5xl font-serif font-bold text-center mb-16">Simple, transparent pricing</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white border border-gray-200 rounded-lg p-8">
+                <h3 class="font-bold text-lg mb-6">Free Proof</h3>
+                <p class="text-3xl font-bold mb-6">Free</p>
+                <button class="border-2 border-gray-300 w-full py-3 rounded-lg font-semibold hover:bg-gray-50 mb-6">Get Started</button>
+                <ul class="space-y-2 text-sm text-gray-700"><li>✓ 5 proof cards</li><li>✓ Basic coach (3x/week)</li><li>✓ Public profile</li><li>✓ 1 source integration</li></ul>
+            </div>
+            <div class="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-8 relative">
+                <div class="absolute -top-4 left-6 bg-emerald-500 text-white px-4 py-1 rounded-full text-sm font-bold">Most Popular</div>
+                <h3 class="font-bold text-lg mb-6">Pro Proof</h3>
+                <p class="text-3xl font-bold mb-2">₹299<span class="text-gray-600 text-lg">/month</span></p>
+                <button class="btn-green w-full py-3 rounded-lg font-semibold mb-6">Start Free Trial</button>
+                <ul class="space-y-2 text-sm text-gray-700"><li>✓ Unlimited proof cards</li><li>✓ Daily AI coach</li><li>✓ Unlimited integrations</li><li>✓ Opportunity matching</li><li>✓ Analytics dashboard</li><li>✓ Priority support</li></ul>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-8">
+                <h3 class="font-bold text-lg mb-6">Institutions</h3>
+                <p class="text-3xl font-bold mb-6">Custom</p>
+                <button class="border-2 border-gray-300 w-full py-3 rounded-lg font-semibold hover:bg-gray-50 mb-6">Contact</button>
+                <ul class="space-y-2 text-sm text-gray-700"><li>✓ All Pro features</li><li>✓ Cohort dashboard</li><li>✓ Outcome reporting</li><li>✓ Dedicated support</li><li>✓ Branded profiles</li></ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="py-24 px-6 bg-gradient-to-br from-emerald-50 via-white to-orange-50">
+    <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-5xl font-serif font-bold mb-6">Stop scattering. Start proving.</h2>
+        <p class="text-xl text-gray-600 mb-8">Your work should become your career proof. Not scattered across 5 platforms. One single source of truth.</p>
+        <div class="flex gap-4 justify-center flex-wrap">
+            <button class="btn-green px-8 py-4 rounded-lg font-semibold text-lg">Get Started Free</button>
+            <button class="border-2 border-gray-300 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-50">Watch Demo</button>
+        </div>
+        <p class="text-sm text-gray-500 mt-8">🎓 Special: First 500 students get Pro free for 3 months</p>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-gray-900 text-gray-400 py-16 px-6">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-5 gap-8 mb-8">
+        <div><p class="font-serif font-bold text-white text-lg">ORIN</p><p class="text-sm mt-2">Turn your work into career proof.</p></div>
+        <div><p class="font-bold text-white text-sm mb-4">Product</p><ul class="space-y-2 text-sm"><li><a href="#" class="hover:text-white">Features</a></li><li><a href="#" class="hover:text-white">Pricing</a></li><li><a href="#" class="hover:text-white">Security</a></li></ul></div>
+        <div><p class="font-bold text-white text-sm mb-4">Company</p><ul class="space-y-2 text-sm"><li><a href="#" class="hover:text-white">About</a></li><li><a href="#" class="hover:text-white">Blog</a></li><li><a href="#" class="hover:text-white">Careers</a></li></ul></div>
+        <div><p class="font-bold text-white text-sm mb-4">Legal</p><ul class="space-y-2 text-sm"><li><a href="#" class="hover:text-white">Privacy</a></li><li><a href="#" class="hover:text-white">Terms</a></li><li><a href="#" class="hover:text-white">Cookies</a></li></ul></div>
+        <div><p class="font-bold text-white text-sm mb-4">Connect</p><ul class="space-y-2 text-sm"><li><a href="#" class="hover:text-white">Twitter</a></li><li><a href="#" class="hover:text-white">Discord</a></li><li><a href="#" class="hover:text-white">LinkedIn</a></li></ul></div>
+    </div>
+    <div class="border-t border-gray-800 pt-8 text-center text-sm">© 2025 ORIN. Career proof for students building futures.</div>
+</footer>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('[id]').forEach((el) => {
+        gsap.from(el, {
+            scrollTrigger: { trigger: el, start: 'top 80%' },
+            opacity: 0, y: 30, duration: 0.8
+        });
+    });
+</script>
+</body>
+</html>

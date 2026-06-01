@@ -1,103 +1,161 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import Link from 'next/link';
+import { useState } from 'react';
 
 export default function SignupPage() {
+  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [password, setPassword] = useState('');
   const [showEmailForm, setShowEmailForm] = useState(false);
-  const [isSubmitting] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[var(--color-neutral-bg)] to-[var(--color-primary-soft)]">
-      <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-4 py-12 md:px-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="flex flex-col justify-center gap-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-primary-teal)]">
-            ORIN onboarding
-          </p>
-          <h1 className="text-4xl font-semibold leading-tight md:text-5xl">
-            Create your account and start building proof.
-          </h1>
-          <p className="max-w-xl text-base text-[var(--color-neutral-text-secondary)]">
-            Bring every project, competition, and win into one verified, shareable profile.
-          </p>
-          <div className="grid gap-3 text-sm text-[var(--color-neutral-text-secondary)]">
-            <div className="flex items-center gap-2">
-              <span className="text-[var(--color-accent-green)]">✓</span>
-              Trusted by 500+ students across top universities.
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[var(--color-accent-green)]">✓</span>
-              No spam, no recruiters by default. You control sharing.
-            </div>
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-white via-emerald-50 to-white">
+      <div className="w-full max-w-md">
+        {/* Card */}
+        <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-8">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-serif font-bold text-gray-900 mb-2">
+              Create your account
+            </h1>
+            <p className="text-gray-600">
+              Start building and sharing your career proof today.
+            </p>
           </div>
-        </section>
 
-        <Card className="mx-auto w-full max-w-md">
-          <div className="flex flex-col gap-4">
-            <div>
-              <p className="text-sm font-semibold text-[var(--color-primary-teal)]">ORIN</p>
-              <h2 className="mt-2 text-2xl font-semibold">Create your account</h2>
-              <p className="mt-1 text-sm text-[var(--color-neutral-text-secondary)]">
-                Step 1 of 3 · Let&apos;s get started.
-              </p>
-            </div>
-            <div className="grid gap-3">
-              <Button size="lg" loading={isSubmitting}>
-                Continue with GitHub
-              </Button>
-              <Button variant="secondary" size="lg">
-                Continue with Google
-              </Button>
-              <Button
-                variant="ghost"
-                size="lg"
+          {/* Social Login Buttons */}
+          {!showEmailForm && (
+            <>
+              <div className="space-y-3 mb-6">
+                <button
+                  type="button"
+                  className="w-full border border-gray-300 rounded-lg py-3 font-semibold text-gray-700 hover:bg-gray-50 transition"
+                >
+                  Continue with GitHub
+                </button>
+                <button
+                  type="button"
+                  className="w-full border border-gray-300 rounded-lg py-3 font-semibold text-gray-700 hover:bg-gray-50 transition"
+                >
+                  Continue with Google
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div className="relative mb-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or</span>
+                </div>
+              </div>
+
+              {/* Email toggle */}
+              <button
                 type="button"
-                onClick={() => setShowEmailForm((prev) => !prev)}
+                onClick={() => setShowEmailForm(true)}
+                className="w-full btn-green py-3 rounded-lg font-semibold text-white"
               >
-                {showEmailForm ? "Hide email signup" : "Continue with email"}
-              </Button>
-            </div>
+                Continue with email
+              </button>
+            </>
+          )}
 
-            {showEmailForm ? (
-              <form className="mt-2 grid gap-4" aria-label="Email signup form">
-                <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-medium">
-                    Email<span className="text-[var(--color-danger)]">*</span>
-                  </label>
-                  <Input id="email" type="email" required placeholder="you@orin.app" />
-                </div>
-                <div>
-                  <label htmlFor="fullName" className="mb-2 block text-sm font-medium">
-                    Full Name (optional)
-                  </label>
-                  <Input id="fullName" type="text" placeholder="Your name" />
-                </div>
-                <div>
-                  <label htmlFor="college" className="mb-2 block text-sm font-medium">
-                    College
-                  </label>
-                  <Input id="college" type="text" list="colleges" placeholder="College name" />
-                  <datalist id="colleges">
-                    <option value="VIT Vellore" />
-                    <option value="BITS Pilani" />
-                    <option value="NIT Bhopal" />
-                  </datalist>
-                </div>
-                <div>
-                  <label htmlFor="year" className="mb-2 block text-sm font-medium">
-                    Year
-                  </label>
-                  <select
-                    id="year"
-                    className="min-h-11 w-full rounded-[6px] border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] px-3 text-base text-[var(--color-neutral-text)] transition focus:border-[var(--color-primary-teal)] focus:shadow-[0_0_0_3px_rgba(14,165,233,0.1)] focus:outline-none"
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Select year
-                    </option>
+          {/* Email Form */}
+          {showEmailForm && (
+            <form className="space-y-4 mb-6">
+              {/* Full Name */}
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-semibold text-gray-900 mb-2">
+                  Full Name
+                </label>
+                <input
+                  id="fullName"
+                  type="text"
+                  placeholder="John Doe"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-2">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Sign up Button */}
+              <button
+                type="submit"
+                className="w-full btn-green py-3 rounded-lg font-semibold text-white mt-6"
+              >
+                Create account
+              </button>
+
+              {/* Back button */}
+              <button
+                type="button"
+                onClick={() => setShowEmailForm(false)}
+                className="w-full border border-gray-300 py-3 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition"
+              >
+                Back
+              </button>
+            </form>
+          )}
+
+          {/* Sign in link */}
+          <div className="text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link href="/auth/signin" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+              Sign in
+            </Link>
+          </div>
+        </div>
+
+        {/* Footer text */}
+        <p className="text-center text-xs text-gray-500 mt-6">
+          By signing up, you agree to our{" "}
+          <a href="#" className="text-emerald-600 hover:text-emerald-700">
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a href="#" className="text-emerald-600 hover:text-emerald-700">
+            Privacy Policy
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}
                     <option value="first">1st</option>
                     <option value="second">2nd</option>
                     <option value="third">3rd</option>

@@ -1,28 +1,33 @@
 :root {
-  --color-primary-teal: #0ea5e9;
-  --color-primary-teal-strong: #0284c7;
-  --color-primary-blue: #3b82f6;
-  --color-primary-blue-strong: #2563eb;
-  --color-primary-soft: #f0f9ff;
-  --color-accent-coral: #fb7185;
-  --color-accent-gold: #f59e0b;
-  --color-accent-gold-light: #fcd34d;
+  /* Primary Colors - Emerald & Orange (from landing page) */
+  --color-primary-emerald: #059669;
+  --color-primary-emerald-light: #10b981;
+  --color-primary-orange: #d97706;
+  
+  /* Secondary Colors */
   --color-accent-green: #10b981;
   --color-accent-green-light: #a7f3d0;
+  --color-accent-gold: #f59e0b;
+  --color-accent-gold-light: #fcd34d;
   --color-danger: #ef4444;
   --color-danger-strong: #dc2626;
-  /* Use a warmer neutral background to match the landing palette */
-  --color-neutral-bg: #FFF7ED; /* orin-sand */
-  --color-neutral-surface: #FFFBEB; /* orin-cream */
-  --color-neutral-surface-alt: #FFF7ED;
-  --color-neutral-text: #0f172a;
-  --color-neutral-text-secondary: #64748b;
-  --color-neutral-text-tertiary: #94a3b8;
-  --color-neutral-border: #e2e8f0;
-  --color-neutral-border-strong: #cbd5e1;
+  
+  /* Neutral Colors */
+  --color-neutral-bg: #ffffff;
+  --color-neutral-surface: #f9fafb;
+  --color-neutral-surface-alt: #f3f4f6;
+  --color-neutral-text: #111827;
+  --color-neutral-text-secondary: #6b7280;
+  --color-neutral-text-tertiary: #9ca3af;
+  --color-neutral-border: #e5e7eb;
+  --color-neutral-border-strong: #d1d5db;
 
-  --font-heading: Inter, Geist, sans-serif;
-  --font-body: Outfit, "DM Sans", sans-serif;
+  /* Backgrounds */
+  --color-bg-emerald-light: #ecfdf5;
+  --color-bg-orange-light: #fff7ed;
+
+  --font-heading: Georgia, serif;
+  --font-body: system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
   --radius-sm: 4px;
@@ -32,14 +37,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-neutral-bg: #0f172a;
-    --color-neutral-surface: #1e293b;
-    --color-neutral-surface-alt: #111827;
-    --color-neutral-text: #f8fafc;
-    --color-neutral-text-secondary: #94a3b8;
-    --color-neutral-text-tertiary: #64748b;
-    --color-neutral-border: #334155;
-    --color-neutral-border-strong: #475569;
-    --color-primary-soft: rgba(14, 165, 233, 0.12);
+    --color-neutral-bg: #1f2937;
+    --color-neutral-surface: #111827;
+    --color-neutral-surface-alt: #0f172a;
+    --color-neutral-text: #f9fafb;
+    --color-neutral-text-secondary: #d1d5db;
+    --color-neutral-text-tertiary: #9ca3af;
+    --color-neutral-border: #374151;
+    --color-neutral-border-strong: #4b5563;
+    --color-bg-emerald-light: rgba(16, 185, 129, 0.1);
+    --color-bg-orange-light: rgba(217, 119, 6, 0.1);
   }
 }
