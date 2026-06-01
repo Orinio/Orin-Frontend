@@ -80,7 +80,7 @@ function HeroSection() {
   return (
     <motion.section
       ref={ref}
-      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-orin-bg-light via-white to-blue-50 pt-20 pb-20"
+      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-20 pb-20"
     >
       {/* Animated gradient background */}
       <div className="absolute inset-0 overflow-hidden">
@@ -131,7 +131,7 @@ function HeroSection() {
           {/* Subheading */}
           <motion.p
             variants={itemVariants}
-            className="mb-8 max-w-2xl text-lg text-orin-text-secondary md:text-xl"
+            className="mb-8 max-w-2xl text-lg text-gray-300 md:text-xl"
           >
             Empower your team with intelligent workflows that feel natural, intuitive, and genuinely enjoyable. ORIN isn&apos;t just another tool—it&apos;s your creative partner.
           </motion.p>
@@ -145,7 +145,7 @@ function HeroSection() {
               Get Started Free
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-orin-teal px-8 py-3 font-semibold text-orin-teal transition-all hover:bg-orin-teal/5">
+            <button className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white px-8 py-3 font-semibold text-white transition-all hover:bg-white/10">
               Watch Demo
               <ChevronDown className="h-5 w-5" />
             </button>
@@ -251,7 +251,7 @@ function FeaturesSection() {
   ];
 
   return (
-    <section className="relative w-full bg-white py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-white to-slate-50 py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -502,7 +502,7 @@ function PricingSection() {
   ];
 
   return (
-    <section className="relative w-full bg-white py-20 md:py-32">
+    <section className="relative w-full bg-gradient-to-b from-slate-50 to-white py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -653,7 +653,7 @@ function CTASection() {
 // ============================================================================
 function Footer() {
   return (
-    <footer className="w-full bg-orin-bg-dark text-white">
+    <footer className="w-full bg-slate-900 text-white">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-4">
           <div>
@@ -722,7 +722,7 @@ function Footer() {
 // ============================================================================
 export default function Home() {
   return (
-    <main id="main-content" className="w-full overflow-hidden bg-white">
+    <main id="main-content" className="w-full overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-100">
       <HeroSection />
       <FeaturesSection />
       <TestimonialsSection />
