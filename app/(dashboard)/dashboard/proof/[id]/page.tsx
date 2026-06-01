@@ -81,7 +81,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
           <Card>
             <h2 className="text-xl font-semibold">Skills extracted</h2>
             <div className="mt-3 flex flex-wrap gap-2">
-              {proof.skillsExtracted.map((skill) => (
+              {proof.skillsExtracted.map((skill: string) => (
                 <SkillBadge key={skill} skill={skill} />
               ))}
             </div>
@@ -90,7 +90,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
           <Card>
             <h2 className="text-xl font-semibold">What this proves</h2>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--color-neutral-text-secondary)]">
-              {proof.whatItProves?.map((item) => <li key={item}>{item}</li>)}
+              {proof.whatItProves?.map((item: string) => <li key={item}>{item}</li>)}
             </ul>
           </Card>
 

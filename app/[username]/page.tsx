@@ -53,7 +53,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
     .select('skills_extracted')
     .eq('user_id', user.id);
 
-  const allSkills = skills?.flatMap(s => s.skills_extracted || []).filter((v, i, a) => a.indexOf(v) === i) || [];
+  const allSkills = skills?.flatMap((s: any) => s.skills_extracted || []).filter((v: any, i: number, a: any[]) => a.indexOf(v) === i) || [];
 
   return (
     <main id="main-content" className="mx-auto w-full max-w-[1200px] px-4 py-8 md:px-8">
@@ -119,13 +119,13 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
                   {proof.verification_status}
                 </span>
               </div>
-              <div className="mt-3 flex flex-wrap gap-1">
-                {(proof.skills_extracted || []).slice(0, 3).map((skill) => (
-                  <span key={skill} className="text-xs bg-[var(--color-neutral-surface-alt)] px-2 py-1 rounded">
-                    {skill}
-                  </span>
-                ))}
-              </div>
+<div className="mt-3 flex flex-wrap gap-1">
+                 {(proof.skills_extracted || []).slice(0, 3).map((skill: string) => (
+                   <span key={skill} className="text-xs bg-[var(--color-neutral-surface-alt)] px-2 py-1 rounded">
+                     {skill}
+                   </span>
+                 ))}
+               </div>
             </div>
           ))}
         </div>

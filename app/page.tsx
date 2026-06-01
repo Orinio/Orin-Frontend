@@ -22,8 +22,8 @@ export default function Home() {
 
     if (!supabase) return;
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
+const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+       if (session?.user) {
         router.push('/dashboard');
       }
     });

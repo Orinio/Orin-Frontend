@@ -19,6 +19,12 @@ export default function AddProofSourcePage() {
     setLoading(true);
     setError(null);
 
+    if (!supabase) {
+      setError('Supabase not configured');
+      setLoading(false);
+      return;
+    }
+
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
@@ -64,7 +70,7 @@ export default function AddProofSourcePage() {
             onChange={(e) => setSourceType(e.target.value)}
             className="w-full rounded-md border border-[var(--color-neutral-border)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-emerald)]"
           >
-            {sourceTypes.map((type) => (
+            {sourceTypes.map((type: string) => (
               <option key={type} value={type}>
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </option>

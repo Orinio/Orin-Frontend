@@ -28,7 +28,7 @@ export function Navigation() {
 
     if (!supabase) return;
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user || null);
     });
 
@@ -36,6 +36,7 @@ export function Navigation() {
   }, []);
 
   const handleSignOut = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
     router.push('/auth/signin');
   };
