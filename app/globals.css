@@ -2,8 +2,8 @@
 @import "../styles/variables.css";
 
 @theme inline {
-  --font-sans: system-ui, -apple-system, sans-serif;
-  --font-serif: Georgia, serif;
+  --font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-serif), Lora, Georgia, serif;
   --font-mono: var(--font-mono);
 }
 

@@ -1,9 +1,11 @@
 'use client';
 
-import Link from "next/link";
-import { useState } from "react";
-import styled from 'styled-components';
+import Link from 'next/link';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Mail, ArrowRight, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { Input } from '@/components/ui/input';
 
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState('');
@@ -36,167 +38,121 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <StyledWrapper>
-      <form className="form" onSubmit={handleResetPassword}>
-        <p id="heading">Reset Password</p>
-        <p className="subtitle">We&apos;ll email you a secure reset link in seconds.</p>
-        
-        {error && <p className="message error">{error}</p>}
-        {message && <p className="message success">{message}</p>}
-        
-        <div className="field">
-          <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" viewBox="0 0 16 16">
-            <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className="w-full"
+    >
+      {/* Heading */}
+      <div className="mb-8">
+        <h2 className="font-serif text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          Reset Password
+        </h2>
+        <p className="mt-2 text-[15px] text-slate-600">
+          We&apos;ll email you a secure reset link in seconds.
+        </p>
+      </div>
+
+      {/* Messages */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-5 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50/80 p-3.5 text-sm text-red-700"
+        >
+          <svg
+            className="mt-0.5 h-4 w-4 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+            />
           </svg>
-          <input 
-            autoComplete="off" 
-            placeholder="Email address" 
-            className="input-field" 
-            type="email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <span>{error}</span>
+        </motion.div>
+      )}
+
+      {message && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-5 flex items-start gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50/80 p-3.5 text-sm text-emerald-700"
+        >
+          <svg
+            className="mt-0.5 h-4 w-4 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+            />
+          </svg>
+          <span>{message}</span>
+        </motion.div>
+      )}
+
+      {/* Form */}
+      <form onSubmit={handleResetPassword} className="space-y-4">
+        <div>
+          <label
+            htmlFor="email"
+            className="mb-1.5 block text-sm font-medium text-slate-700"
+          >
+            Email address
+          </label>
+          <div className="group relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+              <Mail className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+            </div>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="pl-10"
+            />
+          </div>
         </div>
-        <div className="btn">
-          <button className="button1" type="submit" disabled={loading}>
-            {loading ? 'Sending...' : 'Send reset link'}
-          </button>
-        </div>
-        <Link href="/signin" className="button3">Back to Sign In</Link>
+
+        <motion.button
+          whileHover={{ y: -1 }}
+          whileTap={{ scale: 0.99 }}
+          type="submit"
+          disabled={loading}
+          className="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Sending reset link...</span>
+            </>
+          ) : (
+            <>
+              <span>Send reset link</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </>
+          )}
+        </motion.button>
+
+        <Link
+          href="/signin"
+          className="mt-3 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50"
+        >
+          Back to Sign In
+        </Link>
       </form>
-    </StyledWrapper>
+    </motion.div>
   );
 }
-
-const StyledWrapper = styled.div`
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-left: 2em;
-    padding-right: 2em;
-    padding-bottom: 0.4em;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    border-radius: 25px;
-    transition: .4s ease-in-out;
-    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.15);
-    width: 100%;
-  }
-
-  .form:hover {
-    transform: scale(1.02);
-    box-shadow: 0 15px 50px rgba(16, 185, 129, 0.25);
-  }
-
-  #heading {
-    text-align: center;
-    margin: 0.5em 0 0;
-    color: rgb(255, 255, 255);
-    font-size: 1.5em;
-    font-weight: 600;
-  }
-
-  .subtitle {
-    text-align: center;
-    margin-bottom: 1em;
-    color: #9ca3af;
-    font-size: 0.9rem;
-  }
-
-  .message {
-    text-align: center;
-    font-size: 0.85rem;
-    margin-bottom: 0.5em;
-  }
-
-  .message.error {
-    color: #ef4444;
-  }
-
-  .message.success {
-    color: #10b981;
-  }
-
-  .field {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    border-radius: 25px;
-    padding: 0.6em;
-    border: none;
-    outline: none;
-    color: white;
-    background-color: #1e293b;
-    box-shadow: inset 2px 5px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .input-icon {
-    height: 1.3em;
-    width: 1.3em;
-    fill: #10b981;
-  }
-
-  .input-field {
-    background: none;
-    border: none;
-    outline: none;
-    width: 100%;
-    color: #d3d3d3;
-    font-size: 0.95rem;
-  }
-
-  .input-field::placeholder {
-    color: #9ca3af;
-  }
-
-  .form .btn {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    margin-top: 1em;
-  }
-
-  .button1 {
-    padding: 0.7em;
-    padding-left: 2em;
-    padding-right: 2em;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    transition: .4s ease-in-out;
-    background: linear-gradient(135deg, #059669, #10b981);
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .button1:hover:not(:disabled) {
-    background: linear-gradient(135deg, #047857, #059669);
-    transform: translateY(-2px);
-  }
-
-  .button1:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .button3 {
-    display: block;
-    width: fit-content;
-    margin: 1em auto 0;
-    padding: 0.5em 1em;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    transition: .3s ease;
-    background-color: transparent;
-    color: #f97316;
-    font-size: 0.9rem;
-    text-decoration: none;
-  }
-
-  .button3:hover {
-    color: #ea580c;
-  }`;

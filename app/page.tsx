@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
@@ -39,7 +38,6 @@ const Footer = dynamic(() => import('@/components/home/Footer'), {
 });
 
 export default function Home() {
-  const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -54,7 +52,7 @@ export default function Home() {
 
     if (!supabase) return;
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
        if (session?.user) {
         router.push('/dashboard');
       }

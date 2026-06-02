@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { currentUser as mockUser } from "@/lib/mock-data";
 
 const links = [
   { href: "/dashboard", label: "Dashboard" },
@@ -12,32 +13,62 @@ const links = [
   { href: "/dashboard/settings", label: "Settings" },
 ];
 
+interface NavigationUser {
+  id: string;
+  email?: string;
+  user_metadata: {
+    full_name?: string;
+  };
+}
+
 export function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<NavigationUser | null>(null);
 
   useEffect(() => {
     const getUser = async () => {
-      if (!supabase) return;
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      if (!supabase) {
+        // Suppress console warning, fall back to mock user session
+        setUser({
+          id: mockUser.id,
+          email: mockUser.email,
+          user_metadata: { full_name: mockUser.fullName }
+        });
+        return;
+      }
+      const { data: { user: activeUser } } = await supabase.auth.getUser();
+      if (activeUser) {
+        setUser(activeUser as unknown as NavigationUser);
+      } else {
+        setUser({
+          id: mockUser.id,
+          email: mockUser.email,
+          user_metadata: { full_name: mockUser.fullName }
+        });
+      }
     };
     getUser();
 
     if (!supabase) return;
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-      setUser(session?.user || null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser(session.user as unknown as NavigationUser);
+      } else {
+        setUser(null);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const handleSignOut = async () => {
-    if (!supabase) return;
-    await supabase.auth.signOut();
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+    setUser(null);
     router.push('/signin');
   };
 
@@ -66,7 +97,7 @@ export function Navigation() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <Link href="/" className="text-lg font-semibold text-[var(--color-primary-emerald)]">
+          <Link href="/" className="text-lg font-semibold text-[var(--color-primary-emerald)] font-serif">
             Orin
           </Link>
         </div>
@@ -78,7 +109,7 @@ export function Navigation() {
                 key={link.label}
                 href={link.href}
                 className={`border-b-2 border-transparent pb-1 text-sm font-medium text-[var(--color-neutral-text-secondary)] transition hover:text-[var(--color-primary-emerald)] ${
-                  pathname === link.href && "border-[var(--color-primary-emerald)] text-[var(--color-primary-emerald)]"
+                  pathname === link.href ? "border-[var(--color-primary-emerald)] text-[var(--color-primary-emerald)]" : ""
                 }`}
               >
                 {link.label}
@@ -140,6 +171,7 @@ export function Navigation() {
             {user && (
               <button
                 onClick={handleSignOut}
+                type="button"
                 className="rounded-md px-3 py-2 text-left text-sm font-medium text-[var(--color-danger)] hover:bg-[var(--color-neutral-surface-alt)]"
               >
                 Sign Out

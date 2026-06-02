@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SkillBadge } from "@/components/SkillBadge";
 import { TypeBadge } from "@/components/TypeBadge";
-import { proofs } from "@/lib/mock-data";
+import { proofs as mockProofs } from "@/lib/mock-data";
+import { supabase } from "@/lib/supabase";
+import { mapDbProofToProof } from "@/lib/utils";
+import type { Proof } from "@/lib/types";
 
 interface ProofDetailPageProps {
   params: Promise<{ id: string }>;
@@ -12,7 +15,31 @@ interface ProofDetailPageProps {
 
 export default async function ProofDetailPage({ params }: ProofDetailPageProps) {
   const { id } = await params;
-  const proof = proofs.find((item) => item.id === id);
+  let proof: Proof | undefined;
+
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('proof_cards')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      if (data) {
+        proof = mapDbProofToProof(data);
+      }
+    } catch (e) {
+      console.warn("DB Lookup failed for proof card, falling back to mock data.", e);
+    }
+  }
+
+  // Fall back to checking mock data if not loaded from DB
+  if (!proof) {
+    proof = mockProofs.find((item) => item.id === id);
+  }
 
   if (!proof) {
     notFound();
@@ -53,7 +80,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
       </header>
 
       <section className="space-y-3">
-        <h1 className="text-3xl font-semibold md:text-4xl">{proof.title}</h1>
+        <h1 className="text-3xl font-semibold md:text-4xl font-serif">{proof.title}</h1>
         <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--color-neutral-text-secondary)]">
           <TypeBadge type={proof.type} />
           <span className={`rounded-full px-2 py-1 text-xs font-medium ${statusMeta.className}`}>
@@ -67,19 +94,19 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
       <section className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-4">
           <Card>
-            <h2 className="text-xl font-semibold">What it is</h2>
+            <h2 className="text-xl font-semibold font-serif">What it is</h2>
             <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
               {proof.description}
             </p>
             <p className="mt-3 text-sm">
-              <a className="text-[var(--color-primary-emerald)]" href={proof.url}>
+              <a className="text-[var(--color-primary-emerald)] break-all" href={proof.url}>
                 {proof.url}
               </a>
             </p>
           </Card>
 
           <Card>
-            <h2 className="text-xl font-semibold">Skills extracted</h2>
+            <h2 className="text-xl font-semibold font-serif">Skills extracted</h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {proof.skillsExtracted.map((skill: string) => (
                 <SkillBadge key={skill} skill={skill} />
@@ -88,14 +115,14 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
           </Card>
 
           <Card>
-            <h2 className="text-xl font-semibold">What this proves</h2>
+            <h2 className="text-xl font-semibold font-serif">What this proves</h2>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--color-neutral-text-secondary)]">
               {proof.whatItProves?.map((item: string) => <li key={item}>{item}</li>)}
             </ul>
           </Card>
 
           <Card>
-            <h2 className="text-xl font-semibold">Proof evidence</h2>
+            <h2 className="text-xl font-semibold font-serif">Proof evidence</h2>
             <div className="mt-3 space-y-3 text-sm text-[var(--color-neutral-text-secondary)]">
               <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--color-neutral-border)] p-3">
                 <div>
@@ -136,7 +163,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
 
         <div className="space-y-4">
           <Card>
-            <h2 className="text-lg font-semibold">Public visibility</h2>
+            <h2 className="text-lg font-semibold font-serif">Public visibility</h2>
             <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
               Public link: {proof.publicLink}
             </p>
@@ -155,7 +182,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
           </Card>
 
           <Card>
-            <h2 className="text-lg font-semibold">Shared with</h2>
+            <h2 className="text-lg font-semibold font-serif">Shared with</h2>
             {sharedWith.length ? (
               <ul className="mt-3 space-y-2 text-sm text-[var(--color-neutral-text-secondary)]">
                 {sharedWith.map((share) => (
@@ -172,7 +199,7 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
           </Card>
 
           <Card>
-            <h2 className="text-lg font-semibold">View analytics</h2>
+            <h2 className="text-lg font-semibold font-serif">View analytics</h2>
             <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
               Views per week
             </p>

@@ -12,7 +12,6 @@ export default function SettingsPage() {
   const [headline, setHeadline] = useState('');
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -21,13 +20,12 @@ export default function SettingsPage() {
         console.warn('Supabase not configured');
         return;
       }
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const { data: { user: activeUser } } = await supabase.auth.getUser();
+      if (!activeUser) {
         router.push('/signin');
         return;
       }
-      setUser(user);
-      setFullName(user.user_metadata?.full_name || '');
+      setFullName(activeUser.user_metadata?.full_name || '');
     };
     fetchUser();
   }, [router]);

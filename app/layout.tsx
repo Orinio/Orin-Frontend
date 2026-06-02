@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
+import { Inter, Lora } from "next/font/google";
 import "./globals.css";
+
+const sans = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const serif = Lora({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
   title: "ORIN - Turn Work Into Career Proof",
@@ -12,15 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full scroll-smooth">
-      <head>
-        <style>
-          {`
-            @import url('https://fonts.googleapis.com/css2?family=Georgia:ital,wght@0,400;0,700&display=swap');
-          `}
-        </style>
-      </head>
-      <body className="min-h-full bg-white text-gray-900">
+    <html lang="en" className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}>
+      <body className="min-h-full bg-white text-gray-900 font-sans">
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>

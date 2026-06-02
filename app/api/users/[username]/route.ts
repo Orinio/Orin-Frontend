@@ -39,7 +39,9 @@ export async function GET(
     .select('skills_extracted')
     .eq('user_id', users.id);
 
-  const allSkills = skills?.flatMap((s: any) => s.skills_extracted || []).filter((v: any, i: number, a: any[]) => a.indexOf(v) === i) || [];
+  const allSkills = skills
+    ?.flatMap((s: { skills_extracted: string[] }) => s.skills_extracted || [])
+    .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i) || [];
 
   if (proofsError) {
     return NextResponse.json({ error: proofsError.message }, { status: 500 });

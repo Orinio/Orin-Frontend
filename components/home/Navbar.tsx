@@ -7,7 +7,6 @@ import { supabase } from '@/lib/supabase';
 
 export default function Navbar() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -21,7 +20,7 @@ export default function Navbar() {
 
     if (!supabase) return;
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
        if (session?.user) {
         router.push('/dashboard');
       }

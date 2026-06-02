@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { Input } from '@/components/ui/input';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -11,6 +13,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState<'github' | 'google' | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -47,295 +50,277 @@ export default function SignupPage() {
       setError('Authentication not configured');
       return;
     }
+    setSocialLoading(provider);
+    setError(null);
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: `${window.location.origin}/dashboard`,
       },
     });
-    if (error) setError(error.message);
+    if (error) {
+      setError(error.message);
+      setSocialLoading(null);
+    }
   };
 
   return (
-    <StyledWrapper>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className="w-full"
+    >
+      {/* Heading */}
+      <div className="mb-8">
+        <h2 className="font-serif text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          Create Account
+        </h2>
+        <p className="mt-2 text-[15px] text-slate-600">
+          Set up your profile to start building and sharing verified career proof.
+        </p>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-5 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50/80 p-3.5 text-sm text-red-700"
+        >
+          <svg
+            className="mt-0.5 h-4 w-4 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+            />
+          </svg>
+          <span>{error}</span>
+        </motion.div>
+      )}
+
       {!showEmailForm ? (
-        <div className="social-buttons">
-          <button type="button" className="social-btn" onClick={() => handleSocialLogin('github')}>Continue with GitHub</button>
-          <button type="button" className="social-btn" onClick={() => handleSocialLogin('google')}>Continue with Google</button>
-          
-          <div className="divider">
-            <div className="line"></div>
-            <span className="text">Or</span>
+        <div className="space-y-4">
+          {/* Social buttons */}
+          <div className="grid grid-cols-2 gap-3">
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              type="button"
+              onClick={() => handleSocialLogin('google')}
+              disabled={socialLoading !== null || loading}
+              className="group relative flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {socialLoading === 'google' ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <GoogleIcon className="h-4 w-4" />
+              )}
+              <span>Google</span>
+            </motion.button>
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              type="button"
+              onClick={() => handleSocialLogin('github')}
+              disabled={socialLoading !== null || loading}
+              className="group relative flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-900 hover:text-white hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {socialLoading === 'github' ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <GithubIcon className="h-4 w-4" />
+              )}
+              <span>GitHub</span>
+            </motion.button>
           </div>
-          
-          <button
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-3 text-slate-500">
+                or continue with
+              </span>
+            </div>
+          </div>
+
+          <motion.button
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.99 }}
             type="button"
             onClick={() => setShowEmailForm(true)}
-            className="email-btn"
+            className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/30"
           >
-            Continue with email
-          </button>
-          
-          <p className="signin-link">
-            Already have an account? <Link href="/signin">Sign in</Link>
+            <span>Continue with Email</span>
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </motion.button>
+
+          <p className="mt-7 text-center text-sm text-slate-600">
+            Already have an account?{' '}
+            <Link
+              href="/signin"
+              className="font-semibold text-emerald-600 transition-colors hover:text-emerald-700"
+            >
+              Sign in
+            </Link>
           </p>
         </div>
       ) : (
-        <form className="form" onSubmit={handleSignUp}>
-          <p id="heading">Create Account</p>
-          {error && <p className="error">{error}</p>}
-          <div className="field">
-            <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 7a3 3 0 1 0-6 0 3 3 0 0 0 6 0zM2 12a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm12-4a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
-            </svg>
-            <input
-              id="fullName"
-              type="text"
-              placeholder="Full Name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="input-field"
-              required
-            />
+        <form onSubmit={handleSignUp} className="space-y-4">
+          <div>
+            <label
+              htmlFor="fullName"
+              className="mb-1.5 block text-sm font-medium text-slate-700"
+            >
+              Full name
+            </label>
+            <div className="group relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                <User className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+              </div>
+              <Input
+                id="fullName"
+                type="text"
+                placeholder="Full Name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                className="pl-10"
+              />
+            </div>
           </div>
-          <div className="field">
-            <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" viewBox="0 0 16 16">
-              <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
-            </svg>
-            <input
-              id="email"
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field"
-              required
-            />
+
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-1.5 block text-sm font-medium text-slate-700"
+            >
+              Email address
+            </label>
+            <div className="group relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                <Mail className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+              </div>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="pl-10"
+              />
+            </div>
           </div>
-          <div className="field">
-            <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
-            </svg>
-            <input
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
-              required
-            />
+
+          <div>
+            <label
+              htmlFor="password"
+              className="mb-1.5 block text-sm font-medium text-slate-700"
+            >
+              Password
+            </label>
+            <div className="group relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                <Lock className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Create a strong password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="pl-10"
+              />
+            </div>
           </div>
-          <div className="btn">
-            <button className="button1" type="submit" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Account'}
-            </button>
-          </div>
+
+          <motion.button
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.99 }}
+            type="submit"
+            disabled={loading}
+            className="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Creating account...</span>
+              </>
+            ) : (
+              <>
+                <span>Create Account</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </>
+            )}
+          </motion.button>
+
           <button
             type="button"
             onClick={() => setShowEmailForm(false)}
-            className="back-btn"
+            className="mt-3 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50"
           >
             Back
           </button>
         </form>
       )}
-    </StyledWrapper>
+
+      {/* Footer trust */}
+      <p className="mt-6 text-center text-xs text-slate-400">
+        Protected by industry-standard encryption.{' '}
+        <Link href="#" className="underline-offset-2 hover:underline">
+          Privacy
+        </Link>{' '}
+        &middot;{' '}
+        <Link href="#" className="underline-offset-2 hover:underline">
+          Terms
+        </Link>
+      </p>
+    </motion.div>
   );
 }
 
-const StyledWrapper = styled.div`
-  .social-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
+function GoogleIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.83z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"
+      />
+    </svg>
+  );
+}
 
-  .social-btn {
-    width: 100%;
-    padding: 0.7em;
-    border-radius: 10px;
-    border: 1px solid #334155;
-    background-color: #1e293b;
-    color: #d3d3d3;
-    font-weight: 500;
-    cursor: pointer;
-    transition: .3s ease;
-  }
-
-  .social-btn:hover {
-    background-color: #334155;
-  }
-
-  .divider {
-    position: relative;
-    margin: 1em 0;
-    text-align: center;
-  }
-
-  .line {
-    width: 100%;
-    height: 1px;
-    background-color: #334155;
-  }
-
-  .divider .text {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    padding: 0 10px;
-    color: #9ca3af;
-    font-size: 0.85rem;
-  }
-
-  .email-btn {
-    width: 100%;
-    padding: 0.7em;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(135deg, #059669, #10b981);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: .3s ease;
-  }
-
-  .email-btn:hover {
-    background: linear-gradient(135deg, #047857, #059669);
-    transform: translateY(-1px);
-  }
-
-  .signin-link {
-    margin-top: 0.5em;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #9ca3af;
-  }
-
-  .signin-link a {
-    color: #10b981;
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .signin-link a:hover {
-    color: #059669;
-  }
-
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 1.5em;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    border-radius: 25px;
-    transition: .4s ease-in-out;
-    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.15);
-    width: 100%;
-  }
-
-  .form:hover {
-    transform: scale(1.02);
-    box-shadow: 0 15px 50px rgba(16, 185, 129, 0.25);
-  }
-
-  #heading {
-    text-align: center;
-    margin: 0.5em 0 0;
-    color: rgb(255, 255, 255);
-    font-size: 1.5em;
-    font-weight: 600;
-  }
-
-  .error {
-    color: #ef4444;
-    font-size: 0.85rem;
-    text-align: center;
-    margin-bottom: 0.5em;
-  }
-
-  .field {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    border-radius: 25px;
-    padding: 0.6em;
-    border: none;
-    outline: none;
-    color: white;
-    background-color: #1e293b;
-    box-shadow: inset 2px 5px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .input-icon {
-    height: 1.3em;
-    width: 1.3em;
-    fill: #10b981;
-  }
-
-  .input-field {
-    background: none;
-    border: none;
-    outline: none;
-    width: 100%;
-    color: #d3d3d3;
-    font-size: 0.95rem;
-  }
-
-  .input-field::placeholder {
-    color: #9ca3af;
-  }
-
-  .form .btn {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    margin-top: 1em;
-  }
-
-  .button1 {
-    padding: 0.7em;
-    padding-left: 2em;
-    padding-right: 2em;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    transition: .4s ease-in-out;
-    background: linear-gradient(135deg, #059669, #10b981);
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .button1:hover:not(:disabled) {
-    background: linear-gradient(135deg, #047857, #059669);
-    transform: translateY(-2px);
-  }
-
-  .button1:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .back-btn {
-    width: fit-content;
-    margin: 0.5em auto 0;
-    padding: 0.5em 1em;
-    border-radius: 10px;
-    border: 1px solid #334155;
-    outline: none;
-    transition: .3s ease;
-    background-color: transparent;
-    color: #9ca3af;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-
-  .back-btn:hover {
-    border-color: #475569;
-    color: #cbd5e1;
-  }`;
+function GithubIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      />
+    </svg>
+  );
+}

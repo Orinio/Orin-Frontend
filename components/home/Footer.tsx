@@ -23,7 +23,7 @@ export default function Footer() {
               <li><a href="#" className="hover:text-white">Blog</a></li>
               <li><a href="#" className="hover:text-white">Careers</a></li>
             </ul>
-          </div
+          </div>
           <div>
             <p className="font-bold text-white text-sm mb-4">Legal</p>
             <ul className="space-y-2 text-sm">
