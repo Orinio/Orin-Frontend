@@ -63,7 +63,7 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any,
             </p>
             <div className="flex gap-4 flex-wrap mb-6">
               <Link
-                href="/auth/signup"
+                href="/signup"
                 className="btn-green px-6 py-3 rounded-lg font-semibold"
               >
                 Start Building Proof
@@ -396,7 +396,7 @@ const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any,
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link
-              href="/auth/signup"
+              href="/signup"
               className="btn-green px-8 py-4 rounded-lg font-semibold text-lg"
             >
               Get Started Free
