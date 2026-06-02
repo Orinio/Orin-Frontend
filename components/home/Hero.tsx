@@ -16,7 +16,7 @@ export default function Hero() {
               GitHub, Kaggle, certificates, projects, all over the place. ORIN transforms them into verified proof cards, an AI coach who guides you daily, and real opportunities that match your proof.
             </p>
             <div className="flex gap-4 flex-wrap mb-6">
-              <Link href="/register" className="btn-green px-6 py-3 rounded-lg font-semibold">
+              <Link href="/signup" className="btn-green px-6 py-3 rounded-lg font-semibold">
                 Start Building Proof
               </Link>
               <button className="border-2 border-gray-300 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50">
