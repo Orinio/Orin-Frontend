@@ -23,8 +23,10 @@ export default function Hero() {
                 Watch Demo
               </button>
             </div>
-            <p className="text-sm text-gray-500">
-              Free forever tier. No card needed. 5,000+ active students
+            <p className="text-sm text-gray-500 flex items-center gap-3 flex-wrap">
+              <span className="flex items-center gap-1.5"><svg className="w-3.5 h-3.5 text-emerald-500" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg> Free forever tier</span>
+              <span className="flex items-center gap-1.5"><svg className="w-3.5 h-3.5 text-emerald-500" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg> No card needed</span>
+              <span className="flex items-center gap-1.5"><svg className="w-3.5 h-3.5 text-emerald-500" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg> 5,000+ active students</span>
             </p>
           </div>
           <PhoneMockup />
@@ -130,7 +132,7 @@ function OpportunityCard() {
     <div className="absolute top-1/2 -right-2 md:-right-14 z-30 animate-float-slow hidden lg:block" style={{ animationDelay: '1.5s' }}>
       <div className="bg-white rounded-2xl shadow-2xl shadow-gray-900/15 border border-gray-100 p-3 max-w-[200px] backdrop-blur-md">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="text-base">New</span>
+          <span className="text-base">&#10024;</span>
           <span className="text-[10px] font-bold text-gray-900 uppercase tracking-wider">New Match</span>
         </div>
         <p className="text-[11px] font-semibold text-gray-900 leading-tight">Frontend Intern at Linear</p>
@@ -200,7 +202,7 @@ function HeroCard() {
       <div className="absolute -right-8 -bottom-8 w-20 h-20 rounded-full bg-white/5"></div>
       <div className="relative">
         <div className="flex items-center gap-1.5 mb-1">
-          <span className="text-base">Trophy</span>
+          <svg className="w-3.5 h-3.5 text-emerald-50" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"></path></svg>
           <span className="text-[8px] font-bold text-emerald-50 uppercase tracking-wider">Verified</span>
         </div>
         <p className="text-[11px] font-bold text-white leading-tight">Kaggle 1st Place</p>
