@@ -26,7 +26,7 @@ export default function Hero() {
             <Link href="/signup" className="btn-primary px-7 py-3.5 rounded-lg text-base">
               Start Building Proof
             </Link>
-            <button className="btn-secondary px-7 py-3.5 rounded-lg text-base">
+            <button type="button" className="btn-secondary px-7 py-3.5 rounded-lg text-base">
               Watch Demo
             </button>
           </div>

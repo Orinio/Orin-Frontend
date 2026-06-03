@@ -76,7 +76,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4" style={{ borderColor: '#1e293b' }}>
           <p className="text-sm" style={{ color: '#64748b' }}>
-            &copy; 2025 ORIN. Career proof for students building futures.
+            &copy; {new Date().getFullYear()} ORIN. Career proof for students building futures.
           </p>
           <div className="flex items-center gap-6">
             <span className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#1e293b', color: 'var(--color-bloom)' }}>

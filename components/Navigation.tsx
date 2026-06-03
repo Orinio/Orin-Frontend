@@ -2,23 +2,140 @@
 
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
+import {
+  LayoutGrid,
+  Briefcase,
+  PlusCircle,
+  Settings,
+  Bell,
+  Menu,
+  X,
+  LogOut,
+  User,
+  ChevronDown,
+  Check,
+} from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import type { Notification } from '@/lib/types';
+import { formatRelativeTime, getInitials } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 export default function Navigation() {
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
+  const [fullName, setFullName] = useState<string>('');
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const notifRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const getUser = async () => {
       if (!supabase) return;
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      setUser(authUser);
+
+      if (authUser) {
+        const { data } = await supabase
+          .from('users')
+          .select('full_name, avatar_url')
+          .eq('auth_user_id', authUser.id)
+          .single();
+        if (data) {
+          setFullName(data.full_name || authUser.email?.split('@')[0] || 'User');
+          setAvatarUrl(data.avatar_url || '');
+        }
+      }
     };
     getUser();
   }, []);
+
+  useEffect(() => {
+    if (!supabase || !user) return;
+
+    const fetchNotifications = async () => {
+      const { data } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .limit(20);
+      if (data) {
+        setNotifications(
+          data.map((n) => ({
+            id: n.id,
+            userId: n.user_id,
+            type: n.type,
+            title: n.title,
+            body: n.body ?? undefined,
+            link: n.link ?? undefined,
+            payload: n.payload || {},
+            readAt: n.read_at ? new Date(n.read_at) : undefined,
+            createdAt: new Date(n.created_at),
+          })),
+        );
+      }
+    };
+    fetchNotifications();
+
+    const channel = supabase
+      .channel('nav-notifications')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          const n = payload.new as any;
+          setNotifications((prev) => [
+            {
+              id: n.id,
+              userId: n.user_id,
+              type: n.type,
+              title: n.title,
+              body: n.body ?? undefined,
+              link: n.link ?? undefined,
+              payload: n.payload || {},
+              readAt: n.read_at ? new Date(n.read_at) : undefined,
+              createdAt: new Date(n.created_at),
+            },
+            ...prev,
+          ]);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) setNotifOpen(false);
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) setUserMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const unreadCount = notifications.filter((n) => !n.readAt).length;
+
+  const markAllRead = async () => {
+    if (!supabase || !user) return;
+    const now = new Date().toISOString();
+    await supabase
+      .from('notifications')
+      .update({ read_at: now })
+      .eq('user_id', user.id)
+      .is('read_at', null);
+    setNotifications((prev) => prev.map((n) => ({ ...n, readAt: new Date() })));
+  };
 
   const handleSignOut = async () => {
     if (!supabase) return;
@@ -27,132 +144,230 @@ export default function Navigation() {
   };
 
   const navLinks = [
-    { href: '/dashboard', label: 'Dashboard', icon: (
-      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
-      </svg>
-    )},
-    { href: '/dashboard/opportunities', label: 'Opportunities', icon: (
-      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-      </svg>
-    )},
-    { href: '/dashboard/sources/new', label: 'Add Source', icon: (
-      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" />
-      </svg>
-    )},
-    { href: '/dashboard/settings', label: 'Settings', icon: (
-      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-      </svg>
-    )},
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
+    { href: '/dashboard/opportunities', label: 'Opportunities', icon: Briefcase },
+    { href: '/dashboard/sources/new', label: 'Add Source', icon: PlusCircle },
+    { href: '/dashboard/settings', label: 'Settings', icon: Settings },
   ];
 
   const isActive = (href: string) => pathname === href;
 
   return (
-    <>
-      <header
-        className="sticky top-0 z-50 w-full"
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          borderBottom: '1px solid var(--color-border-light)',
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-ink)' }}>
-                <span className="text-sm font-bold" style={{ color: 'var(--color-spark)' }}>O</span>
-              </div>
-              <span className="text-lg font-bold" style={{ color: 'var(--color-ink)' }}>ORIN</span>
-            </Link>
+    <header className="sticky top-0 z-50 w-full bg-[var(--color-surface)] border-b border-[var(--color-border-light)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[var(--color-ink)]">
+              <span className="text-sm font-bold text-[var(--color-spark)]">O</span>
+            </div>
+            <span className="text-lg font-bold" style={{ color: 'var(--color-ink)' }}>
+              ORIN
+            </span>
+          </Link>
 
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
+          <nav className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-                  style={{
-                    color: isActive(link.href) ? 'var(--color-pulse)' : 'var(--color-text-secondary)',
-                    backgroundColor: isActive(link.href) ? 'rgba(238,66,102,0.06)' : 'transparent',
-                  }}
+                  className={cn(
+                    'flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                    isActive(link.href)
+                      ? 'text-[var(--color-pulse)] bg-[var(--color-pulse)]/5'
+                      : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-dim)]',
+                  )}
                 >
-                  {link.icon}
+                  <Icon className="w-4 h-4" />
                   {link.label}
                 </Link>
-              ))}
-            </nav>
+              );
+            })}
+          </nav>
 
-            {/* User section */}
-            <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="relative" ref={notifRef}>
               <button
-                className="hidden md:flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-200"
-                style={{ backgroundColor: 'var(--color-surface-dim)' }}
+                onClick={() => {
+                  setNotifOpen(!notifOpen);
+                  setUserMenuOpen(false);
+                }}
+                className="relative flex items-center justify-center w-9 h-9 rounded-full transition-colors hover:bg-[var(--color-surface-dim)]"
+                aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
               >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-text-secondary)' }}>
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
+                <Bell className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-[var(--color-pulse)] rounded-full">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </button>
 
-              <button
-                onClick={handleSignOut}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
-                  style={{ backgroundColor: 'var(--color-bloom)' }}
-                >
-                  {user?.email?.charAt(0)?.toUpperCase() || 'U'}
+              {notifOpen && (
+                <div className="absolute right-0 top-full mt-2 w-80 rounded-xl shadow-xl border overflow-hidden bg-[var(--color-surface)] border-[var(--color-border-light)]">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border-light)]">
+                    <h3 className="text-sm font-semibold" style={{ color: 'var(--color-ink)' }}>
+                      Notifications
+                    </h3>
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={markAllRead}
+                        className="flex items-center gap-1 text-[11px] font-medium text-[var(--color-pulse)] hover:text-[var(--color-pulse)]/80"
+                      >
+                        <Check className="w-3 h-3" />
+                        Mark all read
+                      </button>
+                    )}
+                  </div>
+                  <div className="max-h-80 overflow-y-auto">
+                    {notifications.length === 0 ? (
+                      <div className="px-4 py-8 text-center">
+                        <Bell className="w-8 h-8 mx-auto mb-2 opacity-30" style={{ color: 'var(--color-mist)' }} />
+                        <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                          No notifications yet
+                        </p>
+                      </div>
+                    ) : (
+                      notifications.map((n) => (
+                        <Link
+                          key={n.id}
+                          href={n.link || '#'}
+                          onClick={() => setNotifOpen(false)}
+                          className={cn(
+                            'block px-4 py-3 transition-colors hover:bg-[var(--color-surface-dim)] border-b border-[var(--color-border-light)] last:border-0',
+                            !n.readAt && 'bg-[var(--color-pulse)]/3',
+                          )}
+                        >
+                          <div className="flex items-start gap-2">
+                            {!n.readAt && (
+                              <span className="w-2 h-2 rounded-full bg-[var(--color-pulse)] mt-1.5 flex-shrink-0" />
+                            )}
+                            <div className="min-w-0">
+                              <p className="text-xs font-semibold truncate" style={{ color: 'var(--color-ink)' }}>
+                                {n.title}
+                              </p>
+                              {n.body && (
+                                <p className="text-[11px] mt-0.5 line-clamp-2" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {n.body}
+                                </p>
+                              )}
+                              <p className="text-[10px] mt-1" style={{ color: 'var(--color-mist)' }}>
+                                {formatRelativeTime(n.createdAt)}
+                              </p>
+                            </div>
+                          </div>
+                        </Link>
+                      ))
+                    )}
+                  </div>
                 </div>
-                <span className="hidden md:inline">Sign Out</span>
-              </button>
+              )}
             </div>
 
-            {/* Mobile toggle */}
+            <div className="relative" ref={userMenuRef}>
+              <button
+                onClick={() => {
+                  setUserMenuOpen(!userMenuOpen);
+                  setNotifOpen(false);
+                }}
+                className="flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors hover:bg-[var(--color-surface-dim)]"
+                aria-label="User menu"
+                aria-expanded={userMenuOpen}
+              >
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs bg-[var(--color-bloom)] overflow-hidden">
+                  {avatarUrl ? (
+                    <Image src={avatarUrl} alt={fullName} width={32} height={32} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(fullName || 'U')
+                  )}
+                </div>
+                <span className="hidden md:inline text-sm font-medium max-w-[120px] truncate" style={{ color: 'var(--color-ink)' }}>
+                  {fullName || 'User'}
+                </span>
+                <ChevronDown className="hidden md:block w-3 h-3" style={{ color: 'var(--color-text-secondary)' }} />
+              </button>
+
+              {userMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-56 rounded-xl shadow-xl border overflow-hidden bg-[var(--color-surface)] border-[var(--color-border-light)]">
+                  <div className="px-4 py-3 border-b border-[var(--color-border-light)]">
+                    <p className="text-sm font-semibold truncate" style={{ color: 'var(--color-ink)' }}>
+                      {fullName || 'User'}
+                    </p>
+                    <p className="text-xs truncate mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
+                      {user?.email}
+                    </p>
+                  </div>
+                  <div className="py-1">
+                    <Link
+                      href="/dashboard/settings"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-surface-dim)]"
+                      style={{ color: 'var(--color-ink)' }}
+                    >
+                      <User className="w-4 h-4" />
+                      Profile
+                    </Link>
+                    <Link
+                      href="/dashboard/settings"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-surface-dim)]"
+                      style={{ color: 'var(--color-ink)' }}
+                    >
+                      <Settings className="w-4 h-4" />
+                      Settings
+                    </Link>
+                  </div>
+                  <div className="border-t border-[var(--color-border-light)] py-1">
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-surface-dim)] text-red-600"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button
-              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg"
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg transition-colors hover:bg-[var(--color-surface-dim)]"
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               style={{ color: 'var(--color-ink)' }}
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                {mobileOpen ? (
-                  <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
-                ) : (
-                  <><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></>
-                )}
-              </svg>
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <div className="md:hidden px-4 pb-4" style={{ borderTop: '1px solid var(--color-border-light)' }}>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-200"
-                style={{
-                  color: isActive(link.href) ? 'var(--color-pulse)' : 'var(--color-text-secondary)',
-                  backgroundColor: isActive(link.href) ? 'rgba(238,66,102,0.06)' : 'transparent',
-                }}
-              >
-                {link.icon}
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        )}
-      </header>
-    </>
+      {mobileOpen && (
+        <div className="md:hidden border-t border-[var(--color-border-light)] bg-[var(--color-surface)]">
+          <nav className="px-4 py-3 space-y-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors',
+                    isActive(link.href)
+                      ? 'text-[var(--color-pulse)] bg-[var(--color-pulse)]/5'
+                      : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-dim)]',
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      )}
+    </header>
   );
 }

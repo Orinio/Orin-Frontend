@@ -1,12 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import SkillBadge from "@/components/SkillBadge";
-import TypeBadge from "@/components/TypeBadge";
+import { supabase, Database } from "@/lib/supabase";
 import { proofs as mockProofs } from "@/lib/mock-data";
-import { supabase } from "@/lib/supabase";
-import { mapDbProofToProof } from "@/lib/utils";
+import { mapDbProofToProof, getStatusConfig, formatNumber, formatRelativeTime, getProofTypeColor } from "@/lib/utils";
 import type { Proof } from "@/lib/types";
 
 interface ProofDetailPageProps {
@@ -25,200 +21,233 @@ export default async function ProofDetailPage({ params }: ProofDetailPageProps) 
         .eq('id', id)
         .maybeSingle();
 
-      if (error) {
-        throw new Error(error.message);
-      }
-      if (data) {
-        proof = mapDbProofToProof(data);
-      }
+      if (error) throw new Error(error.message);
+      if (data) proof = mapDbProofToProof(data);
     } catch (e) {
-      console.warn("DB Lookup failed for proof card, falling back to mock data.", e);
+      console.warn("DB Lookup failed, falling back to mock data.", e);
     }
   }
 
-  // Fall back to checking mock data if not loaded from DB
   if (!proof) {
     proof = mockProofs.find((item) => item.id === id);
   }
 
-  if (!proof) {
-    notFound();
-  }
+  if (!proof) notFound();
 
-  const statusMeta = {
-    verified: {
-      label: "✓ Verified",
-      className: "bg-[var(--color-accent-green)]/15 text-[var(--color-accent-green)]",
-    },
-    pending: {
-      label: "⏳ Pending",
-      className: "bg-[var(--color-accent-gold)]/15 text-[var(--color-accent-gold)]",
-    },
-    draft: {
-      label: "◯ Draft",
-      className:
-        "bg-[var(--color-neutral-surface-alt)] text-[var(--color-neutral-text-secondary)]",
-    },
-  }[proof.status];
+  const statusConfig = getStatusConfig(proof.verificationStatus);
 
-  const sharedWith = proof.sharedWith ?? [];
+  const getEvidenceItems = () => {
+    const items: { label: string; detail: string; action?: string; href?: string }[] = [];
+
+    if (proof.sourceUrl) {
+      items.push({
+        label: `${proof.sourceType.charAt(0).toUpperCase() + proof.sourceType.slice(1)} source`,
+        detail: proof.sourceUrl,
+        action: "Open",
+        href: proof.sourceUrl,
+      });
+    }
+
+    switch (proof.sourceType) {
+      case 'github':
+        if (proof.metadata) {
+          const meta = proof.metadata as Record<string, unknown>;
+          if (meta.language) items.push({ label: "Primary language", detail: String(meta.language) });
+          if (meta.stars !== undefined) items.push({ label: "Stars", detail: String(meta.stars) });
+          if (meta.lastCommit) items.push({ label: "Last commit", detail: String(meta.lastCommit) });
+        }
+        break;
+      case 'kaggle':
+        if (proof.metadata) {
+          const meta = proof.metadata as Record<string, unknown>;
+          if (meta.leaderboardRank) items.push({ label: "Leaderboard rank", detail: String(meta.leaderboardRank) });
+          if (meta.dataset) items.push({ label: "Dataset", detail: String(meta.dataset) });
+        }
+        break;
+      case 'certificate':
+        if (proof.metadata) {
+          const meta = proof.metadata as Record<string, unknown>;
+          if (meta.issuer) items.push({ label: "Issuer", detail: String(meta.issuer) });
+          if (meta.issuedDate) items.push({ label: "Issued", detail: String(meta.issuedDate) });
+        }
+        break;
+      case 'hackathon':
+        if (proof.metadata) {
+          const meta = proof.metadata as Record<string, unknown>;
+          if (meta.placement) items.push({ label: "Placement", detail: String(meta.placement) });
+          if (meta.teamSize) items.push({ label: "Team size", detail: String(meta.teamSize) });
+        }
+        break;
+      case 'project':
+      case 'demo':
+        if (proof.metadata) {
+          const meta = proof.metadata as Record<string, unknown>;
+          if (meta.deploymentUrl) items.push({ label: "Live demo", detail: String(meta.deploymentUrl), action: "Visit", href: String(meta.deploymentUrl) });
+          if (meta.technologies) items.push({ label: "Technologies", detail: String(meta.technologies) });
+        }
+        break;
+      case 'blog':
+        if (proof.metadata) {
+          const meta = proof.metadata as Record<string, unknown>;
+          if (meta.readTime) items.push({ label: "Read time", detail: String(meta.readTime) });
+          if (meta.publication) items.push({ label: "Published on", detail: String(meta.publication) });
+        }
+        break;
+      default:
+        break;
+    }
+
+    return items;
+  };
+
+  const evidenceItems = getEvidenceItems();
 
   return (
     <article className="mx-auto max-w-5xl space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 text-sm text-[var(--color-neutral-text-secondary)]">
-          <Link href="/dashboard" className="text-[var(--color-primary-emerald)]">
-            ← Back
+          <Link href="/dashboard" className="text-[var(--color-primary-emerald)] hover:underline">
+            &larr; Back
           </Link>
           <span>/</span>
           <span>Proof detail</span>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary">Share</Button>
-          <Button variant="ghost">More</Button>
+          <form action="/api/proof/share" method="POST" className="inline">
+            <input type="hidden" name="proofId" value={proof.id} />
+            <button type="submit" className="rounded-md border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-neutral-text)] transition hover:border-[var(--color-primary-emerald)] hover:text-[var(--color-primary-emerald)]">
+              Share
+            </button>
+          </form>
+          <Link
+            href={`/dashboard/proof/${proof.id}/edit`}
+            className="rounded-md border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-neutral-text)] transition hover:border-[var(--color-primary-emerald)] hover:text-[var(--color-primary-emerald)]"
+          >
+            Edit
+          </Link>
         </div>
       </header>
 
       <section className="space-y-3">
         <h1 className="text-3xl font-semibold md:text-4xl font-serif">{proof.title}</h1>
         <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--color-neutral-text-secondary)]">
-          <TypeBadge type={proof.type} />
-          <span className={`rounded-full px-2 py-1 text-xs font-medium ${statusMeta.className}`}>
-            {statusMeta.label}
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
+            style={{ backgroundColor: `${getProofTypeColor(proof.sourceType)}20`, color: getProofTypeColor(proof.sourceType) }}
+          >
+            {proof.sourceType}
           </span>
-          <span>• {proof.viewCount} views</span>
-          <span>• Updated {proof.updatedAt.toLocaleDateString()}</span>
+          <span className={`rounded-full px-2 py-1 text-xs font-medium ${statusConfig.className}`}>
+            {statusConfig.label}
+          </span>
+          <span>&middot; {formatNumber(proof.viewCount)} views</span>
+          <span>&middot; Updated {formatRelativeTime(proof.updatedAt)}</span>
+          {proof.visibility === 'public' && (
+            <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700">Public</span>
+          )}
         </div>
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-4">
-          <Card>
-            <h2 className="text-xl font-semibold font-serif">What it is</h2>
-            <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
-              {proof.description}
-            </p>
-            <p className="mt-3 text-sm">
-              <a className="text-[var(--color-primary-emerald)] break-all" href={proof.url}>
-                {proof.url}
-              </a>
-            </p>
-          </Card>
-
-          <Card>
-            <h2 className="text-xl font-semibold font-serif">Skills extracted</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {proof.skillsExtracted.map((skill: string) => (
-                <SkillBadge key={skill} skill={skill} />
-              ))}
+          {proof.description && (
+            <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-5">
+              <h2 className="text-xl font-semibold font-serif">What it is</h2>
+              <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">{proof.description}</p>
+              {proof.sourceUrl && (
+                <p className="mt-3 text-sm">
+                  <a className="text-[var(--color-primary-emerald)] break-all hover:underline" href={proof.sourceUrl} target="_blank" rel="noopener noreferrer">
+                    {proof.sourceUrl}
+                  </a>
+                </p>
+              )}
             </div>
-          </Card>
+          )}
 
-          <Card>
-            <h2 className="text-xl font-semibold font-serif">What this proves</h2>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--color-neutral-text-secondary)]">
-              {proof.whatItProves?.map((item: string) => <li key={item}>{item}</li>)}
-            </ul>
-          </Card>
-
-          <Card>
-            <h2 className="text-xl font-semibold font-serif">Proof evidence</h2>
-            <div className="mt-3 space-y-3 text-sm text-[var(--color-neutral-text-secondary)]">
-              <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--color-neutral-border)] p-3">
-                <div>
-                  <p className="font-medium text-[var(--color-neutral-text)]">
-                    GitHub metadata
-                  </p>
-                  <p>Primary language: JavaScript · Last commit 14 days ago</p>
-                </div>
-                <Button variant="ghost" size="sm">
-                  View
-                </Button>
-              </div>
-              <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--color-neutral-border)] p-3">
-                <div>
-                  <p className="font-medium text-[var(--color-neutral-text)]">
-                    README preview
-                  </p>
-                  <p>Built a scalable service with caching and monitoring.</p>
-                </div>
-                <Button variant="ghost" size="sm">
-                  Expand
-                </Button>
-              </div>
-              <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--color-neutral-border)] p-3">
-                <div>
-                  <p className="font-medium text-[var(--color-neutral-text)]">
-                    Deployment link
-                  </p>
-                  <p>demo.orin.app/microservice</p>
-                </div>
-                <Button variant="ghost" size="sm">
-                  Open
-                </Button>
+          {proof.skillsExtracted.length > 0 && (
+            <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-5">
+              <h2 className="text-xl font-semibold font-serif">Skills extracted</h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {proof.skillsExtracted.map((skill) => (
+                  <span key={skill} className="rounded-full bg-[var(--color-primary-soft)] px-3 py-1 text-xs font-medium text-[var(--color-primary-emerald)]">
+                    {skill}
+                  </span>
+                ))}
+                {proof.skillsUserAdded.map((skill) => (
+                  <span key={skill} className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
+                    {skill}
+                  </span>
+                ))}
               </div>
             </div>
-          </Card>
+          )}
+
+          {proof.whatItProves.length > 0 && (
+            <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-5">
+              <h2 className="text-xl font-semibold font-serif">What this proves</h2>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--color-neutral-text-secondary)]">
+                {proof.whatItProves.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {evidenceItems.length > 0 && (
+            <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-5">
+              <h2 className="text-xl font-semibold font-serif">Proof evidence</h2>
+              <div className="mt-3 space-y-3 text-sm text-[var(--color-neutral-text-secondary)]">
+                {evidenceItems.map((item) => (
+                  <div key={item.label} className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--color-neutral-border)] p-3">
+                    <div className="min-w-0">
+                      <p className="font-medium text-[var(--color-neutral-text)]">{item.label}</p>
+                      <p className="truncate">{item.detail}</p>
+                    </div>
+                    {item.href && (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer" className="ml-4 shrink-0 rounded-md px-3 py-1 text-xs font-semibold text-[var(--color-primary-emerald)] hover:bg-[var(--color-primary-soft)]">
+                        {item.action || 'View'}
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">
-          <Card>
-            <h2 className="text-lg font-semibold font-serif">Public visibility</h2>
-            <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
-              Public link: {proof.publicLink}
-            </p>
+          <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-5">
+            <h2 className="text-lg font-semibold font-serif">Visibility</h2>
+            <div className="mt-3 rounded-[var(--radius-md)] bg-[var(--color-neutral-bg)] p-3 text-xs text-[var(--color-neutral-text-secondary)]">
+              {proof.visibility === 'public' ? 'Public - visible to everyone' : proof.visibility === 'unlisted' ? 'Unlisted - accessible via link' : 'Private - only visible to you'}
+            </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button size="sm">Copy link</Button>
-              <Button variant="secondary" size="sm">
-                Email recruiter
-              </Button>
-              <Button variant="ghost" size="sm">
-                Post to LinkedIn
-              </Button>
+              <button className="rounded-md bg-[var(--color-primary-emerald)] px-3 py-1.5 text-xs font-semibold text-white">Copy link</button>
+              <button className="rounded-md border border-[var(--color-neutral-border)] px-3 py-1.5 text-xs font-semibold text-[var(--color-neutral-text-secondary)] hover:bg-[var(--color-neutral-surface-alt)]">Email recruiter</button>
             </div>
-            <div className="mt-4 rounded-[var(--radius-md)] bg-[var(--color-neutral-bg)] p-3 text-xs text-[var(--color-neutral-text-secondary)]">
-              {proof.isPublic ? "Public profile enabled" : "Private proof (not public)"}
-            </div>
-          </Card>
+          </div>
 
-          <Card>
-            <h2 className="text-lg font-semibold font-serif">Shared with</h2>
-            {sharedWith.length ? (
-              <ul className="mt-3 space-y-2 text-sm text-[var(--color-neutral-text-secondary)]">
-                {sharedWith.map((share) => (
-                  <li key={share.email}>
-                    {share.email} · {share.sharedAt.toLocaleDateString()}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
-                No shares yet. Send this proof to a recruiter.
-              </p>
-            )}
-          </Card>
-
-          <Card>
-            <h2 className="text-lg font-semibold font-serif">View analytics</h2>
-            <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
-              Views per week
-            </p>
-            <div className="mt-4 space-y-2">
-              {[40, 65, 30, 80].map((value, index) => (
-                <div key={`bar-${index}`} className="flex items-center gap-3 text-xs">
-                  <span className="w-10 text-[var(--color-neutral-text-secondary)]">
-                    W{index + 1}
-                  </span>
-                  <div className="h-2 flex-1 rounded-full bg-[var(--color-neutral-border)]">
-                    <div
-                      className="h-2 rounded-full bg-[var(--color-primary-emerald)]"
-                      style={{ width: `${value}%` }}
-                    />
-                  </div>
+          <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-5">
+            <h2 className="text-lg font-semibold font-serif">Analytics</h2>
+            <div className="mt-3 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-[var(--color-neutral-text-secondary)]">Total views</span>
+                <span className="text-sm font-semibold text-[var(--color-neutral-text)]">{formatNumber(proof.viewCount)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-[var(--color-neutral-text-secondary)]">Verified</span>
+                <span className="text-sm font-semibold text-[var(--color-neutral-text)]">{proof.verificationStatus === 'verified' ? 'Yes' : 'No'}</span>
+              </div>
+              {proof.verifiedAt && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-[var(--color-neutral-text-secondary)]">Verified on</span>
+                  <span className="text-sm font-semibold text-[var(--color-neutral-text)]">{proof.verifiedAt.toLocaleDateString()}</span>
                 </div>
-              ))}
+              )}
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-[var(--color-neutral-text-secondary)]">Created</span>
+                <span className="text-sm font-semibold text-[var(--color-neutral-text)]">{proof.createdAt.toLocaleDateString()}</span>
+              </div>
             </div>
-          </Card>
+          </div>
         </div>
       </section>
     </article>

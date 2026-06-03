@@ -868,6 +868,29 @@ export type Database = {
       subscription_plan: 'free' | 'pro' | 'team';
       subscription_status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'incomplete';
     };
+    Views: {
+      user_public_profiles: {
+        Row: {
+          id: string;
+          username: string;
+          full_name: string | null;
+          avatar_url: string | null;
+          headline: string | null;
+          bio: string | null;
+          location: string | null;
+          college: string | null;
+          year: 'first' | 'second' | 'third' | 'fourth' | 'graduate' | null;
+          website_url: string | null;
+          github_url: string | null;
+          linkedin_url: string | null;
+          twitter_url: string | null;
+          member_since: string;
+          public_proofs: Record<string, unknown>[];
+          public_skills: string[];
+          total_profile_views: number;
+        };
+      };
+    };
   };
 };
 

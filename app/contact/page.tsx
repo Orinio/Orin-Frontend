@@ -19,9 +19,11 @@ import {
 export default function ContactPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   /* Validation */
   const [touched, setTouched] = useState({ name: false, email: false, message: false });
@@ -52,17 +54,37 @@ export default function ContactPage() {
     setTouched({ name: true, email: true, message: true });
     if (!isValid) return;
     setLoading(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1200));
-    setSuccess(true);
-    setLoading(false);
+    setError(null);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          subject: subject.trim() || undefined,
+          message: message.trim().slice(0, 1000),
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to send message');
+      }
+      setSuccess(true);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
     setName('');
     setEmail('');
+    setSubject('');
     setMessage('');
     setSuccess(false);
+    setError(null);
     setTouched({ name: false, email: false, message: false });
   };
 
@@ -252,6 +274,29 @@ export default function ContactPage() {
                     )}
                   </div>
 
+                  {/* Subject */}
+                  <div>
+                    <label
+                      htmlFor="contactSubject"
+                      className="mb-1.5 block text-sm font-medium text-[var(--color-neutral-text)]"
+                    >
+                      Subject <span className="text-[var(--color-neutral-text-tertiary)]">(optional)</span>
+                    </label>
+                    <div className="flex items-center rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-bg)] transition focus-within:border-[var(--color-primary-emerald)] focus-within:ring-2 focus-within:ring-[var(--color-primary-soft)]">
+                      <span className="pl-3.5 text-[var(--color-neutral-text-tertiary)]">
+                        <MessageSquare size={16} />
+                      </span>
+                      <input
+                        id="contactSubject"
+                        type="text"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        placeholder="What's this about?"
+                        className="w-full border-0 bg-transparent px-3 py-2.5 text-sm text-[var(--color-neutral-text)] placeholder:text-[var(--color-neutral-text-tertiary)] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
                   {/* Message */}
                   <div>
                     <label
@@ -277,6 +322,7 @@ export default function ContactPage() {
                         onBlur={() => handleBlur('message')}
                         placeholder="Tell us what's on your mind..."
                         rows={5}
+                        maxLength={1000}
                         className="w-full resize-none border-0 bg-transparent px-3 py-2.5 text-sm text-[var(--color-neutral-text)] placeholder:text-[var(--color-neutral-text-tertiary)] focus:outline-none"
                       />
                     </div>
@@ -292,6 +338,13 @@ export default function ContactPage() {
                     </div>
                   </div>
 
+                  {/* Error */}
+                  {error && (
+                    <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                      {error}
+                    </div>
+                  )}
+
                   {/* Submit */}
                   <button
                     type="submit"
@@ -301,7 +354,7 @@ export default function ContactPage() {
                     {loading ? (
                       <>
                         <Loader2 size={16} className="animate-spin" />
-                        Sending…
+                        Sending...
                       </>
                     ) : (
                       <>

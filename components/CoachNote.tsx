@@ -1,42 +1,117 @@
 'use client';
 
+import Link from 'next/link';
+import {
+  Lightbulb,
+  CalendarDays,
+  CalendarRange,
+  Trophy,
+  Megaphone,
+  X,
+  ArrowRight,
+} from 'lucide-react';
+import type { CoachNote as CoachNoteType } from '@/lib/types';
+import { cn } from '@/lib/utils';
+
 interface CoachNoteProps {
-  note?: string;
-  onDismiss?: () => void;
+  note: CoachNoteType;
+  onDismiss?: (id: string) => void;
 }
 
-export default function CoachNote({ note = "Today's focus: Ship one live deployment. You're 80% there — the last 20% is what separates proof from potential.", onDismiss }: CoachNoteProps) {
+const typeConfig: Record<
+  string,
+  { label: string; icon: React.ReactNode; accent: string }
+> = {
+  daily: {
+    label: 'Daily Tip',
+    icon: <Lightbulb className="w-3.5 h-3.5" />,
+    accent: 'var(--color-bloom)',
+  },
+  weekly: {
+    label: 'Weekly Insight',
+    icon: <CalendarRange className="w-3.5 h-3.5" />,
+    accent: 'var(--color-ember)',
+  },
+  milestone: {
+    label: 'Milestone',
+    icon: <Trophy className="w-3.5 h-3.5" />,
+    accent: 'var(--color-spark)',
+  },
+  ad_hoc: {
+    label: 'Coach Note',
+    icon: <Megaphone className="w-3.5 h-3.5" />,
+    accent: 'var(--color-pulse)',
+  },
+};
+
+export default function CoachNote({ note, onDismiss }: CoachNoteProps) {
+  const config = typeConfig[note.type] || typeConfig.ad_hoc;
+
   return (
     <div
-      className="p-5 rounded-2xl relative overflow-hidden"
+      className="relative p-5 rounded-2xl overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, var(--color-ink) 0%, #1a1a2e 100%)',
-        color: 'var(--color-paper)',
       }}
     >
-      <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-10" style={{ backgroundColor: 'var(--color-bloom)' }} />
-      <div className="absolute -right-2 -bottom-2 w-16 h-16 rounded-full opacity-10" style={{ backgroundColor: 'var(--color-ember)' }} />
+      <div
+        className="absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-10"
+        style={{ backgroundColor: config.accent }}
+      />
+      <div
+        className="absolute -right-2 -bottom-2 w-16 h-16 rounded-full opacity-10"
+        style={{ backgroundColor: config.accent }}
+      />
 
       <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bloom)' }}>
-            <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M12 2a3 3 0 0 0-3 3v1H7a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1V8a2 2 0 0 0-2-2h-2V5a3 3 0 0 0-3-3z" />
-            </svg>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: config.accent }}
+            >
+              <span className="text-white">{config.icon}</span>
+            </div>
+            <p
+              className="text-xs font-bold uppercase tracking-wider"
+              style={{ color: config.accent }}
+            >
+              {config.label}
+            </p>
           </div>
-          <p className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--color-bloom)' }}>AI Coach</p>
-          <span className="text-[10px] font-medium" style={{ color: 'var(--color-mist)' }}>Today</span>
+          {onDismiss && (
+            <button
+              onClick={() => onDismiss(note.id)}
+              className="flex items-center justify-center w-6 h-6 rounded-full transition-colors hover:bg-white/10"
+              aria-label="Dismiss note"
+            >
+              <X className="w-3.5 h-3.5 text-white/50 hover:text-white" />
+            </button>
+          )}
         </div>
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--color-paper)' }}>{note}</p>
-        {onDismiss && (
-          <button
-            onClick={onDismiss}
-            className="mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors duration-200"
-            style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'var(--color-paper)' }}
-          >
-            Got it
-          </button>
-        )}
+
+        <p className="text-sm leading-relaxed text-white/90">{note.content}</p>
+
+        <div className="flex items-center justify-between mt-4">
+          <span className="text-[10px] text-white/30">
+            {note.createdAt.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+            })}
+          </span>
+          {note.actionLabel && note.actionUrl && (
+            <Link
+              href={note.actionUrl}
+              className={cn(
+                'inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors',
+                'bg-white/10 hover:bg-white/20 text-white',
+              )}
+            >
+              {note.actionLabel}
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

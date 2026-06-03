@@ -29,7 +29,7 @@ export default function FinalCTA() {
           <Link href="/signup" className="btn-primary px-8 py-4 rounded-lg font-semibold text-lg">
             Get Started Free
           </Link>
-          <button className="btn-outline px-8 py-4 rounded-lg font-semibold text-lg">
+          <button type="button" className="btn-outline px-8 py-4 rounded-lg font-semibold text-lg">
             Watch Demo
           </button>
         </div>

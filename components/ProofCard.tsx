@@ -1,131 +1,198 @@
 'use client';
 
 import Link from 'next/link';
+import type { Proof, VerificationStatus } from '@/lib/types';
+import { cn } from '@/lib/utils';
+import {
+  CheckCircle,
+  Clock,
+  FileText,
+  XCircle,
+  Star,
+  Eye,
+  ExternalLink,
+} from 'lucide-react';
+import TypeBadge from './TypeBadge';
+import Image from 'next/image';
 
 interface ProofCardProps {
-  proof: {
-    id: string;
-    title: string;
-    type: string;
-    status: 'pending' | 'verified' | 'draft';
-    skillsExtracted: string[];
-    description?: string;
-    viewCount?: number;
-    url: string;
-    publicLink: string;
-    isPublic: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  proof: Proof;
   variant?: 'dashboard' | 'public';
 }
 
-const statusConfig = {
+const statusConfig: Record<
+  VerificationStatus,
+  { label: string; className: string; icon: React.ReactNode }
+> = {
   verified: {
     label: 'Verified',
-    bg: 'var(--color-bloom)',
-    textColor: '#FFFFFF',
-    icon: (
-      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-      </svg>
-    ),
+    className: 'bg-emerald-100 text-emerald-800',
+    icon: <CheckCircle className="w-3 h-3" />,
   },
   pending: {
     label: 'Pending',
-    bg: 'var(--color-ember)',
-    textColor: '#FFFFFF',
-    icon: (
-      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-        <circle cx="12" cy="12" r="10" />
-      </svg>
-    ),
+    className: 'bg-amber-100 text-amber-800',
+    icon: <Clock className="w-3 h-3" />,
   },
   draft: {
     label: 'Draft',
-    bg: 'var(--color-mist)',
-    textColor: 'var(--color-ink)',
-    icon: (
-      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-      </svg>
-    ),
+    className: 'bg-slate-100 text-slate-600',
+    icon: <FileText className="w-3 h-3" />,
+  },
+  rejected: {
+    label: 'Rejected',
+    className: 'bg-red-100 text-red-700',
+    icon: <XCircle className="w-3 h-3" />,
   },
 };
 
-export default function ProofCard({
-  proof,
-  variant = 'dashboard',
-}: ProofCardProps) {
-  const { id, title, type: sourceType, status: verificationStatus, skillsExtracted, description, viewCount = 0 } = proof;
+export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardProps) {
+  const {
+    id,
+    title,
+    sourceType,
+    verificationStatus,
+    skillsExtracted,
+    description,
+    viewCount = 0,
+    whatItProves,
+    thumbnailUrl,
+    isHighlighted,
+  } = proof;
+
   const status = statusConfig[verificationStatus];
 
   return (
     <div
-      className="p-5 rounded-2xl transition-all duration-200"
-      style={{
-        backgroundColor: 'var(--color-surface)',
-        border: '1px solid var(--color-border-light)',
-      }}
+      className={cn(
+        'group relative p-5 rounded-2xl border transition-all duration-300',
+        'bg-[var(--color-surface)] border-[var(--color-border-light)]',
+        'hover:shadow-soft-lg hover:-translate-y-0.5',
+        isHighlighted && 'ring-2 ring-[var(--color-bloom)]/40 border-[var(--color-bloom)]',
+      )}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <h3 className="font-bold" style={{ color: 'var(--color-ink)' }}>{title}</h3>
+      {isHighlighted && (
+        <div className="absolute top-3 right-3">
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--color-bloom)]/10 text-[var(--color-bloom)]">
+            <Star className="w-2.5 h-2.5 fill-current" />
+            Highlighted
+          </span>
         </div>
-        <span
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
-          style={{ backgroundColor: status.bg, color: status.textColor }}
-        >
-          {status.icon}
-          {status.label}
-        </span>
-      </div>
-
-      <p className="text-xs font-medium mb-3 uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
-        {sourceType}
-      </p>
-
-      {description && (
-        <p className="text-sm mb-3 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-          {description}
-        </p>
       )}
 
-      {skillsExtracted.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {skillsExtracted.slice(0, 5).map((skill) => (
-            <span
-              key={skill}
-              className="text-xs font-medium px-2.5 py-1 rounded-full"
-              style={{ backgroundColor: 'var(--color-surface-dim)', color: 'var(--color-text-secondary)' }}
+      <div className="flex items-start gap-4">
+        {thumbnailUrl && (
+          <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-[var(--color-surface-dim)]">
+            <Image
+              src={thumbnailUrl}
+              alt={title}
+              fill
+              className="object-cover"
+              sizes="64px"
+            />
+          </div>
+        )}
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <div className="min-w-0">
+              <h3 className="font-bold text-sm leading-snug truncate" style={{ color: 'var(--color-ink)' }}>
+                {title}
+              </h3>
+              <div className="flex items-center gap-2 mt-1">
+                <TypeBadge type={sourceType} />
+                <span
+                  className={cn(
+                    'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold',
+                    status.className,
+                  )}
+                >
+                  {status.icon}
+                  {status.label}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {description && (
+            <p
+              className="text-xs leading-relaxed mt-2 line-clamp-2"
+              style={{ color: 'var(--color-text-secondary)' }}
             >
-              {skill}
-            </span>
-          ))}
-          {skillsExtracted.length > 5 && (
-            <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ color: 'var(--color-text-secondary)' }}>
-              +{skillsExtracted.length - 5} more
-            </span>
+              {description}
+            </p>
           )}
-        </div>
-      )}
 
-      <div className="flex items-center justify-between pt-3" style={{ borderTop: '1px solid var(--color-border-light)' }}>
-        <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-          {viewCount} views
-        </span>
-        {variant === 'dashboard' ? (
-          <div className="flex items-center gap-2">
-            <Link href={`/dashboard/proof/${id}`} className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors duration-200" style={{ color: 'var(--color-pulse)' }}>
-              View Details
+          {whatItProves.length > 0 && (
+            <div className="mt-2.5 flex items-center gap-1.5">
+              <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
+                Proves
+              </span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--color-ember)]/10 text-[var(--color-ember)]">
+                {whatItProves.length}
+              </span>
+            </div>
+          )}
+
+          {skillsExtracted.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-3">
+              {skillsExtracted.slice(0, 4).map((skill) => (
+                <span
+                  key={skill}
+                  className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[var(--color-surface-dim)]"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  {skill}
+                </span>
+              ))}
+              {skillsExtracted.length > 4 && (
+                <span
+                  className="text-[11px] font-medium px-2 py-0.5 rounded-full"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  +{skillsExtracted.length - 4}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div
+            className="flex items-center justify-between mt-3 pt-3 border-t"
+            style={{ borderColor: 'var(--color-border-light)' }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1 text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
+                <Eye className="w-3 h-3" />
+                {viewCount}
+              </span>
+              {proof.sourceUrl && (
+                <a
+                  href={proof.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-[11px] transition-colors hover:text-[var(--color-pulse)]"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                  aria-label="Open source URL"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  Source
+                </a>
+              )}
+            </div>
+
+            <Link
+              href={`/dashboard/proof/${id}`}
+              className={cn(
+                'text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors duration-200',
+                variant === 'dashboard'
+                  ? 'hover:bg-[var(--color-pulse)]/5 text-[var(--color-pulse)]'
+                  : 'hover:bg-[var(--color-bloom)]/5 text-[var(--color-bloom)]',
+              )}
+            >
+              {variant === 'dashboard' ? 'View Details' : 'View Full Proof'}
             </Link>
           </div>
-        ) : (
-          <Link href={`/dashboard/proof/${id}`} className="text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ color: 'var(--color-bloom)' }}>
-            View Full Proof
-          </Link>
-        )}
+        </div>
       </div>
     </div>
   );

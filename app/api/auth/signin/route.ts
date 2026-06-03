@@ -6,7 +6,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const body = await request.json();
+  let body: { email?: string; password?: string };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+
   const { email, password } = body;
 
   if (!email || !password) {
@@ -22,5 +28,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
-  return NextResponse.json({ user: data.user, session: data.session }, { status: 200 });
+  return NextResponse.json({ user: { id: data.user.id, email: data.user.email } }, { status: 200 });
 }
