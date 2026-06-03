@@ -204,7 +204,18 @@ export default async function DashboardPage() {
             ))}
           </div>
 
-          <CoachNote note={coachNote} />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-[var(--color-neutral-text)]">AI Career Coach</h2>
+              <Link
+                href="/dashboard/coach"
+                className="text-sm text-[var(--color-primary-emerald)] hover:underline"
+              >
+                View all notes →
+              </Link>
+            </div>
+            <CoachNote note={coachNote} />
+          </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
             <div>

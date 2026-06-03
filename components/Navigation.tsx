@@ -16,8 +16,10 @@ import {
   User,
   ChevronDown,
   Check,
+  Sparkles,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/lib/auth-context';
 import type { Notification } from '@/lib/types';
 import { formatRelativeTime, getInitials } from '@/lib/utils';
 import { cn } from '@/lib/utils';
@@ -25,6 +27,7 @@ import { cn } from '@/lib/utils';
 export default function Navigation() {
   const router = useRouter();
   const pathname = usePathname();
+  const { user: authUser, signOut: authSignOut } = useAuth();
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
   const [fullName, setFullName] = useState<string>('');
   const [avatarUrl, setAvatarUrl] = useState<string>('');
@@ -139,13 +142,13 @@ export default function Navigation() {
   };
 
   const handleSignOut = async () => {
-    if (!supabase) return;
-    await supabase.auth.signOut();
+    await authSignOut();
     router.push('/signin');
   };
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
+    { href: '/dashboard/coach', label: 'AI Coach', icon: Sparkles },
     { href: '/opportunities', label: 'Opportunities', icon: Briefcase },
     { href: '/dashboard/sources/new', label: 'Add Source', icon: PlusCircle },
     { href: '/settings', label: 'Settings', icon: Settings },
