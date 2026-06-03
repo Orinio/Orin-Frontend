@@ -212,7 +212,16 @@ export function parseCoachResponse(response: string): {
 } | null {
   try {
     const cleaned = response.replace(/```json\n?|\n?```/g, '').trim();
-    const parsed = JSON.parse(cleaned);
+    
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      return {
+        content: cleaned,
+        priority: 5,
+      };
+    }
+    
+    const parsed = JSON.parse(jsonMatch[0]);
 
     if (!parsed.content || typeof parsed.content !== 'string') {
       return null;
