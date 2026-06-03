@@ -6,7 +6,7 @@ export default function Hero() {
       <section className="pt-32 pb-20 px-6 overflow-hidden">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-bold mb-6">
+            <div className="inline-block badge-highlight mb-6">
               AI Coach For Students
             </div>
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 leading-tight text-gray-900">
@@ -16,10 +16,10 @@ export default function Hero() {
               GitHub, Kaggle, certificates, projects, all over the place. ORIN transforms them into verified proof cards, an AI coach who guides you daily, and real opportunities that match your proof.
             </p>
             <div className="flex gap-4 flex-wrap mb-6">
-              <Link href="/signup" className="btn-green px-6 py-3 rounded-lg font-semibold">
+              <Link href="/signup" className="btn-primary px-6 py-3 rounded-lg font-semibold">
                 Start Building Proof
               </Link>
-              <button className="border-2 border-gray-300 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50">
+              <button className="btn-secondary px-6 py-3 rounded-lg font-semibold">
                 Watch Demo
               </button>
             </div>
@@ -39,8 +39,11 @@ export default function Hero() {
 
 const styles = `
   .grad-emerald { background: linear-gradient(135deg, #059669 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .btn-green { background: linear-gradient(135deg, #059669, #10b981); color: white; font-weight: 500; transition: box-shadow 0.3s ease; }
-  .btn-green:hover { box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3); }
+  .btn-primary { background-color: var(--color-primary-cta); color: var(--color-text-primary); font-weight: 500; transition: all 0.3s ease; border: none; }
+  .btn-primary:hover { box-shadow: 0 8px 25px rgba(238, 66, 102, 0.3); }
+  .btn-secondary { background-color: var(--color-secondary-cta); color: var(--color-text-primary); font-weight: 500; transition: all 0.3s ease; border: none; }
+  .btn-secondary:hover { box-shadow: 0 8px 25px rgba(246, 146, 38, 0.3); }
+  .badge-highlight { background-color: var(--color-highlight); color: var(--color-text-primary); padding: 4px 8px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.875rem; }
   .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
   .animate-float-slower { animation: floatSlower 7.5s ease-in-out infinite; }
   @keyframes floatSlow { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-14px); } }

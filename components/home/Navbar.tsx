@@ -34,13 +34,13 @@ export default function Navbar() {
       {/* NAV */}
       <nav className="fixed top-0 w-full z-50 bg-glass border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="text-2xl font-serif font-bold grad-emerald">ORIN</div>
-          <div className="hidden md:flex gap-8 text-sm font-medium text-gray-600">
+          <div className="text-2xl font-serif font-bold" style={{ color: 'var(--color-ink)' }}>ORIN</div>
+          <div className="hidden md:flex gap-8 text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
             <a href="#features" className="hover:text-emerald-700">Features</a>
             <a href="#how" className="hover:text-emerald-700">How It Works</a>
             <a href="#pricing" className="hover:text-emerald-700">Pricing</a>
           </div>
-          <Link href="/signin" className="btn-green px-6 py-2 rounded-lg font-medium">
+          <Link href="/signin" className="btn-primary px-6 py-2 rounded-lg font-medium">
             Get Started
           </Link>
         </div>
@@ -48,27 +48,9 @@ export default function Navbar() {
 
       {/* STYLES */}
       <style>{`
-        .grad-emerald {
-          background: linear-gradient(135deg, #059669 0%, #d97706 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
         .bg-glass {
           background: rgba(255, 255, 255, 0.7);
           backdrop-filter: blur(12px);
-        }
-
-        .btn-green {
-          background: linear-gradient(135deg, #059669, #10b981);
-          color: white;
-          font-weight: 500;
-          transition: box-shadow 0.3s ease;
-        }
-
-        .btn-green:hover {
-          box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
         }
       `}</style>
     </>

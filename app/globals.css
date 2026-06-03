@@ -2,8 +2,8 @@
 @import "../styles/variables.css";
 
 @theme inline {
-  --font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
-  --font-serif: var(--font-serif), Lora, Georgia, serif;
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
   --font-mono: var(--font-mono);
 }
 
@@ -16,12 +16,9 @@ html,
 body {
   margin: 0;
   min-height: 100%;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-
-body {
-  background: white;
-  color: #111827;
+  font-family: var(--font-body);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
 }
 
 h1,
@@ -30,17 +27,11 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-weight: bold;
 }
 
-/* Gradient text utility */
-.grad-emerald {
-  background: linear-gradient(135deg, #059669 0%, #d97706 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* Gradient text utility - removed old one, can add back if needed with new palette */
 
 /* Glass effect */
 .bg-glass {
@@ -49,19 +40,76 @@ h6 {
 }
 
 /* Primary button */
-.btn-green {
-  background: linear-gradient(135deg, #059669, #10b981);
-  color: white;
+.btn-primary {
+  background-color: var(--color-primary-cta);
+  color: var(--color-text-primary);
   font-weight: 500;
-  transition: box-shadow 0.3s ease;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
 }
 
-.btn-green:hover {
-  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+.btn-primary:hover {
+  background-color: #d63a5b; /* Darker pulse for hover */
+  box-shadow: 0 4px 12px rgba(238, 66, 102, 0.3);
+}
+
+/* Secondary button */
+.btn-secondary {
+  background-color: var(--color-secondary-cta);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: #e08215; /* Darker ember for hover */
+  box-shadow: 0 4px 12px rgba(246, 146, 38, 0.3);
+}
+
+/* Success button */
+.btn-success {
+  background-color: var(--color-success);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
+}
+
+.btn-success:hover {
+  background-color: #0a9a6a; /* Darker bloom for hover */
+}
+
+/* Highlight/Badge */
+.badge-highlight {
+  background-color: var(--color-highlight);
+  color: var(--color-text-primary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* Feature Card accent */
+.card-accent {
+  border-left: 4px solid var(--color-secondary-cta);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 24px;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent-gold);
+  outline: 2px solid var(--color-highlight);
   outline-offset: 4px;
 }
 
@@ -72,8 +120,8 @@ h6 {
 }
 
 .skip-link:focus {
-  background: var(--color-neutral-surface);
-  border: 1px solid var(--color-neutral-border);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   left: 16px;
   padding: 8px 12px;
