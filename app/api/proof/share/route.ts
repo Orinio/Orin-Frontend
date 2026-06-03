@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     proof_id: proofId,
     owner_id: userId,
     kind: shareKind,
-    recipient_email: recipientEmail || null,
+    recipient_email: recipientEmail || '',
     recipient_name: recipientName || null,
     message: message || null,
   };
