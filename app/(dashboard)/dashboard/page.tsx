@@ -303,7 +303,7 @@ export default async function DashboardPage() {
               ))}
             </div>
             <Link
-              href="/dashboard/opportunities"
+              href="/opportunities"
               className="mt-4 block w-full rounded-md border-2 border-[var(--color-primary-emerald)] bg-transparent px-4 py-2 text-center font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)] text-sm"
             >
               View opportunities

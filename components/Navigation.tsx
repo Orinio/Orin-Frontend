@@ -146,9 +146,9 @@ export default function Navigation() {
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
-    { href: '/dashboard/opportunities', label: 'Opportunities', icon: Briefcase },
+    { href: '/opportunities', label: 'Opportunities', icon: Briefcase },
     { href: '/dashboard/sources/new', label: 'Add Source', icon: PlusCircle },
-    { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+    { href: '/settings', label: 'Settings', icon: Settings },
   ];
 
   const isActive = (href: string) => pathname === href;
@@ -302,7 +302,7 @@ export default function Navigation() {
                   </div>
                   <div className="py-1">
                     <Link
-                      href="/dashboard/settings"
+                      href="/settings"
                       onClick={() => setUserMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-surface-dim)]"
                       style={{ color: 'var(--color-ink)' }}
@@ -311,7 +311,7 @@ export default function Navigation() {
                       Profile
                     </Link>
                     <Link
-                      href="/dashboard/settings"
+                      href="/settings"
                       onClick={() => setUserMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-surface-dim)]"
                       style={{ color: 'var(--color-ink)' }}
