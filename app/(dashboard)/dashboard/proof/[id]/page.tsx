@@ -1,40 +1,66 @@
+'use client';
+
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { supabase, Database } from "@/lib/supabase";
-import { proofs as mockProofs } from "@/lib/mock-data";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import { mapDbProofToProof, getStatusConfig, formatNumber, formatRelativeTime, getProofTypeColor } from "@/lib/utils";
 import type { Proof } from "@/lib/types";
 
-interface ProofDetailPageProps {
-  params: Promise<{ id: string }>;
+interface StatusConfig {
+  label: string;
+  className: string;
 }
 
-export default async function ProofDetailPage({ params }: ProofDetailPageProps) {
-  const { id } = await params;
-  let proof: Proof | undefined;
+export default function ProofDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const [proof, setProof] = useState<Proof | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('proof_cards')
-        .select('*')
-        .eq('id', id)
-        .maybeSingle();
+  useEffect(() => {
+    async function fetchProof() {
+      try {
+        if (!supabase) return;
+        const { data, error } = await supabase
+          .from('proof_cards')
+          .select('*')
+          .eq('id', id)
+          .maybeSingle();
 
-      if (error) throw new Error(error.message);
-      if (data) proof = mapDbProofToProof(data);
-    } catch (e) {
-      console.warn("DB Lookup failed, falling back to mock data.", e);
+        if (error) throw new Error(error.message);
+        if (data) setProof(mapDbProofToProof(data));
+      } catch (e) {
+        console.warn('Failed to fetch proof:', e);
+      } finally {
+        setLoading(false);
+      }
     }
+    fetchProof();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-5xl space-y-6 animate-pulse">
+        <div className="h-4 w-48 rounded bg-[var(--color-neutral-border)]" />
+        <div className="h-10 w-96 rounded bg-[var(--color-neutral-border)]" />
+        <div className="h-32 w-full rounded bg-[var(--color-neutral-border)]" />
+      </div>
+    );
   }
 
   if (!proof) {
-    proof = mockProofs.find((item) => item.id === id);
+    return (
+      <div className="mx-auto max-w-2xl py-16 text-center">
+        <h2 className="text-xl font-semibold">Proof not found</h2>
+        <Link href="/dashboard" className="mt-2 inline-block text-sm text-[var(--color-primary-emerald)] hover:underline">
+          &larr; Back to dashboard
+        </Link>
+      </div>
+    );
   }
 
-  if (!proof) notFound();
-
-  const statusConfig = getStatusConfig(proof.verificationStatus);
+  const statusConfig: StatusConfig = getStatusConfig(proof.verificationStatus);
 
   const getEvidenceItems = () => {
     const items: { label: string; detail: string; action?: string; href?: string }[] = [];

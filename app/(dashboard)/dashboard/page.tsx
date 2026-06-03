@@ -1,61 +1,49 @@
+'use client';
+
 import Link from "next/link";
-import { supabase, Database } from "@/lib/supabase";
-import { proofs as mockProofs, opportunities as mockOpps, coachNote as mockCoachNote, currentUser as mockUser } from "@/lib/mock-data";
-import { mapDbProofToProof, mapDbOpportunityToOpportunity, mapDbCoachNoteToCoachNote, formatNumber, getProofTypeColor } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/lib/supabase";
+import { mapDbProofToProof, mapDbOpportunityToOpportunity, mapDbCoachNoteToCoachNote, mapDbUserToUser, formatNumber, getProofTypeColor } from "@/lib/utils";
+import type { Database } from "@/lib/supabase";
 import ProofCard from "@/components/ProofCard";
 import CoachNote from "@/components/CoachNote";
 import type { Proof, Opportunity, CoachNote as CoachNoteType, User } from "@/lib/types";
 
-export default async function DashboardPage() {
-  let proofs: Proof[] = [];
-  let opportunities: Opportunity[] = [];
-  let coachNote: CoachNoteType = mockCoachNote;
-  let user: User = mockUser;
-  let isDemoMode = false;
+export default function DashboardPage() {
+  const { user: authUser, initialized } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [proofs, setProofs] = useState<Proof[]>([]);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [coachNote, setCoachNote] = useState<CoachNoteType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (supabase) {
-    try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
+  useEffect(() => {
+    if (!initialized) return;
+    if (!authUser) {
+      window.location.href = '/signin';
+      return;
+    }
+    setLoading(true);
 
-      if (!authUser) {
-        throw new Error("No authenticated user");
-      }
+    const userId = authUser.id;
 
-      const { data: userDataRaw } = await supabase
-        .from('users')
-        .select('*')
-        .eq('auth_user_id', authUser.id)
-        .maybeSingle();
+    async function fetchData() {
+      try {
+        if (!supabase) return;
 
-      if (userDataRaw) {
-        user = {
-          id: userDataRaw.id,
-          authUserId: userDataRaw.auth_user_id ?? undefined,
-          email: userDataRaw.email,
-          username: userDataRaw.username,
-          fullName: userDataRaw.full_name ?? undefined,
-          avatarUrl: userDataRaw.avatar_url ?? undefined,
-          college: userDataRaw.college ?? undefined,
-          year: userDataRaw.year ?? undefined,
-          bio: userDataRaw.bio ?? undefined,
-          headline: userDataRaw.headline ?? undefined,
-          location: userDataRaw.location ?? undefined,
-          websiteUrl: userDataRaw.website_url ?? undefined,
-          githubUrl: userDataRaw.github_url ?? undefined,
-          linkedinUrl: userDataRaw.linkedin_url ?? undefined,
-          twitterUrl: userDataRaw.twitter_url ?? undefined,
-          role: userDataRaw.role,
-          accountStatus: userDataRaw.account_status,
-          isProfilePublic: userDataRaw.is_profile_public,
-          hideEmail: userDataRaw.hide_email,
-          emailVerified: userDataRaw.email_verified,
-          authProvider: userDataRaw.auth_provider,
-          lastLoginAt: userDataRaw.last_login_at ? new Date(userDataRaw.last_login_at) : undefined,
-          createdAt: new Date(userDataRaw.created_at),
-          updatedAt: new Date(userDataRaw.updated_at),
-        };
+        const { data: userDataRaw } = await supabase
+          .from('users')
+          .select('*')
+          .eq('auth_user_id', userId)
+          .maybeSingle();
 
-        const { data: proofsData, error: proofsError } = await supabase
+        if (!userDataRaw) return;
+
+        const currentUser = mapDbUserToUser(userDataRaw);
+        setUser(currentUser);
+
+        const { data: proofsData } = await supabase
           .from('proof_cards')
           .select('*')
           .eq('user_id', userDataRaw.id)
@@ -69,12 +57,8 @@ export default async function DashboardPage() {
           .is('deleted_at', null)
           .order('created_at', { ascending: false });
 
-        if (proofsError) {
-          throw new Error("Supabase query failed");
-        }
-
-        proofs = proofsData ? proofsData.map(mapDbProofToProof) : [];
-        opportunities = oppsData ? oppsData.map(mapDbOpportunityToOpportunity) : [];
+        if (proofsData) setProofs(proofsData.map(mapDbProofToProof));
+        if (oppsData) setOpportunities(oppsData.map(mapDbOpportunityToOpportunity));
 
         const { data: noteDataRaw } = await supabase
           .from('coach_notes')
@@ -86,20 +70,34 @@ export default async function DashboardPage() {
           .maybeSingle();
 
         if (noteDataRaw) {
-          coachNote = mapDbCoachNoteToCoachNote(noteDataRaw as Database['public']['Tables']['coach_notes']['Row']);
+          setCoachNote(mapDbCoachNoteToCoachNote(noteDataRaw as Database['public']['Tables']['coach_notes']['Row']));
         }
+      } catch (e) {
+        console.warn('Failed to fetch dashboard data:', e);
+      } finally {
+        setLoading(false);
       }
-    } catch (e) {
-      console.warn("Falling back to demo mode:", e);
-      proofs = mockProofs;
-      opportunities = mockOpps;
-      isDemoMode = true;
     }
-  } else {
-    isDemoMode = true;
-    proofs = mockProofs;
-    opportunities = mockOpps;
+
+    fetchData();
+  }, [authUser, initialized]);
+
+  if (!initialized || loading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="animate-pulse rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-4">
+              <div className="h-3 w-20 rounded bg-[var(--color-neutral-border)]" />
+              <div className="mt-2 h-8 w-16 rounded bg-[var(--color-neutral-border)]" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
+
+  if (!user) return null;
 
   const totalViews = proofs.reduce((sum, p) => sum + p.viewCount, 0);
   const verifiedCount = proofs.filter((p) => p.verificationStatus === 'verified').length;
@@ -116,20 +114,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {isDemoMode && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50/80 p-3.5 text-sm text-amber-800 shadow-sm flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
-            </span>
-            <span>
-              <strong>Running in Demo Mode:</strong> Database connection is currently offline. Displaying sandbox data.
-            </span>
-          </div>
-        </div>
-      )}
-
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <aside className="hidden lg:col-span-2 lg:block">
           <nav className="sticky top-20 space-y-2 text-sm" aria-label="Dashboard navigation">
@@ -204,18 +188,20 @@ export default async function DashboardPage() {
             ))}
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-[var(--color-neutral-text)]">AI Career Coach</h2>
-              <Link
-                href="/dashboard/coach"
-                className="text-sm text-[var(--color-primary-emerald)] hover:underline"
-              >
-                View all notes →
-              </Link>
+          {coachNote && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-[var(--color-neutral-text)]">AI Career Coach</h2>
+                <Link
+                  href="/dashboard/coach"
+                  className="text-sm text-[var(--color-primary-emerald)] hover:underline"
+                >
+                  View all notes →
+                </Link>
+              </div>
+              <CoachNote note={coachNote} />
             </div>
-            <CoachNote note={coachNote} />
-          </div>
+          )}
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
             <div>
@@ -298,28 +284,30 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div id="opportunities" className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-4">
-            <h2 className="text-base font-semibold text-[var(--color-neutral-text)]">Opportunities matched</h2>
-            <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
-              {opportunities.length} opportunities match your proof.
-            </p>
-            <div className="mt-3 space-y-2">
-              {opportunities.slice(0, 2).map((opportunity) => (
-                <div key={opportunity.id} className="rounded-[var(--radius-md)] border border-[var(--color-neutral-border)] p-3">
-                  <p className="text-sm font-medium text-[var(--color-neutral-text)]">{opportunity.company}</p>
-                  <p className="text-xs text-[var(--color-neutral-text-secondary)]">
-                    {opportunity.title} &middot; {opportunity.matchPercentage}% match
-                  </p>
-                </div>
-              ))}
+          {opportunities.length > 0 && (
+            <div id="opportunities" className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-4">
+              <h2 className="text-base font-semibold text-[var(--color-neutral-text)]">Opportunities matched</h2>
+              <p className="mt-2 text-sm text-[var(--color-neutral-text-secondary)]">
+                {opportunities.length} opportunities match your proof.
+              </p>
+              <div className="mt-3 space-y-2">
+                {opportunities.slice(0, 2).map((opportunity) => (
+                  <div key={opportunity.id} className="rounded-[var(--radius-md)] border border-[var(--color-neutral-border)] p-3">
+                    <p className="text-sm font-medium text-[var(--color-neutral-text)]">{opportunity.company}</p>
+                    <p className="text-xs text-[var(--color-neutral-text-secondary)]">
+                      {opportunity.title} &middot; {opportunity.matchPercentage}% match
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/opportunities"
+                className="mt-4 block w-full rounded-md border-2 border-[var(--color-primary-emerald)] bg-transparent px-4 py-2 text-center font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)] text-sm"
+              >
+                View opportunities
+              </Link>
             </div>
-            <Link
-              href="/opportunities"
-              className="mt-4 block w-full rounded-md border-2 border-[var(--color-primary-emerald)] bg-transparent px-4 py-2 text-center font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)] text-sm"
-            >
-              View opportunities
-            </Link>
-          </div>
+          )}
         </aside>
       </div>
     </div>

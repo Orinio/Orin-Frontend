@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { currentUser as mockUser, proofs as mockProofs } from '@/lib/mock-data';
 import ProofCard from '@/components/ProofCard';
 import { mapDbUserToUser, mapDbProofToProof, getProofTypeColor } from '@/lib/utils';
 import type { User, Proof } from '@/lib/types';
@@ -50,37 +49,6 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
     } catch (e) {
       console.warn("Error fetching public profile, falling back to mock.", e);
     }
-  }
-
-  if (!user && (username === 'aarav-gupta-cse' || !supabase)) {
-    user = {
-      id: mockUser.id,
-      email: mockUser.email,
-      username: mockUser.username,
-      fullName: mockUser.fullName,
-      avatarUrl: mockUser.avatarUrl,
-      college: mockUser.college,
-      year: mockUser.year,
-      bio: mockUser.bio,
-      headline: mockUser.headline,
-      location: mockUser.location,
-      githubUrl: mockUser.githubUrl,
-      linkedinUrl: mockUser.linkedinUrl,
-      twitterUrl: mockUser.twitterUrl,
-      websiteUrl: mockUser.websiteUrl,
-      role: 'user',
-      accountStatus: 'active',
-      isProfilePublic: true,
-      hideEmail: false,
-      emailVerified: true,
-      authProvider: 'email',
-      createdAt: mockUser.createdAt,
-      updatedAt: mockUser.updatedAt,
-    };
-    proofs = mockProofs.filter((p) => p.visibility === 'public');
-    allSkills = Array.from(
-      new Set(mockProofs.filter((p) => p.visibility === 'public').flatMap((p) => [...p.skillsExtracted, ...p.skillsUserAdded]))
-    );
   }
 
   if (!user) notFound();

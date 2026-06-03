@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
-import { opportunities as mockOpps } from '@/lib/mock-data';
 import { getOpportunityTypeLabel, getStatusConfig } from '@/lib/utils';
 import type { Opportunity, OpportunityType, OpportunityStatus } from '@/lib/types';
 
@@ -17,7 +16,6 @@ export default function OpportunitiesPage() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [userOpps, setUserOpps] = useState<Record<string, OpportunityStatus>>({});
   const [loading, setLoading] = useState(true);
-  const [isDemoMode, setIsDemoMode] = useState(false);
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<OpportunityType | null>(null);
   const [sortBy, setSortBy] = useState<'match' | 'recent' | 'salary'>('match');
@@ -29,9 +27,8 @@ export default function OpportunitiesPage() {
         if (!response.ok) throw new Error('API failed');
         const data = await response.json();
         setOpportunities(data.opportunities || []);
-      } catch {
-        setOpportunities(mockOpps);
-        setIsDemoMode(true);
+      } catch (e) {
+        console.warn('Failed to fetch opportunities:', e);
       } finally {
         setLoading(false);
       }
@@ -115,20 +112,6 @@ export default function OpportunitiesPage() {
           Internships, projects, and jobs matched to your proof.
         </p>
       </header>
-
-      {isDemoMode && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50/80 p-3.5 text-sm text-amber-800 shadow-sm flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
-            </span>
-            <span>
-              <strong>Demo Mode:</strong> API offline. Displaying sandbox opportunities.
-            </span>
-          </div>
-        </div>
-      )}
 
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="relative flex-1 max-w-md">

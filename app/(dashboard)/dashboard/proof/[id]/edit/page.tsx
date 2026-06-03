@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, Database } from '@/lib/supabase';
-import { proofs as mockProofs } from '@/lib/mock-data';
 import { mapDbProofToProof } from '@/lib/utils';
 import type { Proof, ProofSourceType } from '@/lib/types';
 
@@ -32,36 +31,23 @@ export default function EditProofPage() {
   useEffect(() => {
     async function fetchProof() {
       try {
-        if (supabase) {
-          const { data, error: dbError } = await supabase
-            .from('proof_cards')
-            .select('*')
-            .eq('id', id)
-            .maybeSingle();
-          if (dbError) throw new Error(dbError.message);
-          if (data) {
-            const p = mapDbProofToProof(data);
-            setProof(p);
-            setTitle(p.title);
-            setDescription(p.description || '');
-            setSourceType(p.sourceType);
-            setSourceUrl(p.sourceUrl || '');
-            setVisibility(p.visibility);
-            setSkillsExtracted(p.skillsExtracted.join(', '));
-            setWhatItProves(p.whatItProves.join(', '));
-            return;
-          }
-        }
-        const mock = mockProofs.find((p) => p.id === id);
-        if (mock) {
-          setProof(mock);
-          setTitle(mock.title);
-          setDescription(mock.description || '');
-          setSourceType(mock.sourceType);
-          setSourceUrl(mock.sourceUrl || '');
-          setVisibility(mock.visibility);
-          setSkillsExtracted(mock.skillsExtracted.join(', '));
-          setWhatItProves(mock.whatItProves.join(', '));
+        if (!supabase) return;
+        const { data, error: dbError } = await supabase
+          .from('proof_cards')
+          .select('*')
+          .eq('id', id)
+          .maybeSingle();
+        if (dbError) throw new Error(dbError.message);
+        if (data) {
+          const p = mapDbProofToProof(data);
+          setProof(p);
+          setTitle(p.title);
+          setDescription(p.description || '');
+          setSourceType(p.sourceType);
+          setSourceUrl(p.sourceUrl || '');
+          setVisibility(p.visibility);
+          setSkillsExtracted(p.skillsExtracted.join(', '));
+          setWhatItProves(p.whatItProves.join(', '));
         }
       } catch (e) {
         console.warn('Failed to load proof', e);

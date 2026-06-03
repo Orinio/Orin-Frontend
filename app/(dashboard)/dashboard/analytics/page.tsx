@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { proofs as mockProofs } from '@/lib/mock-data';
 import { mapDbProofToProof, formatNumber, getProofTypeColor } from '@/lib/utils';
 import type { Proof } from '@/lib/types';
 
@@ -127,22 +126,17 @@ export default function AnalyticsPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (supabase) {
-          const { data, error } = await supabase
-            .from('proof_cards')
-            .select('*')
-            .is('deleted_at', null)
-            .order('created_at', { ascending: false });
+        if (!supabase) return;
+        const { data, error } = await supabase
+          .from('proof_cards')
+          .select('*')
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
 
-          if (error) throw new Error(error.message);
-          if (data) {
-            setProofs(data.map(mapDbProofToProof));
-            return;
-          }
-        }
-        setProofs(mockProofs);
-      } catch {
-        setProofs(mockProofs);
+        if (error) throw new Error(error.message);
+        if (data) setProofs(data.map(mapDbProofToProof));
+      } catch (e) {
+        console.warn('Failed to fetch analytics:', e);
       } finally {
         setLoading(false);
       }

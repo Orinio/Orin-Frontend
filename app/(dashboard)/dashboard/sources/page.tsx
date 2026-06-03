@@ -69,27 +69,21 @@ function EmptyState() {
 export default function SourcesPage() {
   const [sources, setSources] = useState<ProofSource[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isDemoMode, setIsDemoMode] = useState(false);
 
   useEffect(() => {
     async function fetchSources() {
       try {
-        if (supabase) {
-          const { data, error } = await supabase
-            .from('proof_sources')
-            .select('*')
-            .is('deleted_at', null)
-            .order('created_at', { ascending: false });
+        if (!supabase) return;
+        const { data, error } = await supabase
+          .from('proof_sources')
+          .select('*')
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
 
-          if (error) throw new Error(error.message);
-          if (data) {
-            setSources(data.map(mapDbProofSourceToProofSource));
-            return;
-          }
-        }
-        setIsDemoMode(true);
-      } catch {
-        setIsDemoMode(true);
+        if (error) throw new Error(error.message);
+        if (data) setSources(data.map(mapDbProofSourceToProofSource));
+      } catch (e) {
+        console.warn('Failed to fetch sources:', e);
       } finally {
         setLoading(false);
       }
@@ -115,16 +109,6 @@ export default function SourcesPage() {
           + Add source
         </Link>
       </header>
-
-      {isDemoMode && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50/80 p-3.5 text-sm text-amber-800 flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
-          </span>
-          <span><strong>Demo Mode:</strong> API offline. Displaying sample data.</span>
-        </div>
-      )}
 
       {sources.length === 0 ? (
         <EmptyState />
