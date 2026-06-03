@@ -30,23 +30,29 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { title, company, match_percentage } = body;
+  const { title, company, link, match_percentage, type, description, location, is_remote, required_skills } = body;
 
-  if (!title || !company) {
-    return NextResponse.json({ error: 'Title and company are required' }, { status: 400 });
+  if (!title || !company || !link) {
+    return NextResponse.json({ error: 'Title, company, and link are required' }, { status: 400 });
   }
 
   const insertData: Database['public']['Tables']['opportunities']['Insert'] = {
     title,
     company,
+    link,
     match_percentage: match_percentage || 0,
+    type: type || 'internship',
+    description: description || null,
+    location: location || null,
+    is_remote: is_remote || false,
+    required_skills: required_skills || [],
   };
 
   const { data: opportunity, error } = await supabase
-  .from('opportunities')
-  .insert([insertData])
-  .select()
-  .single();
+    .from('opportunities')
+    .insert([insertData])
+    .select()
+    .single();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

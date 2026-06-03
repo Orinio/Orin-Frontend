@@ -13,12 +13,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-gradient-to-r from-[var(--color-primary-emerald)] to-[var(--color-primary-orange)] text-white hover:from-[var(--color-primary-emerald-strong)] hover:to-[var(--color-primary-orange-light)]",
+    "bg-[var(--color-primary-cta)] text-[var(--color-ink)] hover:bg-[#d63a5b] hover:shadow-[0_4px_12px_rgba(238,66,102,0.3)]",
   secondary:
-    "border-2 border-[var(--color-primary-emerald)] bg-transparent text-[var(--color-primary-emerald)] hover:bg-[var(--color-primary-soft)]",
+    "bg-[var(--color-secondary-cta)] text-[var(--color-ink)] hover:bg-[#e08215] hover:shadow-[0_4px_12px_rgba(246,146,38,0.3)]",
   ghost:
-    "bg-transparent text-[var(--color-primary-emerald)] hover:bg-[var(--color-primary-soft)]",
-  danger: "bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger-strong)]",
+    "bg-transparent text-[var(--color-ink)] hover:bg-[var(--color-mist)]",
+  danger: "bg-[var(--color-pulse)] text-[var(--color-ink)] hover:bg-[#d63a5b]",
 };
 
 const sizeClasses: Record<Size, string> = {

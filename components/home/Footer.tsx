@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <>
       {/* FOOTER */}
-      <footer className="bg-gray-900 text-gray-400 py-16 px-6">
+      <footer className="text-gray-400 py-16 px-6" style={{ backgroundColor: 'var(--color-ink)', color: 'var(--color-text-secondary)' }}>
         <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-8 mb-8">
           <div>
             <p className="font-serif font-bold text-white text-lg">ORIN</p>
@@ -18,7 +18,7 @@ export default function Footer() {
           </div>
           <div>
             <p className="font-bold text-white text-sm mb-4">Company</p>
-            <ul className="space-y-2 text-sm">
+            <ul className="space0-y-2 text-sm">
               <li><a href="#" className="hover:text-white">About</a></li>
               <li><a href="#" className="hover:text-white">Blog</a></li>
               <li><a href="#" className="hover:text-white">Careers</a></li>
