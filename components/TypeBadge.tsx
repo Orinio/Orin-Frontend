@@ -1,5 +1,6 @@
 import {
   Github,
+  GitFork,
   BarChart3,
   Award,
   Trophy,

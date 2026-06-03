@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const protectedRoutes = ['/dashboard', '/dashboard/settings', '/dashboard/opportunities', '/dashboard/sources'];
-const apiRoutes = ['/api/proofs', '/api/sources', '/api/user', '/api/opportunities', '/api/notifications', '/api/coach-notes'];
+const apiRoutes = ['/api/proofs', '/api/proof', '/api/sources', '/api/user', '/api/opportunities', '/api/notifications', '/api/coach-notes'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -36,6 +36,7 @@ export const config = {
   matcher: [
     '/dashboard/:path*',
     '/api/proofs/:path*',
+    '/api/proof/:path*',
     '/api/sources/:path*',
     '/api/user/:path*',
     '/api/opportunities/:path*',

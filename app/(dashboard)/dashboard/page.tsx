@@ -138,6 +138,8 @@ export default async function DashboardPage() {
               { label: `My Proofs (${proofs.length})`, href: "#my-proof", icon: "M4 5h16v4H4zM4 13h16v6H4z" },
               { label: "Skills Map", href: "#skills-map", icon: "M4 20V6m5 14V9m5 11v-5m5 5V8" },
               { label: "Opportunities", href: "#opportunities", icon: "M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4z" },
+              { label: "Sources", href: "/dashboard/sources", icon: "M4 5h16v4H4zM4 13h16v6H4z" },
+              { label: "Analytics", href: "/dashboard/analytics", icon: "M4 20V6m5 14V9m5 11v-5m5 5V8" },
               { label: "Settings", href: "/dashboard/settings", icon: "M12 8a4 4 0 100 8 4 4 0 000-8zm8 4l-2 1 1 2-2 2-2-1-1 2h-2l-1-2-2 1-2-2 1-2-2-1V10l2-1-1-2 2-2 2 1 1-2h2l1 2 2-1 2 2-1 2 2 1v2z" },
             ].map((item) => (
               <a
