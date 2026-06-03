@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function middleware(_request: NextRequest) {
+export async function proxy(_request: NextRequest) {
   // Simple pass-through - auth handled client-side
   return NextResponse.next();
 }
