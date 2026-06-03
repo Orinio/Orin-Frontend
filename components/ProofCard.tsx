@@ -3,13 +3,20 @@
 import Link from 'next/link';
 
 interface ProofCardProps {
-  id: string;
-  title: string;
-  sourceType: string;
-  verificationStatus: 'pending' | 'verified' | 'draft';
-  skillsExtracted: string[];
-  description?: string;
-  viewCount?: number;
+  proof: {
+    id: string;
+    title: string;
+    type: string;
+    status: 'pending' | 'verified' | 'draft';
+    skillsExtracted: string[];
+    description?: string;
+    viewCount?: number;
+    url: string;
+    publicLink: string;
+    isPublic: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   variant?: 'dashboard' | 'public';
 }
 
@@ -48,15 +55,10 @@ const statusConfig = {
 };
 
 export default function ProofCard({
-  id,
-  title,
-  sourceType,
-  verificationStatus,
-  skillsExtracted,
-  description,
-  viewCount = 0,
+  proof,
   variant = 'dashboard',
 }: ProofCardProps) {
+  const { id, title, type: sourceType, status: verificationStatus, skillsExtracted, description, viewCount = 0 } = proof;
   const status = statusConfig[verificationStatus];
 
   return (
