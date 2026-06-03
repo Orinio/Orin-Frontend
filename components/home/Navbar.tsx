@@ -16,14 +16,13 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-glass border-b border-[var(--color-border-light)] shadow-soft-sm'
+          ? 'bg-glass border-b border-[var(--color-border)] shadow-soft-sm'
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--color-ink)] flex items-center justify-center">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-[var(--radius-md)] bg-[var(--color-ink)] flex items-center justify-center transition-transform group-hover:scale-105">
             <span className="text-sm font-bold" style={{ color: 'var(--color-spark)' }}>O</span>
           </div>
           <span className="text-xl font-bold tracking-tight" style={{ color: 'var(--color-ink)' }}>
@@ -31,41 +30,35 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Nav Links */}
         <div className="hidden md:flex items-center gap-8">
-          <a
-            href="#features"
-            className="text-sm font-medium transition-colors duration-200"
-            style={{ color: 'var(--color-text-secondary)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-ink)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
-          >
-            Features
-          </a>
-          <a
-            href="#how"
-            className="text-sm font-medium transition-colors duration-200"
-            style={{ color: 'var(--color-text-secondary)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-ink)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
-          >
-            How It Works
-          </a>
-          <a
-            href="#pricing"
-            className="text-sm font-medium transition-colors duration-200"
-            style={{ color: 'var(--color-text-secondary)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-ink)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
-          >
-            Pricing
-          </a>
+          {[
+            { label: 'Features', href: '#features' },
+            { label: 'How It Works', href: '#how' },
+            { label: 'Pricing', href: '#pricing' },
+          ].map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium transition-colors duration-200 hover:text-[var(--color-ink)]"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
 
-        {/* CTA */}
-        <Link href="/signin" className="btn-primary px-5 py-2.5 rounded-lg text-sm">
-          Get Started
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/signin"
+            className="hidden sm:inline-flex text-sm font-medium px-4 py-2 rounded-[var(--radius-md)] transition-colors duration-200 hover:bg-[var(--color-surface-dim)]"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            Sign in
+          </Link>
+          <Link href="/signup" className="btn-primary px-5 py-2.5 rounded-[var(--radius-md)] text-sm">
+            Get Started
+          </Link>
+        </div>
       </div>
     </nav>
   );

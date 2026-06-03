@@ -849,25 +849,6 @@ export type Database = {
         ];
       };
     };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: {
-      user_role: 'user' | 'admin' | 'moderator';
-      account_status: 'active' | 'pending' | 'suspended' | 'deactivated';
-      student_year: 'first' | 'second' | 'third' | 'fourth' | 'graduate';
-      proof_source_type: 'github' | 'kaggle' | 'certificate' | 'hackathon' | 'project' | 'blog' | 'demo' | 'other';
-      verification_status: 'draft' | 'pending' | 'verified' | 'rejected';
-      visibility_status: 'private' | 'unlisted' | 'public';
-      opportunity_type: 'internship' | 'job' | 'scholarship' | 'mentorship' | 'hackathon' | 'research' | 'other';
-      coach_note_type: 'daily' | 'weekly' | 'milestone' | 'ad_hoc';
-      integration_status: 'connected' | 'disconnected' | 'pending' | 'error';
-      auth_provider: 'email' | 'google' | 'github' | 'apple' | 'linkedin';
-      contact_status: 'new' | 'in_progress' | 'resolved' | 'spam';
-      notification_type: 'recruiter_view' | 'verification_update' | 'opportunity_match' | 'coach_tip' | 'weekly_summary' | 'system';
-      share_token_kind: 'link' | 'email' | 'recruiter_invite';
-      subscription_plan: 'free' | 'pro' | 'team';
-      subscription_status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'incomplete';
-    };
     Views: {
       user_public_profiles: {
         Row: {
@@ -885,11 +866,41 @@ export type Database = {
           linkedin_url: string | null;
           twitter_url: string | null;
           member_since: string;
-          public_proofs: Record<string, unknown>[];
+          public_proofs: Array<{
+            id: string;
+            title: string;
+            description: string | null;
+            source_type: string;
+            source_url: string | null;
+            thumbnail_url: string | null;
+            skills_extracted: string[];
+            what_it_proves: string[];
+            view_count: number;
+            created_at: string;
+          }>;
           public_skills: string[];
           total_profile_views: number;
         };
       };
+    };
+    Functions: Record<string, never>;
+    Enums: {
+      user_role: 'user' | 'admin' | 'moderator';
+      account_status: 'active' | 'pending' | 'suspended' | 'deactivated';
+      student_year: 'first' | 'second' | 'third' | 'fourth' | 'graduate';
+      proof_source_type: 'github' | 'kaggle' | 'certificate' | 'hackathon' | 'project' | 'blog' | 'demo' | 'other';
+      verification_status: 'draft' | 'pending' | 'verified' | 'rejected';
+      visibility_status: 'private' | 'unlisted' | 'public';
+      opportunity_type: 'internship' | 'job' | 'scholarship' | 'mentorship' | 'hackathon' | 'research' | 'other';
+      coach_note_type: 'daily' | 'weekly' | 'milestone' | 'ad_hoc';
+      integration_status: 'connected' | 'disconnected' | 'pending' | 'error';
+      auth_provider: 'email' | 'google' | 'github' | 'apple' | 'linkedin';
+      contact_status: 'new' | 'in_progress' | 'resolved' | 'spam';
+      notification_type: 'recruiter_view' | 'verification_update' | 'opportunity_match' | 'coach_tip' | 'weekly_summary' | 'system';
+      share_token_kind: 'link' | 'email' | 'recruiter_invite';
+      subscription_plan: 'free' | 'pro' | 'team';
+      subscription_status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'incomplete';
+      opportunity_status: 'saved' | 'applied' | 'dismissed' | 'interviewing' | 'rejected' | 'offered';
     };
   };
 };

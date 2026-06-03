@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, Database } from '@/lib/supabase';
+import { resolvePublicUserId } from '@/lib/utils';
 
 type SourceInsert = Database['public']['Tables']['proof_sources']['Insert'];
 
@@ -11,16 +12,14 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const userIdParam = searchParams.get('userId');
 
-  let userId: string;
+  let userId: string | null = userIdParam;
 
-  if (userIdParam) {
-    userId = userIdParam;
-  } else {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    userId = session.user.id;
+  if (!userId) {
+    userId = await resolvePublicUserId(supabase);
+  }
+
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { data: sources, error } = await supabase
@@ -42,8 +41,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -60,16 +59,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'source_type is required' }, { status: 400 });
   }
 
-  const validSourceTypes = ['github', 'kaggle', 'certificate', 'hackathon', 'project', 'blog', 'demo', 'other'];
-  if (!validSourceTypes.includes(source_type)) {
+  const validSourceTypes = ['github', 'kaggle', 'certificate', 'hackathon', 'project', 'blog', 'demo', 'other'] as const;
+  if (!validSourceTypes.includes(source_type as typeof validSourceTypes[number])) {
     return NextResponse.json({ error: `source_type must be one of: ${validSourceTypes.join(', ')}` }, { status: 400 });
   }
 
   const { data: source, error } = await supabase
     .from('proof_sources')
     .insert({
-      user_id: session.user.id,
-      source_type,
+      user_id: userId,
+      source_type: source_type as SourceInsert['source_type'],
       source_url: source_url || null,
       source_name: source_name || null,
     })
@@ -88,8 +87,8 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -104,7 +103,7 @@ export async function DELETE(request: NextRequest) {
     .from('proof_sources')
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', sourceId)
-    .eq('user_id', session.user.id);
+    .eq('user_id', userId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

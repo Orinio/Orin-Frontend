@@ -27,9 +27,9 @@ export async function GET(request: NextRequest) {
   }
 
   if (type) {
-    const validTypes = ['internship', 'job', 'scholarship', 'mentorship', 'hackathon', 'research', 'other'];
-    if (validTypes.includes(type)) {
-      query = query.eq('type', type);
+    const validTypes = ['internship', 'job', 'scholarship', 'mentorship', 'hackathon', 'research', 'other'] as const;
+    if ((validTypes as readonly string[]).includes(type)) {
+      query = query.eq('type', type as Database['public']['Tables']['opportunities']['Row']['type']);
     }
   }
 

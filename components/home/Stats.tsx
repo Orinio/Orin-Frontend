@@ -1,36 +1,29 @@
-export default function Stats() {
-  const stats = [
-    { num: '5K+', label: 'Active students', color: 'var(--color-bloom)' },
-    { num: '23K+', label: 'Proof cards created', color: 'var(--color-ember)' },
-    { num: '1.2K+', label: 'Matched internships', color: 'var(--color-pulse)' },
-    { num: '92%', label: 'Return weekly', color: 'var(--color-spark)' },
-  ];
+const stats = [
+  { value: '5,240+', label: 'Active students', color: 'var(--color-bloom)' },
+  { value: '18,300', label: 'Proof cards generated', color: 'var(--color-ember)' },
+  { value: '88%', label: 'Feel more career-ready', color: 'var(--color-pulse)' },
+  { value: '4.9/5', label: 'Student satisfaction', color: 'var(--color-spark)' },
+];
 
+export default function Stats() {
   return (
-    <section className="py-20 px-6" style={{ backgroundColor: 'var(--color-paper)' }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-8">
-          {stats.map((stat, i) => (
+    <section className="py-20 px-6" style={{ backgroundColor: 'var(--color-ink)' }}>
+      <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        {stats.map((stat, i) => (
+          <div
+            key={stat.label}
+            className="group"
+            style={{ animationDelay: `${i * 0.1}s` }}
+          >
             <div
-              key={i}
-              className="text-center p-8 rounded-2xl transition-all duration-200"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-border-light)',
-              }}
+              className="text-4xl font-bold mb-2 transition-colors"
+              style={{ color: stat.color }}
             >
-              <p
-                className="text-5xl font-bold mb-2"
-                style={{ color: stat.color }}
-              >
-                {stat.num}
-              </p>
-              <p className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-                {stat.label}
-              </p>
+              {stat.value}
             </div>
-          ))}
-        </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>{stat.label}</div>
+          </div>
+        ))}
       </div>
     </section>
   );

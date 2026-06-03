@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { supabase, Database } from '@/lib/supabase';
 import {
   User,
   Bell,
@@ -237,17 +237,17 @@ export default function SettingsPage() {
             .maybeSingle();
 
           if (userData) {
+            const dbKey = key === 'weeklySummary' ? 'weekly_summary' :
+              key === 'recruiterViews' ? 'recruiter_views' :
+              key === 'verificationStatus' ? 'verification_status' :
+              key === 'opportunityMatch' ? 'opportunity_match' :
+              key === 'coachTips' ? 'coach_tips' : 'product_updates';
             await supabase
               .from('notification_preferences')
               .upsert({
                 user_id: userData.id,
-                [key === 'weeklySummary' ? 'weekly_summary' :
-                 key === 'recruiterViews' ? 'recruiter_views' :
-                 key === 'verificationStatus' ? 'verification_status' :
-                 key === 'opportunityMatch' ? 'opportunity_match' :
-                 key === 'coachTips' ? 'coach_tips' :
-                 'product_updates']: notifs[key],
-              }, { onConflict: 'user_id' });
+                [dbKey]: notifs[key],
+              } as Database['public']['Tables']['notification_preferences']['Insert'], { onConflict: 'user_id' });
           }
         }
       }
@@ -302,7 +302,7 @@ export default function SettingsPage() {
                   supabase.from('notification_preferences').upsert({
                     user_id: userData.id,
                     [dbKey]: next[key],
-                  }, { onConflict: 'user_id' }).catch(() => {});
+                  } as Database['public']['Tables']['notification_preferences']['Insert'], { onConflict: 'user_id' }).catch(() => {});
                 }
               }).catch(() => {});
           }

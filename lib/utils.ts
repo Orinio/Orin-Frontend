@@ -8,7 +8,6 @@ import type {
   Notification,
   NotificationPreferences,
   Subscription,
-  UserPublicProfile,
 } from "./types";
 
 export function cn(...classes: Array<string | false | null | undefined>) {
@@ -23,7 +22,6 @@ type DbProofSource = Database["public"]["Tables"]["proof_sources"]["Row"];
 type DbNotification = Database["public"]["Tables"]["notifications"]["Row"];
 type DbNotifPrefs = Database["public"]["Tables"]["notification_preferences"]["Row"];
 type DbSubscription = Database["public"]["Tables"]["subscriptions"]["Row"];
-type DbUserPublicProfile = Database["public"]["Views"]["user_public_profiles"]["Row"];
 
 export function mapDbUserToUser(db: DbUser): User {
   return {
@@ -170,41 +168,6 @@ export function mapDbSubscriptionToSubscription(db: DbSubscription): Subscriptio
     cancelAtPeriodEnd: db.cancel_at_period_end,
     createdAt: new Date(db.created_at),
     updatedAt: new Date(db.updated_at),
-  };
-}
-
-export function mapDbUserPublicProfileToUserPublicProfile(
-  db: DbUserPublicProfile,
-): UserPublicProfile {
-  return {
-    id: db.id,
-    username: db.username,
-    fullName: db.full_name ?? undefined,
-    avatarUrl: db.avatar_url ?? undefined,
-    headline: db.headline ?? undefined,
-    bio: db.bio ?? undefined,
-    location: db.location ?? undefined,
-    college: db.college ?? undefined,
-    year: db.year ?? undefined,
-    websiteUrl: db.website_url ?? undefined,
-    githubUrl: db.github_url ?? undefined,
-    linkedinUrl: db.linkedin_url ?? undefined,
-    twitterUrl: db.twitter_url ?? undefined,
-    memberSince: new Date(db.member_since),
-    publicProofs: (db.public_proofs || []).map((p: Record<string, unknown>) => ({
-      id: p.id as string,
-      title: p.title as string,
-      description: p.description as string | undefined,
-      sourceType: p.source_type as UserPublicProfile['publicProofs'][0]['sourceType'],
-      sourceUrl: p.source_url as string | undefined,
-      thumbnailUrl: p.thumbnail_url as string | undefined,
-      skillsExtracted: (p.skills_extracted as string[]) || [],
-      whatItProves: (p.what_it_proves as string[]) || [],
-      viewCount: (p.view_count as number) || 0,
-      createdAt: new Date(p.created_at as string),
-    })),
-    publicSkills: db.public_skills || [],
-    totalProfileViews: db.total_profile_views,
   };
 }
 

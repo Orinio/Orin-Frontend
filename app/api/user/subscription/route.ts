@@ -1,20 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { resolvePublicUserId } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
     .select('*')
-    .eq('user_id', session.user.id)
+    .eq('user_id', userId)
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
     .limit(1)

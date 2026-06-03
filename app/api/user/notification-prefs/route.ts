@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, Database } from '@/lib/supabase';
+import { resolvePublicUserId } from '@/lib/utils';
 
 type NotificationPrefsUpdate = Database['public']['Tables']['notification_preferences']['Update'];
 
@@ -8,15 +9,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { data: prefs, error } = await supabase
     .from('notification_preferences')
     .select('*')
-    .eq('user_id', session.user.id)
+    .eq('user_id', userId)
     .single();
 
   if (error && error.code !== 'PGRST116') {
@@ -44,8 +45,8 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -75,14 +76,14 @@ export async function PATCH(request: NextRequest) {
   const { data: existing } = await supabase
     .from('notification_preferences')
     .select('user_id')
-    .eq('user_id', session.user.id)
+    .eq('user_id', userId)
     .single();
 
   if (existing) {
     const { data: prefs, error } = await supabase
       .from('notification_preferences')
       .update(updateData)
-      .eq('user_id', session.user.id)
+      .eq('user_id', userId)
       .select()
       .single();
 
@@ -96,7 +97,7 @@ export async function PATCH(request: NextRequest) {
   const { data: prefs, error } = await supabase
     .from('notification_preferences')
     .insert({
-      user_id: session.user.id,
+      user_id: userId,
       ...updateData,
     })
     .select()

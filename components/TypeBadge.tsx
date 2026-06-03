@@ -1,5 +1,5 @@
 import {
-  Github,
+  GitFork,
   BarChart3,
   Award,
   Trophy,
@@ -21,7 +21,7 @@ const typeConfig: Record<
 > = {
   github: {
     color: 'var(--color-ink)',
-    icon: <Github className="w-3.5 h-3.5" />,
+    icon: <GitFork className="w-3.5 h-3.5" />,
     label: 'GitHub',
   },
   kaggle: {

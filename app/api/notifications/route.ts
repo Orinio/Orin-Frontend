@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, Database } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { resolvePublicUserId } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from('notifications')
     .select('*')
-    .eq('user_id', session.user.id)
+    .eq('user_id', userId)
     .is('deleted_at', null);
 
   if (unreadOnly) {
@@ -40,8 +41,8 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -58,7 +59,7 @@ export async function PATCH(request: NextRequest) {
     const { error } = await supabase
       .from('notifications')
       .update({ read_at: new Date().toISOString() })
-      .eq('user_id', session.user.id)
+      .eq('user_id', userId)
       .is('read_at', null);
 
     if (error) {
@@ -73,7 +74,7 @@ export async function PATCH(request: NextRequest) {
       .from('notifications')
       .update({ read_at: new Date().toISOString() })
       .in('id', notificationIds)
-      .eq('user_id', session.user.id);
+      .eq('user_id', userId);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

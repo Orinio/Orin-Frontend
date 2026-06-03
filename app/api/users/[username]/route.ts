@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, Database } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(
   request: NextRequest,
@@ -15,23 +15,37 @@ export async function GET(
     return NextResponse.json({ error: 'username is required' }, { status: 400 });
   }
 
-  const { data: profile, error: profileError } = await supabase
-    .from('user_public_profiles')
+  const { data: user, error: userError } = await supabase
+    .from('users')
     .select('*')
-    .or(`username.eq.${username},id.eq.${username}`)
+    .eq('username', username)
+    .is('deleted_at', null)
     .maybeSingle();
 
-  if (profileError) {
-    return NextResponse.json({ error: profileError.message }, { status: 500 });
+  if (userError) {
+    return NextResponse.json({ error: userError.message }, { status: 500 });
   }
 
-  if (!profile) {
+  if (!user) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
 
+  const { data: proofs } = await supabase
+    .from('proof_cards')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('visibility', 'public')
+    .eq('verification_status', 'verified')
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false });
+
+  const allSkills = proofs
+    ?.flatMap((s) => s.skills_extracted || [])
+    .filter((v, i, a) => a.indexOf(v) === i) || [];
+
   return NextResponse.json({
-    user: profile,
-    proofs: profile.public_proofs || [],
-    skills: profile.public_skills || [],
+    user,
+    proofs: proofs || [],
+    skills: allSkills,
   });
 }

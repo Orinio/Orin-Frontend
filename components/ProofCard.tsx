@@ -26,22 +26,22 @@ const statusConfig: Record<
 > = {
   verified: {
     label: 'Verified',
-    className: 'bg-emerald-100 text-emerald-800',
+    className: 'badge-bloom',
     icon: <CheckCircle className="w-3 h-3" />,
   },
   pending: {
     label: 'Pending',
-    className: 'bg-amber-100 text-amber-800',
+    className: 'badge-ember',
     icon: <Clock className="w-3 h-3" />,
   },
   draft: {
     label: 'Draft',
-    className: 'bg-slate-100 text-slate-600',
+    className: 'badge-ink',
     icon: <FileText className="w-3 h-3" />,
   },
   rejected: {
     label: 'Rejected',
-    className: 'bg-red-100 text-red-700',
+    className: 'badge-pulse',
     icon: <XCircle className="w-3 h-3" />,
   },
 };
@@ -65,15 +65,13 @@ export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardPro
   return (
     <div
       className={cn(
-        'group relative p-5 rounded-2xl border transition-all duration-300',
-        'bg-[var(--color-surface)] border-[var(--color-border-light)]',
-        'hover:shadow-soft-lg hover:-translate-y-0.5',
-        isHighlighted && 'ring-2 ring-[var(--color-bloom)]/40 border-[var(--color-bloom)]',
+        'group relative card-base p-5 hover-lift transition-all duration-300',
+        isHighlighted && 'card-accent-bloom',
       )}
     >
       {isHighlighted && (
         <div className="absolute top-3 right-3">
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--color-bloom)]/10 text-[var(--color-bloom)]">
+          <span className="badge-spark inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider">
             <Star className="w-2.5 h-2.5 fill-current" />
             Highlighted
           </span>
@@ -82,7 +80,7 @@ export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardPro
 
       <div className="flex items-start gap-4">
         {thumbnailUrl && (
-          <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-[var(--color-surface-dim)]">
+          <div className="relative w-16 h-16 rounded-[var(--radius-lg)] overflow-hidden flex-shrink-0 bg-[var(--color-surface-dim)]">
             <Image
               src={thumbnailUrl}
               alt={title}
@@ -101,12 +99,7 @@ export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardPro
               </h3>
               <div className="flex items-center gap-2 mt-1">
                 <TypeBadge type={sourceType} />
-                <span
-                  className={cn(
-                    'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold',
-                    status.className,
-                  )}
-                >
+                <span className={cn('inline-flex items-center gap-1.5 text-[11px] font-semibold', status.className)}>
                   {status.icon}
                   {status.label}
                 </span>
@@ -128,7 +121,7 @@ export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardPro
               <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
                 Proves
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--color-ember)]/10 text-[var(--color-ember)]">
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: 'var(--color-bg-ember-light)', color: 'var(--color-ember)' }}>
                 {whatItProves.length}
               </span>
             </div>
@@ -139,15 +132,14 @@ export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardPro
               {skillsExtracted.slice(0, 4).map((skill) => (
                 <span
                   key={skill}
-                  className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[var(--color-surface-dim)]"
-                  style={{ color: 'var(--color-text-secondary)' }}
+                  className="badge-ink text-[11px] font-medium px-2 py-0.5"
                 >
                   {skill}
                 </span>
               ))}
               {skillsExtracted.length > 4 && (
                 <span
-                  className="text-[11px] font-medium px-2 py-0.5 rounded-full"
+                  className="text-[11px] font-medium px-2 py-0.5"
                   style={{ color: 'var(--color-text-secondary)' }}
                 >
                   +{skillsExtracted.length - 4}
@@ -157,8 +149,7 @@ export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardPro
           )}
 
           <div
-            className="flex items-center justify-between mt-3 pt-3 border-t"
-            style={{ borderColor: 'var(--color-border-light)' }}
+            className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--color-border)]"
           >
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1 text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
@@ -170,8 +161,8 @@ export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardPro
                   href={proof.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-[11px] transition-colors hover:text-[var(--color-pulse)]"
-                  style={{ color: 'var(--color-text-secondary)' }}
+                  className="flex items-center gap-1 text-[11px] transition-colors hover:opacity-80"
+                  style={{ color: 'var(--color-pulse)' }}
                   aria-label="Open source URL"
                 >
                   <ExternalLink className="w-3 h-3" />
@@ -182,12 +173,8 @@ export default function ProofCard({ proof, variant = 'dashboard' }: ProofCardPro
 
             <Link
               href={`/dashboard/proof/${id}`}
-              className={cn(
-                'text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors duration-200',
-                variant === 'dashboard'
-                  ? 'hover:bg-[var(--color-pulse)]/5 text-[var(--color-pulse)]'
-                  : 'hover:bg-[var(--color-bloom)]/5 text-[var(--color-bloom)]',
-              )}
+              className="text-xs font-semibold px-3 py-1.5 rounded-[var(--radius-md)] transition-all duration-200 hover:bg-[var(--color-surface-dim)]"
+              style={{ color: 'var(--color-pulse)' }}
             >
               {variant === 'dashboard' ? 'View Details' : 'View Full Proof'}
             </Link>

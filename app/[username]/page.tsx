@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { supabase, Database } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { currentUser as mockUser, proofs as mockProofs } from '@/lib/mock-data';
 import ProofCard from '@/components/ProofCard';
-import { mapDbUserPublicProfileToUserPublicProfile, getProofTypeColor } from '@/lib/utils';
-import type { UserPublicProfile } from '@/lib/types';
+import { mapDbUserToUser, mapDbProofToProof, getProofTypeColor } from '@/lib/utils';
+import type { User, Proof } from '@/lib/types';
 
 interface PublicProfilePageProps {
   params: Promise<{ username: string }>;
@@ -13,73 +13,78 @@ interface PublicProfilePageProps {
 export default async function PublicProfilePage({ params }: PublicProfilePageProps) {
   const { username } = await params;
 
-  let profile: UserPublicProfile | null = null;
+  let user: User | null = null;
+  let proofs: Proof[] = [];
+  let allSkills: string[] = [];
 
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from('user_public_profiles')
+      const { data: userData, error: userError } = await supabase
+        .from('users')
         .select('*')
         .eq('username', username)
+        .is('deleted_at', null)
         .maybeSingle();
 
-      if (error) throw new Error(error.message);
+      if (userError) throw new Error(userError.message);
 
-      if (data) {
-        profile = mapDbUserPublicProfileToUserPublicProfile(
-          data as Database['public']['Views']['user_public_profiles']['Row'],
-        );
+      if (userData) {
+        user = mapDbUserToUser(userData);
+
+        const { data: proofsData } = await supabase
+          .from('proof_cards')
+          .select('*')
+          .eq('user_id', userData.id)
+          .eq('visibility', 'public')
+          .eq('verification_status', 'verified')
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
+
+        if (proofsData) {
+          proofs = proofsData.map(mapDbProofToProof);
+          allSkills = Array.from(
+            new Set(proofsData.flatMap((s) => s.skills_extracted || []))
+          );
+        }
       }
     } catch (e) {
       console.warn("Error fetching public profile, falling back to mock.", e);
     }
   }
 
-  if (!profile && (username === 'aarav-gupta-cse' || !supabase)) {
-    profile = {
+  if (!user && (username === 'aarav-gupta-cse' || !supabase)) {
+    user = {
       id: mockUser.id,
+      email: mockUser.email,
       username: mockUser.username,
       fullName: mockUser.fullName,
       avatarUrl: mockUser.avatarUrl,
-      headline: mockUser.headline,
-      bio: mockUser.bio,
-      location: mockUser.location,
       college: mockUser.college,
       year: mockUser.year,
-      websiteUrl: mockUser.websiteUrl,
+      bio: mockUser.bio,
+      headline: mockUser.headline,
+      location: mockUser.location,
       githubUrl: mockUser.githubUrl,
       linkedinUrl: mockUser.linkedinUrl,
       twitterUrl: mockUser.twitterUrl,
-      memberSince: mockUser.createdAt,
-      publicProofs: mockProofs
-        .filter((p) => p.visibility === 'public')
-        .map((p) => ({
-          id: p.id,
-          title: p.title,
-          description: p.description,
-          sourceType: p.sourceType,
-          sourceUrl: p.sourceUrl,
-          thumbnailUrl: p.thumbnailUrl,
-          skillsExtracted: p.skillsExtracted,
-          whatItProves: p.whatItProves,
-          viewCount: p.viewCount,
-          createdAt: p.createdAt,
-        })),
-      publicSkills: Array.from(
-        new Set(
-          mockProofs
-            .filter((p) => p.visibility === 'public')
-            .flatMap((p) => [...p.skillsExtracted, ...p.skillsUserAdded]),
-        ),
-      ),
-      totalProfileViews: 0,
+      websiteUrl: mockUser.websiteUrl,
+      role: 'user',
+      accountStatus: 'active',
+      isProfilePublic: true,
+      hideEmail: false,
+      emailVerified: true,
+      authProvider: 'email',
+      createdAt: mockUser.createdAt,
+      updatedAt: mockUser.updatedAt,
     };
+    proofs = mockProofs.filter((p) => p.visibility === 'public');
+    allSkills = Array.from(
+      new Set(mockProofs.filter((p) => p.visibility === 'public').flatMap((p) => [...p.skillsExtracted, ...p.skillsUserAdded]))
+    );
   }
 
-  if (!profile) notFound();
+  if (!user) notFound();
 
-  const proofs = profile.publicProofs;
-  const allSkills = profile.publicSkills;
   const skillCounts = allSkills.map((skill) => ({
     name: skill,
     count: proofs.filter((p) => p.skillsExtracted.includes(skill)).length,
@@ -91,10 +96,10 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
   }, {} as Record<string, number>);
 
   const socialLinks = [
-    { url: profile.githubUrl, label: 'GitHub', icon: 'M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z' },
-    { url: profile.linkedinUrl, label: 'LinkedIn', icon: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.063 2.063 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
-    { url: profile.twitterUrl, label: 'Twitter / X', icon: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
-    { url: profile.websiteUrl, label: 'Website', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z' },
+    { url: user.githubUrl, label: 'GitHub', icon: 'M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z' },
+    { url: user.linkedinUrl, label: 'LinkedIn', icon: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.063 2.063 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
+    { url: user.twitterUrl, label: 'Twitter / X', icon: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
+    { url: user.websiteUrl, label: 'Website', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z' },
   ].filter((link) => link.url);
 
   const yearLabels: Record<string, string> = {
@@ -108,17 +113,17 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
       <section className="rounded-[var(--radius-lg)] bg-gradient-to-br from-white to-[var(--color-neutral-surface-alt)] p-6 border border-[var(--color-neutral-border)]">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-sm text-[var(--color-primary-emerald)]">@{profile.username}</p>
-            <h1 className="mt-2 text-4xl font-semibold md:text-5xl font-serif">{profile.fullName || profile.username}</h1>
-            {profile.headline && (
-              <p className="mt-2 text-[var(--color-neutral-text)] font-medium">{profile.headline}</p>
+            <p className="text-sm text-[var(--color-primary-emerald)]">@{user.username}</p>
+            <h1 className="mt-2 text-4xl font-semibold md:text-5xl font-serif">{user.fullName || user.username}</h1>
+            {user.headline && (
+              <p className="mt-2 text-[var(--color-neutral-text)] font-medium">{user.headline}</p>
             )}
             <p className="mt-1 text-[var(--color-neutral-text-secondary)]">
-              {profile.year && yearLabels[profile.year]}{profile.college && ` @ ${profile.college}`}
-              {profile.location && ` · ${profile.location}`}
+              {user.year && yearLabels[user.year]}{user.college && ` @ ${user.college}`}
+              {user.location && ` · ${user.location}`}
             </p>
-            {profile.bio && (
-              <p className="mt-3 max-w-2xl text-sm text-[var(--color-neutral-text-secondary)]">{profile.bio}</p>
+            {user.bio && (
+              <p className="mt-3 max-w-2xl text-sm text-[var(--color-neutral-text-secondary)]">{user.bio}</p>
             )}
           </div>
           <div className="flex gap-4 text-center">
@@ -144,9 +149,9 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
                 href={link.url!}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-md border-2 border-[var(--color-primary-emerald)] bg-transparent px-3 py-1.5 text-sm font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)]"
+                className="inline-flex items-center gap-2 rounded-md border-2 border-[var(--color-primary-emerald)] bg-transparent px-4 py-2 font-semibold text-[var(--color-primary-emerald)] transition hover:bg-[var(--color-primary-soft)]"
               >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                   <path d={link.icon} />
                 </svg>
                 {link.label}
@@ -156,7 +161,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
         )}
       </section>
 
-      {skillCounts.length > 0 && (
+      {allSkills.length > 0 && (
         <section className="mt-8">
           <h2 className="text-2xl font-semibold text-[var(--color-neutral-text)] font-serif">Verified Skills</h2>
           <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
@@ -179,8 +184,8 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
 
       {Object.keys(sourceTypeCounts).length > 0 && (
         <section className="mt-8">
-          <h2 className="text-2xl font-semibold text-[var(--color-neutral-text)] font-serif">Proof by Type</h2>
-          <div className="mt-4 flex flex-wrap gap-3">
+          <h2 className="text-lg font-semibold text-[var(--color-neutral-text)]">Proof by Type</h2>
+          <div className="mt-3 flex flex-wrap gap-2">
             {Object.entries(sourceTypeCounts).map(([type, count]) => (
               <div key={type} className="flex items-center gap-2 rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] px-4 py-2">
                 <span className="h-2 w-2 rounded-full" style={{ backgroundColor: getProofTypeColor(type) }} />
@@ -194,7 +199,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
 
       <section className="mt-8">
         <h2 className="text-2xl font-semibold text-[var(--color-neutral-text)] font-serif">
-          {profile.fullName || profile.username}&apos;s Proof ({proofs.length} total)
+          {user.fullName || user.username}&apos;s Proof ({proofs.length} total)
         </h2>
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           {proofs.slice(0, 4).map((proof) => (

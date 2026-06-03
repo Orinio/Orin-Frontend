@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
-  Github,
+  GitFork,
   Upload,
   Link2,
   Globe,
@@ -32,7 +32,7 @@ const sourceOptions: SourceOption[] = [
     type: 'github',
     title: 'GitHub',
     description: 'Import repositories, stars, and commit history.',
-    icon: <Github className="w-5 h-5" />,
+    icon: <GitFork className="w-5 h-5" />,
     color: 'var(--color-ink)',
     requiresUrl: true,
     urlPlaceholder: 'https://github.com/username/repo',
@@ -119,8 +119,8 @@ export function AddProofSourceCard() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sourceType: selected.type,
-          sourceUrl: url.trim() || undefined,
+          source_type: selected.type,
+          source_url: url.trim() || undefined,
         }),
       });
 
@@ -131,8 +131,8 @@ export function AddProofSourceCard() {
 
       setSuccess(true);
       setTimeout(() => handleClose(), 1500);
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -197,7 +197,7 @@ export function AddProofSourceCard() {
                     onClick={() => setSelected(option)}
                     className={cn(
                       'w-full rounded-xl p-4 transition-all duration-200 flex items-start gap-3 text-left',
-                      'border border-[var(--color-border-light)] hover:border-[var(--color-ink)] hover:shadow-md',
+                      'border border-[var(--color-border)] hover:border-[var(--color-ink)] hover:shadow-md',
                     )}
                   >
                     <div

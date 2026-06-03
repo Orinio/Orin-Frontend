@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, Database } from '@/lib/supabase';
+import { resolvePublicUserId } from '@/lib/utils';
 
 type CoachNoteInsert = Database['public']['Tables']['coach_notes']['Insert'];
 
@@ -8,15 +9,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { data: coachNotes, error } = await supabase
     .from('coach_notes')
     .select('*')
-    .eq('user_id', session.user.id)
+    .eq('user_id', userId)
     .is('deleted_at', null)
     .order('created_at', { ascending: false });
 
@@ -32,8 +33,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
+  const userId = await resolvePublicUserId(supabase);
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -51,14 +52,14 @@ export async function POST(request: NextRequest) {
   }
 
   if (type) {
-    const validTypes = ['daily', 'weekly', 'milestone', 'ad_hoc'];
-    if (!validTypes.includes(type)) {
+    const validTypes = ['daily', 'weekly', 'milestone', 'ad_hoc'] as const;
+    if (!validTypes.includes(type as typeof validTypes[number])) {
       return NextResponse.json({ error: `type must be one of: ${validTypes.join(', ')}` }, { status: 400 });
     }
   }
 
   const insertData: CoachNoteInsert = {
-    user_id: session.user.id,
+    user_id: userId,
     type: type || 'ad_hoc',
     content,
     action_label: action_label || null,

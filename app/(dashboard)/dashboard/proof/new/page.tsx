@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
-  Github,
+  GitFork,
   BarChart3,
   Award,
   Trophy,
@@ -35,10 +35,10 @@ const steps: Step[] = [
 const sourceTypes: {
   value: ProofSourceType;
   label: string;
-  icon: typeof Github;
+  icon: typeof GitFork;
   description: string;
 }[] = [
-  { value: 'github', label: 'GitHub', icon: Github, description: 'Repositories, contributions, and commit history' },
+  { value: 'github', label: 'GitHub', icon: GitFork, description: 'Repositories, contributions, and commit history' },
   { value: 'kaggle', label: 'Kaggle', icon: BarChart3, description: 'Competitions, datasets, and notebooks' },
   { value: 'certificate', label: 'Certificate', icon: Award, description: 'Online courses, certifications, and badges' },
   { value: 'hackathon', label: 'Hackathon', icon: Trophy, description: 'Hackathon wins, participation, and projects' },

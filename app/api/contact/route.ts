@@ -29,7 +29,14 @@ export async function POST(request: NextRequest) {
   let userId: string | null = null;
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
-    userId = session.user.id;
+    const { data: userData } = await supabase
+      .from('users')
+      .select('id')
+      .eq('auth_user_id', session.user.id)
+      .single();
+    if (userData) {
+      userId = userData.id;
+    }
   }
 
   const insertData: ContactInsert = {

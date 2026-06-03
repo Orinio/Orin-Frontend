@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import {
   Lightbulb,
-  CalendarDays,
   CalendarRange,
   Trophy,
   Megaphone,
@@ -49,7 +48,7 @@ export default function CoachNote({ note, onDismiss }: CoachNoteProps) {
 
   return (
     <div
-      className="relative p-5 rounded-2xl overflow-hidden"
+      className="relative p-5 rounded-[var(--radius-xl)] overflow-hidden shadow-lg shine-wrap"
       style={{
         background: 'linear-gradient(135deg, var(--color-ink) 0%, #1a1a2e 100%)',
       }}
@@ -102,10 +101,7 @@ export default function CoachNote({ note, onDismiss }: CoachNoteProps) {
           {note.actionLabel && note.actionUrl && (
             <Link
               href={note.actionUrl}
-              className={cn(
-                'inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors',
-                'bg-white/10 hover:bg-white/20 text-white',
-              )}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-[var(--radius-md)] transition-colors bg-white/10 hover:bg-white/20 text-white"
             >
               {note.actionLabel}
               <ArrowRight className="w-3 h-3" />

@@ -25,7 +25,7 @@ export function Input({ className, label, error, id, ...props }: InputProps) {
           "bg-[var(--color-surface)] border",
           error
             ? "border-[var(--color-pulse)] focus:ring-2 focus:ring-[var(--color-pulse)]/20"
-            : "border-[var(--color-border-light)] focus:border-[var(--color-ink)] focus:ring-2 focus:ring-[var(--color-ink)]/10",
+            : "border-[var(--color-border)] focus:border-[var(--color-ink)] focus:ring-2 focus:ring-[var(--color-ink)]/10",
           "placeholder:text-[var(--color-mist)]",
           "focus:outline-none",
           "disabled:opacity-50 disabled:cursor-not-allowed",

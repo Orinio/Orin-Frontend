@@ -1,61 +1,73 @@
+const steps = [
+  {
+    num: '01',
+    title: 'Connect your sources',
+    desc: 'Link GitHub, Kaggle, certificates, and more. One-time setup, 2 minutes.',
+    color: 'var(--color-ember)',
+  },
+  {
+    num: '02',
+    title: 'ORIN builds your proof',
+    desc: 'AI scans your work, identifies proof points, and generates verified Proof Cards.',
+    color: 'var(--color-pulse)',
+  },
+  {
+    num: '03',
+    title: 'Get coached daily',
+    desc: 'AI coach reviews your progress, suggests next steps, and pushes you toward your goals.',
+    color: 'var(--color-bloom)',
+  },
+  {
+    num: '04',
+    title: 'Land opportunities',
+    desc: 'Get matched to roles that fit YOUR proof. Not random listings — curated fits.',
+    color: 'var(--color-spark)',
+  },
+];
+
 export default function HowItWorks() {
-  const steps = [
-    {
-      num: '1',
-      title: 'Sign up & import',
-      desc: 'Connect GitHub, upload certificates, paste project links. Takes 3 minutes.',
-      color: 'var(--color-bloom)',
-    },
-    {
-      num: '2',
-      title: 'AI extracts your proof',
-      desc: 'Our AI reads your work and creates structured proof cards with verified skills. You review & edit.',
-      color: 'var(--color-ember)',
-    },
-    {
-      num: '3',
-      title: 'Daily coach guides you',
-      desc: 'Get one message every morning. It notices gaps, flags what you\'re repeating, suggests one next action.',
-      color: 'var(--color-pulse)',
-    },
-    {
-      num: '4',
-      title: 'Share & get matched',
-      desc: 'Publish your proof profile. Get matched to internships, projects, and jobs that fit your actual proof.',
-      color: 'var(--color-spark)',
-    },
-  ];
-
   return (
-    <section id="how" className="py-24 px-6" style={{ backgroundColor: 'var(--color-surface)' }}>
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="badge-ember mb-6">How It Works</div>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight" style={{ color: 'var(--color-ink)' }}>
-            4 steps to proof
-          </h2>
-        </div>
+    <section id="how" className="py-20 px-6" style={{ backgroundColor: 'var(--color-surface)' }}>
+      <div className="max-w-6xl mx-auto text-center mb-14">
+        <div className="inline-block badge-ember mb-6">How It Works</div>
+        <h2 className="text-4xl font-bold tracking-tight mb-4" style={{ color: 'var(--color-ink)' }}>
+          Four steps to{' '}
+          <span className="relative inline-block">
+            career proof
+            <span className="absolute bottom-1 left-0 w-full h-3 -z-10 rounded-sm" style={{ backgroundColor: 'var(--color-ember)', opacity: 0.4 }} />
+          </span>
+        </h2>
+        <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--color-text-secondary)' }}>
+          From scattered tabs to verified proof in minutes, not months.
+        </p>
+      </div>
 
-        <div className="space-y-6">
-          {steps.map((step, i) => (
-            <div
-              key={i}
-              className="flex gap-6 p-6 rounded-2xl transition-all duration-200"
-              style={{ backgroundColor: 'var(--color-paper)', border: '1px solid var(--color-border-light)' }}
+      <div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-5">
+        {steps.map((step, i) => (
+          <div
+            key={step.num}
+            className="card-base p-7 hover-lift relative overflow-hidden group"
+            style={{ animationDelay: `${i * 0.08}s` }}
+          >
+            {/* Big background number */}
+            <span
+              className="absolute -top-4 -right-2 text-[100px] font-bold leading-none pointer-events-none select-none transition-opacity group-hover:opacity-20"
+              style={{ color: step.color, opacity: 0.06 }}
             >
+              {step.num}
+            </span>
+            <div className="relative">
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center font-bold flex-shrink-0 text-xl text-white"
-                style={{ backgroundColor: step.color }}
+                className="w-10 h-10 rounded-[var(--radius-md)] flex items-center justify-center text-sm font-bold mb-4"
+                style={{ backgroundColor: step.color, color: '#fff' }}
               >
                 {step.num}
               </div>
-              <div>
-                <h3 className="font-bold text-lg mb-1" style={{ color: 'var(--color-ink)' }}>{step.title}</h3>
-                <p className="leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{step.desc}</p>
-              </div>
+              <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--color-ink)' }}>{step.title}</h3>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{step.desc}</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

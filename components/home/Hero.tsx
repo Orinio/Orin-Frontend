@@ -2,41 +2,49 @@ import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="pt-32 pb-20 px-6 overflow-hidden" style={{ backgroundColor: 'var(--color-paper)' }}>
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <section className="relative pt-32 pb-20 px-6 overflow-hidden" style={{ backgroundColor: 'var(--color-paper)' }}>
+      {/* Subtle background orbs */}
+      <div className="absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl opacity-[0.07] pointer-events-none" style={{ backgroundColor: 'var(--color-spark)' }} />
+      <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-3xl opacity-[0.05] pointer-events-none" style={{ backgroundColor: 'var(--color-ember)' }} />
+
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
         {/* Left: Copy */}
         <div>
           <div className="inline-block badge-spark mb-6">
             AI Coach For Students
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-[1.08] tracking-tight" style={{ color: 'var(--color-ink)' }}>
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-[1.06] tracking-tight" style={{ color: 'var(--color-ink)' }}>
             Your scattered work becomes{' '}
             <span className="relative inline-block">
               career proof
               <span
-                className="absolute bottom-1 left-0 w-full h-3 -z-10 rounded-sm"
+                className="absolute bottom-1.5 left-0 w-full h-3 -z-10 rounded-sm"
                 style={{ backgroundColor: 'var(--color-spark)', opacity: 0.5 }}
               />
             </span>
           </h1>
           <p className="text-lg mb-8 leading-relaxed max-w-lg" style={{ color: 'var(--color-text-secondary)' }}>
-            GitHub, Kaggle, certificates, projects, all over the place. ORIN transforms them into verified proof cards, an AI coach who guides you daily, and real opportunities that match your proof.
+            GitHub, Kaggle, certificates, projects — all over the place. ORIN transforms them into verified proof cards, an AI coach who guides you daily, and real opportunities that match your proof.
           </p>
-          <div className="flex gap-4 flex-wrap mb-6">
-            <Link href="/signup" className="btn-primary px-7 py-3.5 rounded-lg text-base">
+          <div className="flex gap-4 flex-wrap mb-8">
+            <Link href="/signup" className="btn-primary px-8 py-3.5 rounded-[var(--radius-md)] text-base">
               Start Building Proof
             </Link>
-            <button type="button" className="btn-secondary px-7 py-3.5 rounded-lg text-base">
+            <button type="button" className="btn-secondary px-8 py-3.5 rounded-[var(--radius-md)] text-base">
               Watch Demo
             </button>
           </div>
-          <div className="flex items-center gap-5 flex-wrap">
-            {['Free forever tier', 'No card needed', '5,000+ active students'].map((item) => (
-              <span key={item} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                <svg className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-bloom)' }} viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                </svg>
-                {item}
+          <div className="flex items-center gap-6 flex-wrap">
+            {[
+              { text: 'Free forever tier', icon: '✓' },
+              { text: 'No card needed', icon: '✓' },
+              { text: '5,000+ active students', icon: '✓' },
+            ].map((item) => (
+              <span key={item.text} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                <span className="flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold" style={{ backgroundColor: 'var(--color-bloom)', color: '#fff' }}>
+                  {item.icon}
+                </span>
+                {item.text}
               </span>
             ))}
           </div>
@@ -59,7 +67,7 @@ function PhoneMockup() {
       {/* Background glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
-          className="w-[480px] h-[480px] rounded-full blur-3xl opacity-30"
+          className="w-[480px] h-[480px] rounded-full blur-3xl opacity-25"
           style={{
             background: `radial-gradient(circle, var(--color-spark) 0%, var(--color-ember) 40%, transparent 70%)`,
           }}
@@ -90,7 +98,7 @@ function AICoachCard() {
   return (
     <div className="absolute top-6 -left-2 md:-left-12 z-30 animate-float-slow" style={{ animationDelay: '0.5s' }}>
       <div className="rounded-2xl shadow-2xl p-3.5 max-w-[240px] flex items-start gap-3 backdrop-blur-md"
-        style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border-light)' }}
+        style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '1px solid var(--color-border)' }}
       >
         <div className="relative w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg"
           style={{ background: 'linear-gradient(135deg, var(--color-bloom) 0%, #059669 100%)' }}
@@ -116,7 +124,7 @@ function ProofScoreCard() {
   return (
     <div className="absolute bottom-20 -right-2 md:-right-10 z-30 animate-float-slower" style={{ animationDelay: '1s' }}>
       <div className="rounded-2xl shadow-2xl p-3.5 backdrop-blur-md"
-        style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border-light)' }}
+        style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '1px solid var(--color-border)' }}
       >
         <div className="flex items-center gap-3">
           <div className="relative w-12 h-12">
@@ -146,7 +154,7 @@ function OpportunityCard() {
   return (
     <div className="absolute top-1/2 -right-2 md:-right-14 z-30 animate-float-slow hidden lg:block" style={{ animationDelay: '1.5s' }}>
       <div className="rounded-2xl shadow-2xl p-3 max-w-[200px] backdrop-blur-md"
-        style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border-light)' }}
+        style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '1px solid var(--color-border)' }}
       >
         <div className="flex items-center gap-2 mb-1.5">
           <span className="text-sm" style={{ color: 'var(--color-spark)' }}>&#10024;</span>
@@ -269,7 +277,7 @@ function HeroCard() {
 function ProofCardItem({ iconBg, icon, title, subtitle, delay }: { iconBg: string; icon: React.ReactNode; title: string; subtitle: string; delay: string }) {
   return (
     <div className="rounded-xl p-2.5 shadow-sm flex items-center gap-2.5 proof-card-anim"
-      style={{ animationDelay: delay, border: '1px solid var(--color-border-light)', backgroundColor: 'var(--color-surface)' }}
+      style={{ animationDelay: delay, border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)' }}
     >
       <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: iconBg }}>
         {icon}

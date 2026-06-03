@@ -202,7 +202,7 @@ export default async function DashboardPage() {
             ))}
           </div>
 
-          <CoachNote note={coachNote.content} />
+          <CoachNote note={coachNote} />
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
             <div>
