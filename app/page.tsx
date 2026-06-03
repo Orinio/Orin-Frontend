@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 const Navbar = dynamic(() => import('@/components/home/Navbar'), {
@@ -37,28 +36,16 @@ const Footer = dynamic(() => import('@/components/home/Footer'), {
 });
 
 export default function Home() {
-  const router = useRouter();
-
   useEffect(() => {
     const checkUser = async () => {
       if (!supabase) return;
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        router.push('/dashboard');
+        window.location.href = '/dashboard';
       }
     };
     checkUser();
-
-    if (!supabase) return;
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        router.push('/dashboard');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [router]);
+  }, []);
 
   return (
     <main id="main-content">
