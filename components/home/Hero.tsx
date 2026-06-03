@@ -3,45 +3,51 @@ import Link from 'next/link';
 export default function Hero() {
   return (
     <section className="relative pt-32 pb-20 px-6 overflow-hidden" style={{ backgroundColor: 'var(--color-paper)' }}>
-      {/* Subtle background orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl opacity-[0.07] pointer-events-none" style={{ backgroundColor: 'var(--color-spark)' }} />
-      <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-3xl opacity-[0.05] pointer-events-none" style={{ backgroundColor: 'var(--color-ember)' }} />
+      {/* Enhanced background elements */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl opacity-[0.07] animate-pulse-slow" style={{ backgroundColor: 'var(--color-spark)', animationDuration: '8s' }} />
+        <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-3xl opacity-[0.05] animate-pulse-slower" style={{ backgroundColor: 'var(--color-ember)', animationDuration: '12s' }} />
+        
+        {/* Additional subtle background elements */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-[0.03] animate-float" style={{ backgroundColor: 'var(--color-bloom)', animationDuration: '15s' }} />
+        <div className="absolute bottom-1/3 right-1/3 w-64 h-64 rounded-full blur-3xl opacity-[0.04] animate-floatSlower" style={{ backgroundColor: 'var(--color-pulse)', animationDuration: '20s' }} />
+      </div>
 
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
         {/* Left: Copy */}
-        <div>
-          <div className="inline-block badge-spark mb-6">
+        <div className="animate-slideInLeft">
+          <div className="inline-block badge-spark mb-6 animate-fadeInUp">
             AI Coach For Students
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-[1.06] tracking-tight" style={{ color: 'var(--color-ink)' }}>
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-[1.06] tracking-tight animate-fadeInUp" style={{ color: 'var(--color-ink)', animationDelay: '0.2s' }}>
             Your scattered work becomes{' '}
-            <span className="relative inline-block">
+            <span className="relative inline-block animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
               career proof
               <span
-                className="absolute bottom-1.5 left-0 w-full h-3 -z-10 rounded-sm"
-                style={{ backgroundColor: 'var(--color-spark)', opacity: 0.5 }}
+                className="absolute bottom-1.5 left-0 w-full h-3 -z-10 rounded-sm animate-pulseDot"
+                style={{ backgroundColor: 'var(--color-spark)', opacity: 0.5, animationDelay: '0.6s' }}
               />
             </span>
           </h1>
-          <p className="text-lg mb-8 leading-relaxed max-w-lg" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="text-lg mb-8 leading-relaxed max-w-lg animate-fadeInUp" style={{ color: 'var(--color-text-secondary)', animationDelay: '0.3s' }}>
             GitHub, Kaggle, certificates, projects — all over the place. ORIN transforms them into verified proof cards, an AI coach who guides you daily, and real opportunities that match your proof.
           </p>
-          <div className="flex gap-4 flex-wrap mb-8">
-            <Link href="/signup" className="btn-primary px-8 py-3.5 rounded-[var(--radius-md)] text-base">
+          <div className="flex gap-4 flex-wrap mb-8 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
+            <Link href="/signup" className="btn-primary px-8 py-3.5 rounded-[var(--radius-md)] text-base hover-lift">
               Start Building Proof
             </Link>
-            <button type="button" className="btn-secondary px-8 py-3.5 rounded-[var(--radius-md)] text-base">
+            <button type="button" className="btn-secondary px-8 py-3.5 rounded-[var(--radius-md)] text-base hover-lift">
               Watch Demo
             </button>
           </div>
-          <div className="flex items-center gap-6 flex-wrap">
+          <div className="flex items-center gap-6 flex-wrap animate-fadeInUp" style={{ animationDelay: '0.7s' }}>
             {[
               { text: 'Free forever tier', icon: '✓' },
               { text: 'No card needed', icon: '✓' },
               { text: '5,000+ active students', icon: '✓' },
             ].map((item) => (
-              <span key={item.text} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                <span className="flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold" style={{ backgroundColor: 'var(--color-bloom)', color: '#fff' }}>
+              <span key={item.text} className="flex items-center gap-2 text-sm hover-lift" style={{ color: 'var(--color-text-secondary)' }}>
+                <span className="flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold animate-pulse" style={{ backgroundColor: 'var(--color-bloom)', color: '#fff', animationDelay: '1s' }}>
                   {item.icon}
                 </span>
                 {item.text}
@@ -50,7 +56,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right: Phone Mockup */}
+        {/* Right: Enhanced Phone Mockup */}
         <PhoneMockup />
       </div>
     </section>
@@ -63,28 +69,29 @@ export default function Hero() {
 
 function PhoneMockup() {
   return (
-    <div className="relative h-[560px] flex items-center justify-center select-none">
-      {/* Background glow */}
+    <div className="relative h-[560px] flex items-center justify-center select-none animate-fadeIn">
+      {/* Enhanced Background glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
-          className="w-[480px] h-[480px] rounded-full blur-3xl opacity-25"
+          className="w-[480px] h-[480px] rounded-full blur-3xl opacity-25 animate-pulse"
           style={{
             background: `radial-gradient(circle, var(--color-spark) 0%, var(--color-ember) 40%, transparent 70%)`,
+            animationDuration: '4s'
           }}
         />
       </div>
 
-      {/* Floating cards */}
+      {/* Floating cards with enhanced animations */}
       <AICoachCard />
       <ProofScoreCard />
       <OpportunityCard />
 
-      {/* Phone */}
+      {/* Enhanced Phone */}
       <div className="relative z-20 animate-float-slow" style={{ animationDelay: '0.3s' }}>
-        <div className="relative w-[268px] h-[540px] rounded-[3rem] shadow-2xl p-[6px]"
+        <div className="relative w-[268px] h-[540px] rounded-[3rem] shadow-2xl p-[6px] animate-glow"
           style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%)' }}
         >
-          <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-white/15 via-transparent to-white/5 pointer-events-none" />
+          <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-white/15 via-transparent to-white/5 pointer-events-none animate-pulse" />
           <div className="relative w-full h-full rounded-[2.4rem] overflow-hidden" style={{ backgroundColor: 'var(--color-surface)' }}>
             <PhoneScreen />
           </div>
@@ -96,11 +103,11 @@ function PhoneMockup() {
 
 function AICoachCard() {
   return (
-    <div className="absolute top-6 -left-2 md:-left-12 z-30 animate-float-slow" style={{ animationDelay: '0.5s' }}>
-      <div className="rounded-2xl shadow-2xl p-3.5 max-w-[240px] flex items-start gap-3 backdrop-blur-md"
+    <div className="absolute top-6 -left-2 md:-left-12 z-30 animate-float-slow hover-lift" style={{ animationDelay: '0.5s' }}>
+      <div className="rounded-2xl shadow-2xl p-3.5 max-w-[240px] flex items-start gap-3 backdrop-blur-md hover:scale-105 transition-transform"
         style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '1px solid var(--color-border)' }}
       >
-        <div className="relative w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg"
+        <div className="relative w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg hover-lift"
           style={{ background: 'linear-gradient(135deg, var(--color-bloom) 0%, #059669 100%)' }}
         >
           <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -109,7 +116,7 @@ function AICoachCard() {
             <circle cx="15" cy="14" r="1.3" fill="currentColor" />
             <path d="M9.5 17.5h5" />
           </svg>
-          <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white" style={{ backgroundColor: 'var(--color-ember)' }} />
+          <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white animate-pulse" style={{ backgroundColor: 'var(--color-ember)' }} />
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[10px] font-bold uppercase tracking-wider mb-0.5" style={{ color: 'var(--color-bloom)' }}>AI Coach</p>
@@ -122,12 +129,12 @@ function AICoachCard() {
 
 function ProofScoreCard() {
   return (
-    <div className="absolute bottom-20 -right-2 md:-right-10 z-30 animate-float-slower" style={{ animationDelay: '1s' }}>
-      <div className="rounded-2xl shadow-2xl p-3.5 backdrop-blur-md"
+    <div className="absolute bottom-20 -right-2 md:-right-10 z-30 animate-float-slower hover-lift" style={{ animationDelay: '1s' }}>
+      <div className="rounded-2xl shadow-2xl p-3.5 backdrop-blur-md hover:scale-105 transition-transform"
         style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '1px solid var(--color-border)' }}
       >
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12">
+          <div className="relative w-12 h-12 animate-pulse">
             <svg className="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
               <circle cx="18" cy="18" r="15" fill="none" stroke="#FEF3C7" strokeWidth="3" />
               <circle cx="18" cy="18" r="15" fill="none" stroke="url(#scoreGrad)" strokeWidth="3" strokeDasharray="94.2" strokeDashoffset="94.2" strokeLinecap="round" className="progress-ring" />
@@ -152,8 +159,8 @@ function ProofScoreCard() {
 
 function OpportunityCard() {
   return (
-    <div className="absolute top-1/2 -right-2 md:-right-14 z-30 animate-float-slow hidden lg:block" style={{ animationDelay: '1.5s' }}>
-      <div className="rounded-2xl shadow-2xl p-3 max-w-[200px] backdrop-blur-md"
+    <div className="absolute top-1/2 -right-2 md:-right-14 z-30 animate-float-slow hidden lg:block hover-lift" style={{ animationDelay: '1.5s' }}>
+      <div className="rounded-2xl shadow-2xl p-3 max-w-[200px] backdrop-blur-md hover:scale-105 transition-transform"
         style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '1px solid var(--color-border)' }}
       >
         <div className="flex items-center gap-2 mb-1.5">
@@ -175,13 +182,13 @@ function PhoneScreen() {
   return (
     <>
       {/* Dynamic island */}
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-30 w-24 h-6 rounded-full flex items-center justify-end pr-3" style={{ backgroundColor: 'var(--color-ink)' }}>
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-30 w-24 h-6 rounded-full flex items-center justify-end pr-3 animate-pulse" style={{ backgroundColor: 'var(--color-ink)' }}>
         <div className="w-1.5 h-1.5 rounded-full bg-gray-700" />
       </div>
 
       {/* Status bar */}
       <div className="flex justify-between items-center px-5 pt-2.5 pb-1 text-[10px] font-semibold" style={{ color: 'var(--color-ink)' }}>
-        <span>9:41</span>
+        <span className="animate-pulse">9:41</span>
         <div className="flex items-center gap-1">
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 0 0-6 0zm-4-4l2 2a7.074 7.074 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" /></svg>
           <div className="w-5 h-2.5 border rounded-sm relative" style={{ borderColor: 'var(--color-ink)' }}>
@@ -223,9 +230,9 @@ function PhoneScreen() {
 
 function AppHeader() {
   return (
-    <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center justify-between mb-3 animate-slideInUp">
       <div className="flex items-center gap-2">
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center shadow-sm"
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center shadow-sm hover-lift"
           style={{ background: 'linear-gradient(135deg, var(--color-bloom) 0%, #059669 100%)' }}
         >
           <span className="text-[11px] font-bold text-white">O</span>
@@ -238,7 +245,7 @@ function AppHeader() {
           </p>
         </div>
       </div>
-      <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-surface-dim)' }}>
+      <div className="w-7 h-7 rounded-full flex items-center justify-center hover-lift" style={{ backgroundColor: 'var(--color-surface-dim)' }}>
         <svg className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="12" x2="21" y2="12" />
@@ -251,7 +258,7 @@ function AppHeader() {
 
 function HeroCard() {
   return (
-    <div className="relative rounded-2xl p-3 mb-2.5 shadow-lg overflow-hidden shine-wrap"
+    <div className="relative rounded-2xl p-3 mb-2.5 shadow-lg overflow-hidden shine-wrap hover-lift"
       style={{ background: 'linear-gradient(135deg, var(--color-ink) 0%, #1a1a2e 100%)' }}
     >
       <div className="absolute -right-4 -top-4 w-16 h-16 rounded-full bg-white/10" />
@@ -276,17 +283,17 @@ function HeroCard() {
 
 function ProofCardItem({ iconBg, icon, title, subtitle, delay }: { iconBg: string; icon: React.ReactNode; title: string; subtitle: string; delay: string }) {
   return (
-    <div className="rounded-xl p-2.5 shadow-sm flex items-center gap-2.5 proof-card-anim"
+    <div className="rounded-xl p-2.5 shadow-sm flex items-center gap-2.5 proof-card-anim hover-lift"
       style={{ animationDelay: delay, border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)' }}
     >
-      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: iconBg }}>
+      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 hover-lift" style={{ backgroundColor: iconBg }}>
         {icon}
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-[10px] font-bold leading-tight truncate" style={{ color: 'var(--color-ink)' }}>{title}</p>
         <p className="text-[8px] leading-tight" style={{ color: 'var(--color-text-secondary)' }}>{subtitle}</p>
       </div>
-      <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-bloom)' }}>
+      <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 hover-lift" style={{ backgroundColor: 'var(--color-bloom)' }}>
         <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="currentColor">
           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
         </svg>
@@ -309,7 +316,7 @@ function BottomNav() {
 function NavDot({ active }: { active?: boolean }) {
   return (
     <div
-      className="h-1.5 rounded-full transition-all"
+      className="h-1.5 rounded-full transition-all hover-lift"
       style={{
         width: active ? '16px' : '6px',
         backgroundColor: active ? 'var(--color-bloom)' : '#555',

@@ -21,11 +21,11 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-[var(--radius-md)] bg-[var(--color-ink)] flex items-center justify-center transition-transform group-hover:scale-105">
+        <Link href="/" className="flex items-center gap-2.5 group animate-fadeIn">
+          <div className="w-9 h-9 rounded-[var(--radius-md)] bg-[var(--color-ink)] flex items-center justify-center transition-transform group-hover:scale-105 shadow-lg">
             <span className="text-sm font-bold" style={{ color: 'var(--color-spark)' }}>O</span>
           </div>
-          <span className="text-xl font-bold tracking-tight" style={{ color: 'var(--color-ink)' }}>
+          <span className="text-xl font-bold tracking-tight animate-fadeInRight" style={{ color: 'var(--color-ink)' }}>
             ORIN
           </span>
         </Link>
@@ -39,7 +39,7 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium transition-colors duration-200 hover:text-[var(--color-ink)]"
+              className="text-sm font-medium transition-all duration-200 hover:text-[var(--color-ink)] hover:scale-105 hover-lift"
               style={{ color: 'var(--color-text-secondary)' }}
             >
               {link.label}
@@ -50,12 +50,12 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/signin"
-            className="hidden sm:inline-flex text-sm font-medium px-4 py-2 rounded-[var(--radius-md)] transition-colors duration-200 hover:bg-[var(--color-surface-dim)]"
+            className="hidden sm:inline-flex text-sm font-medium px-4 py-2 rounded-[var(--radius-md)] transition-all duration-200 hover:bg-[var(--color-surface-dim)] hover:scale-105"
             style={{ color: 'var(--color-text-secondary)' }}
           >
             Sign in
           </Link>
-          <Link href="/signup" className="btn-primary px-5 py-2.5 rounded-[var(--radius-md)] text-sm">
+          <Link href="/signup" className="btn-primary px-5 py-2.5 rounded-[var(--radius-md)] text-sm hover-lift hover:scale-105 transition-transform">
             Get Started
           </Link>
         </div>
