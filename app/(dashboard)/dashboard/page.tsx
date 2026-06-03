@@ -43,7 +43,7 @@ export default async function DashboardPage() {
         coachNote = {
           id: noteData.id,
           userId: noteData.user_id,
-          content: noteData.note,
+          content: noteData.content,
           type: "daily",
           actionSuggestion: "Show me what to build",
           createdAt: new Date(noteData.created_at),
