@@ -197,15 +197,15 @@ export default function SettingsPage() {
           const { error } = await supabase
             .from('users')
             .update({
-              full_name: fullName || null,
-              headline: headline || null,
-              location: location || null,
-              username: username || null,
-              bio: bio || null,
-              website_url: websiteUrl || null,
-              github_url: githubUrl || null,
-              linkedin_url: linkedinUrl || null,
-              twitter_url: twitterUrl || null,
+              full_name: fullName || undefined,
+              headline: headline || undefined,
+              location: location || undefined,
+              username: username || undefined,
+              bio: bio || undefined,
+              website_url: websiteUrl || undefined,
+              github_url: githubUrl || undefined,
+              linkedin_url: linkedinUrl || undefined,
+              twitter_url: twitterUrl || undefined,
               is_profile_public: profilePublic,
               hide_email: hideEmail,
             })
@@ -289,9 +289,10 @@ export default function SettingsPage() {
     setNotifs((prev) => {
       const next = { ...prev, [key]: !prev[key] };
       if (supabase) {
-        supabase.auth.getUser().then(({ data: { user: authUser } }) => {
+        const sb = supabase;
+        sb.auth.getUser().then(({ data: { user: authUser } }) => {
           if (authUser) {
-            supabase.from('users').select('id').eq('auth_user_id', authUser.id).maybeSingle()
+            sb.from('users').select('id').eq('auth_user_id', authUser.id).maybeSingle()
               .then(({ data: userData }) => {
                 if (userData) {
                   const dbKey = key === 'weeklySummary' ? 'weekly_summary' :
@@ -299,14 +300,14 @@ export default function SettingsPage() {
                     key === 'verificationStatus' ? 'verification_status' :
                     key === 'opportunityMatch' ? 'opportunity_match' :
                     key === 'coachTips' ? 'coach_tips' : 'product_updates';
-                  supabase.from('notification_preferences').upsert({
+                  void sb.from('notification_preferences').upsert({
                     user_id: userData.id,
                     [dbKey]: next[key],
-                  } as Database['public']['Tables']['notification_preferences']['Insert'], { onConflict: 'user_id' }).catch(() => {});
+                  } as Database['public']['Tables']['notification_preferences']['Insert'], { onConflict: 'user_id' });
                 }
-              }).catch(() => {});
+              });
           }
-        }).catch(() => {});
+        });
       }
       return next;
     });

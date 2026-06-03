@@ -58,9 +58,10 @@ export default function Navigation() {
 
   useEffect(() => {
     if (!supabase || !user) return;
+    const sb = supabase;
 
     const fetchNotifications = async () => {
-      const { data } = await supabase
+      const { data } = await sb
         .from('notifications')
         .select('*')
         .eq('user_id', user.id)
@@ -72,7 +73,7 @@ export default function Navigation() {
           data.map((n) => ({
             id: n.id,
             userId: n.user_id,
-            type: n.type,
+            type: n.type as Notification['type'],
             title: n.title,
             body: n.body ?? undefined,
             link: n.link ?? undefined,
@@ -96,7 +97,7 @@ export default function Navigation() {
             {
               id: n.id as string,
               userId: n.user_id as string,
-              type: n.type as string,
+              type: n.type as Notification['type'],
               title: n.title as string,
               body: (n.body as string) ?? undefined,
               link: (n.link as string) ?? undefined,
@@ -111,7 +112,7 @@ export default function Navigation() {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      sb.removeChannel(channel);
     };
   }, [user]);
 
