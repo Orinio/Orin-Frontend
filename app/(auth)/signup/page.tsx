@@ -17,7 +17,7 @@ import {
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signUp, signInWithOAuth, user, loading: authLoading, initialized } = useAuth();
+  const { signUp, signInWithOAuth, user, initialized } = useAuth();
 
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
@@ -34,8 +34,8 @@ export default function SignupPage() {
 
   useEffect(() => {
     if (!initialized) return;
-    if (user) router.replace('/dashboard');
-  }, [user, initialized, router]);
+    if (user) window.location.href = '/dashboard';
+  }, [user, initialized]);
 
   const passwordStrength = password ? evaluatePasswordStrength(password) : null;
 
@@ -90,7 +90,7 @@ export default function SignupPage() {
   if (!initialized) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-emerald-500" />
+        <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--color-pulse)' }} />
       </div>
     );
   }
@@ -103,17 +103,17 @@ export default function SignupPage() {
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="w-full"
       >
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-            <svg className="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div className="rounded-[var(--radius-xl)] p-8 text-center" style={{ backgroundColor: 'var(--color-bg-emerald-light)', border: '1px solid rgba(11,171,119,0.2)' }}>
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(11,171,119,0.15)' }}>
+            <svg className="h-8 w-8" style={{ color: 'var(--color-bloom)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <h3 className="mb-2 font-serif text-xl font-bold text-slate-900">Check your inbox</h3>
-          <p className="mb-6 text-sm text-slate-600">{success}</p>
+          <h3 className="mb-2 text-xl font-bold" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-heading)' }}>Check your inbox</h3>
+          <p className="mb-6 text-sm" style={{ color: 'var(--color-text-secondary)' }}>{success}</p>
           <Link
             href="/signin"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl"
+            className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-[var(--radius-md)]"
           >
             Go to sign in
             <ArrowRight className="h-4 w-4" />
@@ -131,10 +131,10 @@ export default function SignupPage() {
       className="w-full"
     >
       <div className="mb-8">
-        <h2 className="font-serif text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-heading)' }}>
           Create Account
         </h2>
-        <p className="mt-2 text-[15px] text-slate-600">
+        <p className="mt-2 text-[15px]" style={{ color: 'var(--color-text-secondary)' }}>
           Set up your profile to start building and sharing verified career proof.
         </p>
       </div>
@@ -143,7 +143,7 @@ export default function SignupPage() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-5 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50/80 p-3.5 text-sm text-red-700"
+          className="mb-5 flex items-start gap-2.5 rounded-[var(--radius-md)] p-3.5 text-sm" style={{ backgroundColor: 'var(--color-bg-pulse-light)', color: 'var(--color-pulse)', border: '1px solid rgba(238,66,102,0.2)' }}
         >
           <svg className="mt-0.5 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
@@ -161,10 +161,10 @@ export default function SignupPage() {
               type="button"
               onClick={() => handleSocialLogin('google')}
               disabled={socialLoading !== null || loading}
-              className="group relative flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+              className="group relative flex items-center justify-center gap-2.5 rounded-[var(--radius-md)] border bg-white px-4 py-3 text-sm font-medium shadow-sm transition-all hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink)' }}
             >
               {socialLoading === 'google' ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" style={{ color: 'var(--color-pulse)' }} />
               ) : (
                 <GoogleIcon className="h-4 w-4" />
               )}
@@ -176,10 +176,10 @@ export default function SignupPage() {
               type="button"
               onClick={() => handleSocialLogin('github')}
               disabled={socialLoading !== null || loading}
-              className="group relative flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-900 hover:text-white hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+              className="group relative flex items-center justify-center gap-2.5 rounded-[var(--radius-md)] border bg-white px-4 py-3 text-sm font-medium shadow-sm transition-all hover:shadow-md hover:bg-[var(--color-ink)] hover:text-white disabled:cursor-not-allowed disabled:opacity-60" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink)' }}
             >
               {socialLoading === 'github' ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" style={{ color: 'var(--color-pulse)' }} />
               ) : (
                 <GithubIcon className="h-4 w-4" />
               )}
@@ -189,10 +189,10 @@ export default function SignupPage() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200" />
+              <div className="w-full border-t" style={{ borderColor: 'var(--color-border)' }} />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-white px-3 text-slate-500">or continue with</span>
+              <span className="px-3" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-secondary)' }}>or continue with</span>
             </div>
           </div>
 
@@ -201,15 +201,15 @@ export default function SignupPage() {
             whileTap={{ scale: 0.99 }}
             type="button"
             onClick={() => setShowEmailForm(true)}
-            className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/30"
+            className="btn-primary group relative flex w-full items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold rounded-[var(--radius-md)]"
           >
             <span>Continue with Email</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </motion.button>
 
-          <p className="mt-7 text-center text-sm text-slate-600">
+          <p className="mt-7 text-center text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             Already have an account?{' '}
-            <Link href="/signin" className="font-semibold text-emerald-600 transition-colors hover:text-emerald-700">
+            <Link href="/signin" className="font-semibold transition-colors" style={{ color: 'var(--color-pulse)' }}>
               Sign in
             </Link>
           </p>
@@ -217,12 +217,12 @@ export default function SignupPage() {
       ) : (
         <form onSubmit={handleSignUp} className="space-y-4" noValidate>
           <div>
-            <label htmlFor="fullName" className="mb-1.5 block text-sm font-medium text-slate-700">
+            <label htmlFor="fullName" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-ink)' }}>
               Full name
             </label>
             <div className="group relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <User className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+                <User className="h-4 w-4" style={{ color: 'var(--color-text-tertiary)' }} />
               </div>
               <Input
                 id="fullName"
@@ -231,20 +231,21 @@ export default function SignupPage() {
                 value={fullName}
                 onChange={(e) => { setFullName(e.target.value); setFieldErrors((p) => ({ ...p, fullName: '' })); }}
                 required
-                className={`pl-10 ${fieldErrors.fullName ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : ''}`}
+                className={`pl-10 ${fieldErrors.fullName ? 'border-red-300' : ''}`}
+                style={{ borderColor: fieldErrors.fullName ? undefined : 'var(--color-border)' }}
                 aria-invalid={!!fieldErrors.fullName}
               />
             </div>
-            {fieldErrors.fullName && <p className="mt-1 text-xs text-red-600">{fieldErrors.fullName}</p>}
+            {fieldErrors.fullName && <p className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>{fieldErrors.fullName}</p>}
           </div>
 
           <div>
-            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-700">
+            <label htmlFor="email" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-ink)' }}>
               Email address
             </label>
             <div className="group relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <Mail className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+                <Mail className="h-4 w-4" style={{ color: 'var(--color-text-tertiary)' }} />
               </div>
               <Input
                 id="email"
@@ -253,20 +254,21 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setFieldErrors((p) => ({ ...p, email: '' })); }}
                 required
-                className={`pl-10 ${fieldErrors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : ''}`}
+                className={`pl-10 ${fieldErrors.email ? 'border-red-300' : ''}`}
+                style={{ borderColor: fieldErrors.email ? undefined : 'var(--color-border)' }}
                 aria-invalid={!!fieldErrors.email}
               />
             </div>
-            {fieldErrors.email && <p className="mt-1 text-xs text-red-600">{fieldErrors.email}</p>}
+            {fieldErrors.email && <p className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>{fieldErrors.email}</p>}
           </div>
 
           <div>
-            <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-700">
+            <label htmlFor="password" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-ink)' }}>
               Password
             </label>
             <div className="group relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <Lock className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+                <Lock className="h-4 w-4" style={{ color: 'var(--color-text-tertiary)' }} />
               </div>
               <Input
                 id="password"
@@ -275,38 +277,39 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setFieldErrors((p) => ({ ...p, password: '' })); }}
                 required
-                className={`pl-10 ${fieldErrors.password ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : ''}`}
+                className={`pl-10 ${fieldErrors.password ? 'border-red-300' : ''}`}
+                style={{ borderColor: fieldErrors.password ? undefined : 'var(--color-border)' }}
                 aria-invalid={!!fieldErrors.password}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((s) => !s)}
                 tabIndex={-1}
-                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600"
+                className="absolute inset-y-0 right-0 flex items-center pr-3.5" style={{ color: 'var(--color-text-tertiary)' }}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
-            {fieldErrors.password && <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>}
+            {fieldErrors.password && <p className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>{fieldErrors.password}</p>}
 
             {password && (
               <div className="mt-3 space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200">
-                    <div className={`h-full rounded-full transition-all ${passwordStrength?.color}`} style={{ width: `${(passwordStrength!.score / 6) * 100}%` }} />
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full" style={{ backgroundColor: 'var(--color-surface-dim)' }}>
+                    <div className={`h-full rounded-full transition-all ${passwordStrength?.color}`} style={{ width: `${(passwordStrength!.score / 6) * 100}%`, backgroundColor: 'var(--color-bloom)' }} />
                   </div>
-                  <span className="text-xs font-medium text-slate-500">{passwordStrength?.label}</span>
+                  <span className="text-xs font-medium" style={{ color: 'var(--color-text-tertiary)' }}>{passwordStrength?.label}</span>
                 </div>
                 <ul className="space-y-1">
                   {passwordChecks.map((check) => (
                     <li key={check.label} className="flex items-center gap-2 text-xs">
                       {check.met ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                        <CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'var(--color-bloom)' }} />
                       ) : (
-                        <XCircle className="h-3.5 w-3.5 text-slate-300" />
+                        <XCircle className="h-3.5 w-3.5" style={{ color: 'var(--color-mist)' }} />
                       )}
-                      <span className={check.met ? 'text-emerald-700' : 'text-slate-400'}>{check.label}</span>
+                      <span style={{ color: check.met ? 'var(--color-bloom)' : 'var(--color-text-tertiary)' }}>{check.label}</span>
                     </li>
                   ))}
                 </ul>
@@ -315,12 +318,12 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-slate-700">
+            <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-ink)' }}>
               Confirm password
             </label>
             <div className="group relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <Lock className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+                <Lock className="h-4 w-4" style={{ color: 'var(--color-text-tertiary)' }} />
               </div>
               <Input
                 id="confirmPassword"
@@ -329,13 +332,14 @@ export default function SignupPage() {
                 value={confirmPassword}
                 onChange={(e) => { setConfirmPassword(e.target.value); setFieldErrors((p) => ({ ...p, confirmPassword: '' })); }}
                 required
-                className={`pl-10 ${fieldErrors.confirmPassword ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : ''}`}
+                className={`pl-10 ${fieldErrors.confirmPassword ? 'border-red-300' : ''}`}
+                style={{ borderColor: fieldErrors.confirmPassword ? undefined : 'var(--color-border)' }}
                 aria-invalid={!!fieldErrors.confirmPassword}
               />
             </div>
-            {fieldErrors.confirmPassword && <p className="mt-1 text-xs text-red-600">{fieldErrors.confirmPassword}</p>}
+            {fieldErrors.confirmPassword && <p className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>{fieldErrors.confirmPassword}</p>}
             {confirmPassword && password !== confirmPassword && !fieldErrors.confirmPassword && (
-              <p className="mt-1 text-xs text-red-500">Passwords do not match</p>
+              <p className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>Passwords do not match</p>
             )}
           </div>
 
@@ -348,27 +352,25 @@ export default function SignupPage() {
                   onChange={(e) => { setAgreeTerms(e.target.checked); setFieldErrors((p) => ({ ...p, terms: '' })); }}
                   className="peer sr-only"
                 />
-                <div className={`h-[18px] w-[18px] rounded-md border-2 bg-white transition-all peer-checked:border-emerald-500 peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-500/30 group-hover:border-slate-400 ${fieldErrors.terms ? 'border-red-400' : 'border-slate-300'}`} />
+                <div className={`h-[18px] w-[18px] rounded-[var(--radius-sm)] border-2 bg-white transition-all peer-checked:border-[var(--color-bloom)] peer-checked:bg-[var(--color-bloom)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-bloom)]/30 group-hover:border-slate-400 ${fieldErrors.terms ? 'border-red-400' : ''}`} style={{ borderColor: fieldErrors.terms ? undefined : 'var(--color-border)' }} />
                 <svg className="pointer-events-none absolute left-0.5 top-0.5 h-3 w-3 text-white opacity-0 transition-opacity peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <span className="text-sm text-slate-600">
+              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                 I agree to the{' '}
-                <Link href="#" className="font-medium text-emerald-600 hover:text-emerald-700 underline-offset-2 hover:underline">Terms of Service</Link>
+                <Link href="#" className="font-medium underline-offset-2 hover:underline" style={{ color: 'var(--color-pulse)' }}>Terms of Service</Link>
                 {' '}and{' '}
-                <Link href="#" className="font-medium text-emerald-600 hover:text-emerald-700 underline-offset-2 hover:underline">Privacy Policy</Link>
+                <Link href="#" className="font-medium underline-offset-2 hover:underline" style={{ color: 'var(--color-pulse)' }}>Privacy Policy</Link>
               </span>
             </label>
-            {fieldErrors.terms && <p className="mt-1 text-xs text-red-600">{fieldErrors.terms}</p>}
+            {fieldErrors.terms && <p className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>{fieldErrors.terms}</p>}
           </div>
 
-          <motion.button
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.99 }}
+          <button
             type="submit"
             disabled={loading}
-            className="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-70"
+            className="btn-primary relative mt-2 flex w-full items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold rounded-[var(--radius-md)] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? (
               <>
@@ -381,19 +383,19 @@ export default function SignupPage() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </>
             )}
-          </motion.button>
+          </button>
 
           <button
             type="button"
             onClick={() => setShowEmailForm(false)}
-            className="mt-3 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50"
+            className="btn-outline mt-3 w-full px-4 py-3 text-sm font-semibold rounded-[var(--radius-md)]"
           >
             Back
           </button>
         </form>
       )}
 
-      <p className="mt-6 text-center text-xs text-slate-400">
+      <p className="mt-6 text-center text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
         Protected by industry-standard encryption.{' '}
         <Link href="#" className="underline-offset-2 hover:underline">Privacy</Link>
         &middot;

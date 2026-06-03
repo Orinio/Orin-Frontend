@@ -59,7 +59,7 @@ export default function UpdatePasswordPage() {
   if (!sessionReady) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-emerald-500" />
+        <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--color-pulse)' }} />
       </div>
     );
   }
@@ -72,10 +72,10 @@ export default function UpdatePasswordPage() {
       className="w-full"
     >
       <div className="mb-8">
-        <h2 className="font-serif text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-heading)' }}>
           Set new password
         </h2>
-        <p className="mt-2 text-[15px] text-slate-600">
+        <p className="mt-2 text-[15px]" style={{ color: 'var(--color-text-secondary)' }}>
           Choose a strong password for your account.
         </p>
       </div>
@@ -84,7 +84,7 @@ export default function UpdatePasswordPage() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-5 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50/80 p-3.5 text-sm text-red-700"
+          className="mb-5 flex items-start gap-2.5 rounded-[var(--radius-md)] p-3.5 text-sm" style={{ backgroundColor: 'var(--color-bg-pulse-light)', color: 'var(--color-pulse)', border: '1px solid rgba(238,66,102,0.2)' }}
         >
           <svg className="mt-0.5 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
@@ -95,12 +95,12 @@ export default function UpdatePasswordPage() {
 
       <form onSubmit={handleUpdatePassword} className="space-y-4" noValidate>
         <div>
-          <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-700">
+          <label htmlFor="password" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-ink)' }}>
             New password
           </label>
           <div className="group relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-              <Lock className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+              <Lock className="h-4 w-4" style={{ color: 'var(--color-text-tertiary)' }} />
             </div>
             <Input
               id="password"
@@ -110,12 +110,13 @@ export default function UpdatePasswordPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="pl-10"
+              style={{ borderColor: 'var(--color-border)' }}
             />
             <button
               type="button"
               onClick={() => setShowPassword((s) => !s)}
               tabIndex={-1}
-              className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600"
+              className="absolute inset-y-0 right-0 flex items-center pr-3.5" style={{ color: 'var(--color-text-tertiary)' }}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -125,16 +126,20 @@ export default function UpdatePasswordPage() {
           {password && (
             <div className="mt-3 space-y-2">
               <div className="flex items-center gap-2">
-                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200">
-                  <div className={`h-full rounded-full transition-all ${passwordStrength?.color}`} style={{ width: `${(passwordStrength!.score / 6) * 100}%` }} />
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full" style={{ backgroundColor: 'var(--color-surface-dim)' }}>
+                  <div className="h-full rounded-full transition-all" style={{ width: `${(passwordStrength!.score / 6) * 100}%`, backgroundColor: 'var(--color-bloom)' }} />
                 </div>
-                <span className="text-xs font-medium text-slate-500">{passwordStrength?.label}</span>
+                <span className="text-xs font-medium" style={{ color: 'var(--color-text-tertiary)' }}>{passwordStrength?.label}</span>
               </div>
               <ul className="space-y-1">
                 {passwordChecks.map((check) => (
                   <li key={check.label} className="flex items-center gap-2 text-xs">
-                    {check.met ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> : <XCircle className="h-3.5 w-3.5 text-slate-300" />}
-                    <span className={check.met ? 'text-emerald-700' : 'text-slate-400'}>{check.label}</span>
+                    {check.met ? (
+                      <CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'var(--color-bloom)' }} />
+                    ) : (
+                      <XCircle className="h-3.5 w-3.5" style={{ color: 'var(--color-mist)' }} />
+                    )}
+                    <span style={{ color: check.met ? 'var(--color-bloom)' : 'var(--color-text-tertiary)' }}>{check.label}</span>
                   </li>
                 ))}
               </ul>
@@ -143,7 +148,7 @@ export default function UpdatePasswordPage() {
         </div>
 
         <div>
-          <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-slate-700">
+          <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-ink)' }}>
             Confirm new password
           </label>
           <Input
@@ -153,18 +158,17 @@ export default function UpdatePasswordPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+            style={{ borderColor: 'var(--color-border)' }}
           />
           {confirmPassword && password !== confirmPassword && (
-            <p className="mt-1 text-xs text-red-500">Passwords do not match</p>
+            <p className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>Passwords do not match</p>
           )}
         </div>
 
-        <motion.button
-          whileHover={{ y: -1 }}
-          whileTap={{ scale: 0.99 }}
+        <button
           type="submit"
           disabled={loading}
-          className="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-70"
+          className="btn-primary relative mt-2 flex w-full items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold rounded-[var(--radius-md)] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {loading ? (
             <>
@@ -177,7 +181,7 @@ export default function UpdatePasswordPage() {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </>
           )}
-        </motion.button>
+        </button>
       </form>
     </motion.div>
   );

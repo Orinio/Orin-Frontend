@@ -18,7 +18,6 @@ export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<'github' | 'google' | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -66,7 +65,7 @@ export default function SignInPage() {
   if (!initialized) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-emerald-500" />
+        <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--color-pulse)' }} />
       </div>
     );
   }
@@ -79,10 +78,10 @@ export default function SignInPage() {
       className="w-full"
     >
       <div className="mb-8">
-        <h2 className="font-serif text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-heading)' }}>
           Welcome back
         </h2>
-        <p className="mt-2 text-[15px] text-slate-600">
+        <p className="mt-2 text-[15px]" style={{ color: 'var(--color-text-secondary)' }}>
           Sign in to your Orin account to continue building your proof portfolio.
         </p>
       </div>
@@ -91,7 +90,7 @@ export default function SignInPage() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-5 flex items-start gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50/80 p-3.5 text-sm text-emerald-700"
+          className="mb-5 flex items-start gap-2.5 rounded-[var(--radius-md)] p-3.5 text-sm" style={{ backgroundColor: 'var(--color-bg-emerald-light)', color: 'var(--color-bloom)', border: '1px solid rgba(11,171,119,0.2)' }}
         >
           <svg className="mt-0.5 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
@@ -104,7 +103,7 @@ export default function SignInPage() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-5 flex items-start gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50/80 p-3.5 text-sm text-emerald-700"
+          className="mb-5 flex items-start gap-2.5 rounded-[var(--radius-md)] p-3.5 text-sm" style={{ backgroundColor: 'var(--color-bg-emerald-light)', color: 'var(--color-bloom)', border: '1px solid rgba(11,171,119,0.2)' }}
         >
           <svg className="mt-0.5 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
@@ -117,7 +116,7 @@ export default function SignInPage() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-5 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50/80 p-3.5 text-sm text-red-700"
+          className="mb-5 flex items-start gap-2.5 rounded-[var(--radius-md)] p-3.5 text-sm" style={{ backgroundColor: 'var(--color-bg-pulse-light)', color: 'var(--color-pulse)', border: '1px solid rgba(238,66,102,0.2)' }}
         >
           <svg className="mt-0.5 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
@@ -133,10 +132,10 @@ export default function SignInPage() {
           type="button"
           onClick={() => handleSocialLogin('google')}
           disabled={socialLoading !== null || loading}
-          className="group relative flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+          className="group relative flex items-center justify-center gap-2.5 rounded-[var(--radius-md)] border bg-white px-4 py-3 text-sm font-medium shadow-sm transition-all hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink)' }}
         >
           {socialLoading === 'google' ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" style={{ color: 'var(--color-pulse)' }} />
           ) : (
             <GoogleIcon className="h-4 w-4" />
           )}
@@ -148,10 +147,10 @@ export default function SignInPage() {
           type="button"
           onClick={() => handleSocialLogin('github')}
           disabled={socialLoading !== null || loading}
-          className="group relative flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-900 hover:text-white hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+          className="group relative flex items-center justify-center gap-2.5 rounded-[var(--radius-md)] border bg-white px-4 py-3 text-sm font-medium shadow-sm transition-all hover:shadow-md hover:bg-[var(--color-ink)] hover:text-white disabled:cursor-not-allowed disabled:opacity-60" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink)' }}
         >
           {socialLoading === 'github' ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" style={{ color: 'var(--color-pulse)' }} />
           ) : (
             <GithubIcon className="h-4 w-4" />
           )}
@@ -161,21 +160,23 @@ export default function SignInPage() {
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-200" />
+          <div className="w-full border-t" style={{ borderColor: 'var(--color-border)' }} />
         </div>
         <div className="relative flex justify-center text-xs">
-          <span className="bg-white px-3 text-slate-500">or sign in with email</span>
+          <span className="px-3" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-secondary)' }}>
+            or sign in with email
+          </span>
         </div>
       </div>
 
       <form onSubmit={handleSignIn} className="space-y-4" noValidate>
         <div>
-          <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-700">
+          <label htmlFor="email" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-ink)' }}>
             Email address
           </label>
           <div className="group relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-              <Mail className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+              <Mail className="h-4 w-4 transition-colors" style={{ color: 'var(--color-text-tertiary)' }} />
             </div>
             <input
               id="email"
@@ -186,23 +187,24 @@ export default function SignInPage() {
               onChange={(e) => { setEmail(e.target.value); setFieldErrors((p) => ({ ...p, email: undefined })); }}
               onBlur={() => { const err = validateEmail(email); setFieldErrors((p) => ({ ...p, email: err ?? undefined })); }}
               required
-              className={`block w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-[15px] text-slate-900 placeholder:text-slate-400 shadow-sm transition-all hover:border-slate-300 focus:outline-none focus:ring-4 ${fieldErrors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10'}`}
+              className={`block w-full rounded-[var(--radius-md)] border bg-white py-3 pl-10 pr-3.5 text-[15px] shadow-sm transition-all hover:border-slate-300 focus:outline-none focus:ring-4 ${fieldErrors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : ''}`}
+              style={{ borderColor: fieldErrors.email ? undefined : 'var(--color-border)', color: 'var(--color-ink)' }}
               aria-invalid={!!fieldErrors.email}
               aria-describedby={fieldErrors.email ? 'email-error' : undefined}
             />
           </div>
           {fieldErrors.email && (
-            <p id="email-error" className="mt-1 text-xs text-red-600">{fieldErrors.email}</p>
+            <p id="email-error" className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>{fieldErrors.email}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-700">
+          <label htmlFor="password" className="mb-1.5 block text-sm font-medium" style={{ color: 'var(--color-ink)' }}>
             Password
           </label>
           <div className="group relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-              <Lock className="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+              <Lock className="h-4 w-4 transition-colors" style={{ color: 'var(--color-text-tertiary)' }} />
             </div>
             <input
               id="password"
@@ -213,7 +215,8 @@ export default function SignInPage() {
               onChange={(e) => { setPassword(e.target.value); setFieldErrors((p) => ({ ...p, password: undefined })); }}
               onBlur={() => { const err = validatePassword(password); setFieldErrors((p) => ({ ...p, password: err ?? undefined })); }}
               required
-              className={`block w-full rounded-xl border bg-white py-3 pl-10 pr-11 text-[15px] text-slate-900 placeholder:text-slate-400 shadow-sm transition-all hover:border-slate-300 focus:outline-none focus:ring-4 ${fieldErrors.password ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10'}`}
+              className={`block w-full rounded-[var(--radius-md)] border bg-white py-3 pl-10 pr-11 text-[15px] shadow-sm transition-all hover:border-slate-300 focus:outline-none focus:ring-4 ${fieldErrors.password ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : ''}`}
+              style={{ borderColor: fieldErrors.password ? undefined : 'var(--color-border)', color: 'var(--color-ink)' }}
               aria-invalid={!!fieldErrors.password}
               aria-describedby={fieldErrors.password ? 'password-error' : undefined}
             />
@@ -221,46 +224,32 @@ export default function SignInPage() {
               type="button"
               onClick={() => setShowPassword((s) => !s)}
               tabIndex={-1}
-              className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition-colors hover:text-slate-600"
+              className="absolute inset-y-0 right-0 flex items-center pr-3.5 transition-colors" style={{ color: 'var(--color-text-tertiary)' }}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
           {fieldErrors.password && (
-            <p id="password-error" className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>
+            <p id="password-error" className="mt-1 text-xs" style={{ color: 'var(--color-pulse)' }}>{fieldErrors.password}</p>
           )}
         </div>
 
         <div className="flex items-center justify-between pt-1">
-          <label className="group flex cursor-pointer items-center gap-2.5">
-            <div className="relative">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="peer sr-only"
-              />
-              <div className="h-[18px] w-[18px] rounded-md border-2 border-slate-300 bg-white transition-all peer-checked:border-emerald-500 peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-500/30 group-hover:border-slate-400" />
-              <svg className="pointer-events-none absolute left-0.5 top-0.5 h-3 w-3 text-white opacity-0 transition-opacity peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <span className="text-sm text-slate-600">Remember me</span>
-          </label>
-          <Link href="/reset-password" className="text-sm font-medium text-emerald-600 transition-colors hover:text-emerald-700">
+          <Link
+            href="/reset-password"
+            className="text-sm font-medium transition-colors" style={{ color: 'var(--color-pulse)' }}
+          >
             Forgot password?
           </Link>
         </div>
 
-        <motion.button
-          whileHover={{ y: -1 }}
-          whileTap={{ scale: 0.99 }}
+        <button
           type="submit"
           disabled={loading}
-          className="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-70"
+          className="btn-primary relative mt-2 flex w-full items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold rounded-[var(--radius-md)] disabled:cursor-not-allowed disabled:opacity-70"
+          style={{ fontFamily: 'var(--font-body)' }}
         >
-          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
           {loading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -272,17 +261,17 @@ export default function SignInPage() {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </>
           )}
-        </motion.button>
+        </button>
       </form>
 
-      <p className="mt-7 text-center text-sm text-slate-600">
+      <p className="mt-7 text-center text-sm" style={{ color: 'var(--color-text-secondary)' }}>
         Don&rsquo;t have an account?{' '}
-        <Link href="/signup" className="font-semibold text-emerald-600 transition-colors hover:text-emerald-700">
+        <Link href="/signup" className="font-semibold transition-colors" style={{ color: 'var(--color-pulse)' }}>
           Create one for free
         </Link>
       </p>
 
-      <p className="mt-6 text-center text-xs text-slate-400">
+      <p className="mt-6 text-center text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
         Protected by industry-standard encryption.{' '}
         <Link href="#" className="underline-offset-2 hover:underline">Privacy</Link>
         &middot;
