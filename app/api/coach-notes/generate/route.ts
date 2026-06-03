@@ -7,6 +7,9 @@ import type { CoachNoteType } from '@/lib/types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const nvidiaApiKey = process.env.NVIDIA_API_KEY!;
+const NVIDIA_BASE_URL = 'https://integrate.api.nvidia.com/v1';
+const NIM_MODEL = 'meta/llama-3.3-70b-instruct';
 
 interface GenerateRequest {
   noteType: CoachNoteType;
@@ -76,8 +79,7 @@ export async function POST(req: NextRequest) {
 
     const skillAnalysis = analyzeSkills(proofs || [], undefined);
 
-    const openaiApiKey = process.env.OPENAI_API_KEY;
-    if (!openaiApiKey) {
+    if (!nvidiaApiKey) {
       const fallbackNote = generateFallbackNote(noteType, userProfile, proofs || [], skillAnalysis);
       
       const { data: savedNote, error: saveError } = await supabase
@@ -147,35 +149,34 @@ export async function POST(req: NextRequest) {
       userQuery
     );
 
-    const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const nvidiaResponse = await fetch(`${NVIDIA_BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${openaiApiKey}`,
+        Authorization: `Bearer ${nvidiaApiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: NIM_MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
         ],
         temperature: 0.7,
         max_tokens: 500,
-        response_format: { type: 'json_object' },
       }),
     });
 
-    if (!openaiResponse.ok) {
-      const errorData = await openaiResponse.text();
-      console.error('OpenAI API error:', errorData);
+    if (!nvidiaResponse.ok) {
+      const errorData = await nvidiaResponse.text();
+      console.error('NVIDIA NIM API error:', errorData);
       return NextResponse.json({ error: 'Failed to generate coaching note' }, { status: 500 });
     }
 
-    const openaiData = await openaiResponse.json();
-    const aiContent = openaiData.choices[0]?.message?.content;
+    const nvidiaData = await nvidiaResponse.json();
+    const aiContent = nvidiaData.choices[0]?.message?.content;
 
     if (!aiContent) {
-      return NextResponse.json({ error: 'Empty response from OpenAI' }, { status: 500 });
+      return NextResponse.json({ error: 'Empty response from NVIDIA NIM' }, { status: 500 });
     }
 
     const coachNote = parseCoachResponse(aiContent);
@@ -210,12 +211,9 @@ export async function POST(req: NextRequest) {
       success: true,
       note: savedNote,
       usage: {
-        model: 'gpt-4o-mini',
-        tokensUsed: openaiData.usage?.total_tokens || 0,
-        costEstimate: estimateOpenAICost(
-          openaiData.usage?.prompt_tokens || 0,
-          openaiData.usage?.completion_tokens || 0
-        ),
+        model: NIM_MODEL,
+        tokensUsed: nvidiaData.usage?.total_tokens || 0,
+        costEstimate: 0,
       },
     });
   } catch (error) {

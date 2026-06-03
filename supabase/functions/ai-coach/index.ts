@@ -29,10 +29,10 @@ serve(async (req: Request) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const openaiApiKey = Deno.env.get("OPENAI_API_KEY")!;
+    const nvidiaApiKey = Deno.env.get("NVIDIA_API_KEY")!;
 
-    if (!openaiApiKey) {
-      throw new Error("OPENAI_API_KEY not configured");
+    if (!nvidiaApiKey) {
+      throw new Error("NVIDIA_API_KEY not configured");
     }
 
     const authHeader = req.headers.get("Authorization");
@@ -92,35 +92,34 @@ serve(async (req: Request) => {
       userQuery
     );
 
-    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+    const nvidiaResponse = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${openaiApiKey}`,
+        Authorization: `Bearer ${nvidiaApiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "meta/llama-3.3-70b-instruct",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
         temperature: 0.7,
         max_tokens: 500,
-        response_format: { type: "json_object" },
       }),
     });
 
-    if (!openaiResponse.ok) {
-      const errorData = await openaiResponse.text();
-      console.error("OpenAI API error:", errorData);
+    if (!nvidiaResponse.ok) {
+      const errorData = await nvidiaResponse.text();
+      console.error("NVIDIA NIM API error:", errorData);
       throw new Error("Failed to generate coaching note");
     }
 
-    const openaiData = await openaiResponse.json();
-    const aiContent = openaiData.choices[0]?.message?.content;
+    const nvidiaData = await nvidiaResponse.json();
+    const aiContent = nvidiaData.choices[0]?.message?.content;
 
     if (!aiContent) {
-      throw new Error("Empty response from OpenAI");
+      throw new Error("Empty response from NVIDIA NIM");
     }
 
     let coachNote: CoachNote;
@@ -167,8 +166,8 @@ serve(async (req: Request) => {
         success: true,
         note: savedNote,
         usage: {
-          model: "gpt-4o-mini",
-          tokensUsed: openaiData.usage?.total_tokens || 0,
+          model: "meta/llama-3.3-70b-instruct",
+          tokensUsed: nvidiaData.usage?.total_tokens || 0,
         },
       }),
       {
