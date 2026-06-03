@@ -13,12 +13,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-[var(--color-primary-cta)] text-[var(--color-ink)] hover:bg-[#d63a5b] hover:shadow-[0_4px_12px_rgba(238,66,102,0.3)]",
+    "bg-[var(--color-pulse)] text-white hover:bg-[#D63A5B] hover:shadow-[0_0_20px_rgba(238,66,102,0.15)]",
   secondary:
-    "bg-[var(--color-secondary-cta)] text-[var(--color-ink)] hover:bg-[#e08215] hover:shadow-[0_4px_12px_rgba(246,146,38,0.3)]",
+    "bg-[var(--color-ember)] text-white hover:bg-[#E08215] hover:shadow-[0_0_20px_rgba(246,146,38,0.15)]",
   ghost:
-    "bg-transparent text-[var(--color-ink)] hover:bg-[var(--color-mist)]",
-  danger: "bg-[var(--color-pulse)] text-[var(--color-ink)] hover:bg-[#d63a5b]",
+    "bg-transparent text-[var(--color-ink)] hover:bg-[var(--color-surface-dim)]",
+  danger:
+    "bg-[var(--color-pulse)] text-white hover:bg-[#D63A5B]",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -40,7 +41,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] font-semibold transition duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-primary-emerald)] active:scale-[0.98] active:shadow-inner disabled:cursor-not-allowed disabled:opacity-50",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] font-semibold transition duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-spark)] active:scale-[0.98] active:shadow-inner disabled:cursor-not-allowed disabled:opacity-50",
         variantClasses[variant],
         sizeClasses[size],
         className,

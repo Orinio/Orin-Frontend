@@ -1,8 +1,8 @@
 import { supabase, Database } from "@/lib/supabase";
 import { proofs as mockProofs, opportunities as mockOpps, coachNote as mockCoachNote } from "@/lib/mock-data";
 import { mapDbProofToProof, mapDbOpportunityToOpportunity } from "@/lib/utils";
-import { ProofCard } from "@/components/ProofCard";
-import { CoachNote } from "@/components/CoachNote";
+import ProofCard from "@/components/ProofCard";
+import CoachNote from "@/components/CoachNote";
 import type { Proof, Opportunity, CoachNote as CoachNoteType } from "@/lib/types";
 
 export default async function DashboardPage() {

@@ -1,43 +1,37 @@
 export default function Stats() {
+  const stats = [
+    { num: '5K+', label: 'Active students', color: 'var(--color-bloom)' },
+    { num: '23K+', label: 'Proof cards created', color: 'var(--color-ember)' },
+    { num: '1.2K+', label: 'Matched internships', color: 'var(--color-pulse)' },
+    { num: '92%', label: 'Return weekly', color: 'var(--color-spark)' },
+  ];
+
   return (
-    <>
-      {/* STATS */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-8 text-center">
-          {[{
-              num: '5K+',
-              label: 'Active students'
-            },
-            {
-              num: '23K+',
-              label: 'Proof cards created'
-            },
-            {
-              num: '1.2K+',
-              label: 'Matched internships'
-            },
-            {
-              num: '92%',
-              label: 'Return weekly'
-            }
-          ].map((stat, i) => (
-            <div key={i}>
-              <p className="text-5xl font-serif font-bold grad-emerald">{stat.num}</p>
-              <p className="text-gray-600 mt-2">{stat.label}</p>
+    <section className="py-20 px-6" style={{ backgroundColor: 'var(--color-paper)' }}>
+      <div className="max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-4 gap-8">
+          {stats.map((stat, i) => (
+            <div
+              key={i}
+              className="text-center p-8 rounded-2xl transition-all duration-200"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                border: '1px solid var(--color-border-light)',
+              }}
+            >
+              <p
+                className="text-5xl font-bold mb-2"
+                style={{ color: stat.color }}
+              >
+                {stat.num}
+              </p>
+              <p className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                {stat.label}
+              </p>
             </div>
           ))}
         </div>
-      </section>
-
-      {/* STYLES */}
-      <style>{`
-        .grad-emerald {
-          background: linear-gradient(135deg, #059669 0%, #d97706 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-      `}</style>
-    </>
+      </div>
+    </section>
   );
 }

@@ -1,185 +1,158 @@
 'use client';
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
-import { currentUser as mockUser } from "@/lib/mock-data";
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
-const links = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/dashboard#my-proof", label: "My Proof" },
-  { href: "/dashboard#opportunities", label: "Opportunities" },
-  { href: "/dashboard/settings", label: "Settings" },
-];
-
-interface NavigationUser {
-  id: string;
-  email?: string;
-  user_metadata: {
-    full_name?: string;
-  };
-}
-
-export function Navigation() {
-  const pathname = usePathname();
+export default function Navigation() {
   const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<NavigationUser | null>(null);
+  const pathname = usePathname();
+  const [user, setUser] = useState<any>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const getUser = async () => {
-      if (!supabase) {
-        // Suppress console warning, fall back to mock user session
-        setUser({
-          id: mockUser.id,
-          email: mockUser.email,
-          user_metadata: { full_name: mockUser.fullName }
-        });
-        return;
-      }
-      const { data: { user: activeUser } } = await supabase.auth.getUser();
-      if (activeUser) {
-        setUser(activeUser as unknown as NavigationUser);
-      } else {
-        setUser({
-          id: mockUser.id,
-          email: mockUser.email,
-          user_metadata: { full_name: mockUser.fullName }
-        });
-      }
+      if (!supabase) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
     };
     getUser();
-
-    if (!supabase) return;
-    
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setUser(session.user as unknown as NavigationUser);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
   }, []);
 
   const handleSignOut = async () => {
-    if (supabase) {
-      await supabase.auth.signOut();
-    }
-    setUser(null);
+    if (!supabase) return;
+    await supabase.auth.signOut();
     router.push('/signin');
   };
 
+  const navLinks = [
+    { href: '/dashboard', label: 'Dashboard', icon: (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+      </svg>
+    )},
+    { href: '/dashboard/opportunities', label: 'Opportunities', icon: (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      </svg>
+    )},
+    { href: '/dashboard/sources/new', label: 'Add Source', icon: (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" />
+      </svg>
+    )},
+    { href: '/dashboard/settings', label: 'Settings', icon: (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      </svg>
+    )},
+  ];
+
+  const isActive = (href: string) => pathname === href;
+
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-      <nav
-        className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4 px-4 md:px-6 lg:px-8"
-        aria-label="Main navigation"
+    <>
+      <header
+        className="sticky top-0 z-50 w-full"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          borderBottom: '1px solid var(--color-border-light)',
+        }}
       >
-        <div className="flex items-center gap-3">
-          <button
-            className="rounded-md border border-[var(--color-neutral-border)] p-2 text-[var(--color-neutral-text-secondary)] md:hidden"
-            aria-label="Toggle navigation"
-            aria-expanded={isMenuOpen}
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-            type="button"
-          >
-            <svg
-              aria-hidden="true"
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <Link href="/" className="text-lg font-semibold text-[var(--color-primary-emerald)] font-serif">
-            Orin
-          </Link>
-        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <Link href="/dashboard" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-ink)' }}>
+                <span className="text-sm font-bold" style={{ color: 'var(--color-spark)' }}>O</span>
+              </div>
+              <span className="text-lg font-bold" style={{ color: 'var(--color-ink)' }}>ORIN</span>
+            </Link>
 
-        <div className="hidden flex-1 items-center justify-center gap-6 md:flex">
-          <div className="hidden items-center gap-6 lg:flex">
-            {links.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`border-b-2 border-transparent pb-1 text-sm font-medium text-[var(--color-neutral-text-secondary)] transition hover:text-[var(--color-primary-emerald)] ${
-                  pathname === link.href ? "border-[var(--color-primary-emerald)] text-[var(--color-primary-emerald)]" : ""
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {user && (
-            <>
-              <button
-                className="relative rounded-full border border-[var(--color-neutral-border)] p-2 text-[var(--color-neutral-text-secondary)]"
-                aria-label="Notifications"
-                type="button"
-              >
-                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[var(--color-danger)]" />
-                <svg
-                  aria-hidden="true"
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
+            {/* Desktop nav */}
+            <nav className="hidden md:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                  style={{
+                    color: isActive(link.href) ? 'var(--color-pulse)' : 'var(--color-text-secondary)',
+                    backgroundColor: isActive(link.href) ? 'rgba(238,66,102,0.06)' : 'transparent',
+                  }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5m6 0a3 3 0 01-6 0m6 0H9"
-                  />
+                  {link.icon}
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* User section */}
+            <div className="flex items-center gap-3">
+              <button
+                className="hidden md:flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-200"
+                style={{ backgroundColor: 'var(--color-surface-dim)' }}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-text-secondary)' }}>
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
               </button>
-              <button
-                className="min-h-11 rounded-full border border-[var(--color-neutral-border)] bg-[var(--color-neutral-bg)] px-3 text-sm font-medium"
-                aria-label="Open user menu"
-                type="button"
-                onClick={handleSignOut}
-              >
-                {user.user_metadata?.full_name?.split(' ').map((n: string) => n[0]).join('') || 'U'}
-              </button>
-            </>
-          )}
-        </div>
-      </nav>
 
-      {isMenuOpen ? (
-        <div className="border-t border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] px-4 py-4 md:hidden">
-          <div className="flex flex-col gap-3">
-            {links.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="rounded-md px-3 py-2 text-sm font-medium text-[var(--color-neutral-text-secondary)] hover:bg-[var(--color-primary-soft)]"
-                onClick={() => setIsMenuOpen(false)}
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                style={{ color: 'var(--color-text-secondary)' }}
               >
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
+                  style={{ backgroundColor: 'var(--color-bloom)' }}
+                >
+                  {user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                </div>
+                <span className="hidden md:inline">Sign Out</span>
+              </button>
+            </div>
+
+            {/* Mobile toggle */}
+            <button
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              style={{ color: 'var(--color-ink)' }}
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {mobileOpen ? (
+                  <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
+                ) : (
+                  <><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></>
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div className="md:hidden px-4 pb-4" style={{ borderTop: '1px solid var(--color-border-light)' }}>
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-200"
+                style={{
+                  color: isActive(link.href) ? 'var(--color-pulse)' : 'var(--color-text-secondary)',
+                  backgroundColor: isActive(link.href) ? 'rgba(238,66,102,0.06)' : 'transparent',
+                }}
+              >
+                {link.icon}
                 {link.label}
               </Link>
             ))}
-            {user && (
-              <button
-                onClick={handleSignOut}
-                type="button"
-                className="rounded-md px-3 py-2 text-left text-sm font-medium text-[var(--color-danger)] hover:bg-[var(--color-neutral-surface-alt)]"
-              >
-                Sign Out
-              </button>
-            )}
           </div>
-        </div>
-      ) : null}
-    </header>
+        )}
+      </header>
+    </>
   );
 }

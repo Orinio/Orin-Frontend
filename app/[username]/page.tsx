@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { supabase, Database } from '@/lib/supabase';
 import { currentUser as mockUser, proofs as mockProofs } from '@/lib/mock-data';
-import { ProofCard } from '@/components/ProofCard';
+import ProofCard from '@/components/ProofCard';
 import { mapDbProofToProof } from '@/lib/utils';
 import type { Proof } from '@/lib/types';
 

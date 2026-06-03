@@ -2,21 +2,42 @@ import type { InputHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  hasError?: boolean;
+  label?: string;
+  error?: string;
 }
 
-export function Input({ className, hasError, ...props }: InputProps) {
+export function Input({ className, label, error, id, ...props }: InputProps) {
   return (
-    <input
-      className={cn(
-        "min-h-11 w-full rounded-[6px] border bg-[var(--color-neutral-surface)] px-3 py-2 text-base text-[var(--color-neutral-text)] transition placeholder:text-[var(--color-neutral-text-tertiary)]",
-        hasError
-          ? "border-[var(--color-danger)]"
-          : "border-[var(--color-neutral-border)]",
-        "focus:border-[var(--color-primary-emerald)] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)] focus:outline-none disabled:cursor-not-allowed disabled:bg-[var(--color-neutral-surface-alt)] disabled:text-[var(--color-neutral-text-secondary)]",
-        className,
+    <div className="space-y-1.5">
+      {label && (
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium"
+          style={{ color: 'var(--color-ink)' }}
+        >
+          {label}
+        </label>
       )}
-      {...props}
-    />
+      <input
+        id={id}
+        className={cn(
+          "w-full h-11 px-4 rounded-[var(--radius-md)] text-sm transition-all duration-200",
+          "bg-[var(--color-surface)] border",
+          error
+            ? "border-[var(--color-pulse)] focus:ring-2 focus:ring-[var(--color-pulse)]/20"
+            : "border-[var(--color-border-light)] focus:border-[var(--color-ink)] focus:ring-2 focus:ring-[var(--color-ink)]/10",
+          "placeholder:text-[var(--color-mist)]",
+          "focus:outline-none",
+          "disabled:opacity-50 disabled:cursor-not-allowed",
+          className,
+        )}
+        {...props}
+      />
+      {error && (
+        <p className="text-xs font-medium" style={{ color: 'var(--color-pulse)' }}>
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
