@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabase, Database } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   if (!supabase) {
@@ -36,15 +36,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Title and company are required' }, { status: 400 });
   }
 
+  const insertData: Database['public']['Tables']['opportunities']['Insert'] = {
+    title,
+    company,
+    match_percentage: match_percentage || 0,
+  };
+
   const { data: opportunity, error } = await supabase
-    .from('opportunities')
-    .insert({
-      title,
-      company,
-      match_percentage: match_percentage || 0,
-    })
-    .select()
-    .single();
+  .from('opportunities')
+  .insert(insertData)
+  .select()
+  .single();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

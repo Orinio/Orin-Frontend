@@ -9,25 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        orin: {
-          emerald: "#10B981",
-          "emerald-dark": "#059669",
-          "orange": "#F97316",
-          "orange-dark": "#D97706",
-          amber: "#F59E0B",
-          coral: "#FB7185",
-          gold: "#F59E0B",
-          sage: "#84CC16",
-          sand: "#FFF7ED",
-          cream: "#FFFBEB",
-          "bg-light": "#F8FAFC",
-          "bg-dark": "#0F172A",
-          "text-primary": "#0F172A",
-          "text-secondary": "#64748B",
-          "text-tertiary": "#94A3B8",
-          "border-light": "#E2E8F0",
-          "border-medium": "#CBD5E1",
-        },
+        ink: "#000000",
+        paper: "#F7F7F2",
+        mist: "#CBD5E1",
+        spark: "#F4E409",
+        pulse: "#EE4266",
+        ember: "#F69226",
+        bloom: "#0BAB77",
+        "text-secondary-dark": "#0F172A",
+        "border-light": "#E2E8F0",
+        "border-medium": "#CBD5E1",
       },
       fontFamily: {
         display: ["Georgia", "serif"],
@@ -47,7 +38,7 @@ const config: Config = {
       animation: {
         "float-slow": "float 6s ease-in-out infinite",
         "glow-pulse": "glow-pulse 3s ease-in-out infinite",
-        "shimmer": "shimmer 2s infinite",
+        shimmer: "shimmer 2s infinite",
       },
       keyframes: {
         float: {
