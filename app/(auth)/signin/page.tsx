@@ -2,19 +2,18 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { validateEmail, validatePassword, getFriendlyErrorMessage } from '@/lib/auth-helpers';
 
 export default function SignInPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/dashboard';
   const confirmed = searchParams.get('confirmed');
 
-  const { signIn, signInWithOAuth, user, loading: authLoading, initialized } = useAuth();
+  const { signIn, signInWithOAuth, user, initialized } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,8 +26,8 @@ export default function SignInPage() {
 
   useEffect(() => {
     if (!initialized) return;
-    if (user) router.replace(redirectTo);
-  }, [user, initialized, router, redirectTo]);
+    if (user) window.location.href = redirectTo;
+  }, [user, initialized, redirectTo]);
 
   const validate = (): boolean => {
     const errors: { email?: string; password?: string } = {};
@@ -54,7 +53,7 @@ export default function SignInPage() {
       return;
     }
 
-    router.replace(redirectTo);
+    window.location.href = redirectTo;
   };
 
   const handleSocialLogin = async (provider: 'github' | 'google') => {
