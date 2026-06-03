@@ -181,3 +181,34 @@ export interface ProofShare {
   viewCount: number;
   createdAt: Date;
 }
+
+export interface UserPublicProfile {
+  id: string;
+  username: string;
+  fullName?: string;
+  avatarUrl?: string;
+  headline?: string;
+  bio?: string;
+  location?: string;
+  college?: string;
+  year?: StudentYear;
+  websiteUrl?: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  twitterUrl?: string;
+  memberSince: Date;
+  publicProofs: {
+    id: string;
+    title: string;
+    description?: string;
+    sourceType: ProofSourceType;
+    sourceUrl?: string;
+    thumbnailUrl?: string;
+    skillsExtracted: string[];
+    whatItProves: string[];
+    viewCount: number;
+    createdAt: Date;
+  }[];
+  publicSkills: string[];
+  totalProfileViews: number;
+}

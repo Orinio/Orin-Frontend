@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, Database } from '@/lib/supabase';
-import { resolvePublicUserId } from '@/lib/utils';
 
 type CoachNoteInsert = Database['public']['Tables']['coach_notes']['Insert'];
 
@@ -9,15 +8,25 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const userId = await resolvePublicUserId(supabase);
-  if (!userId) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { data: userData } = await supabase
+    .from('users')
+    .select('id')
+    .eq('auth_user_id', user.id)
+    .maybeSingle();
+
+  if (!userData) {
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
 
   const { data: coachNotes, error } = await supabase
     .from('coach_notes')
     .select('*')
-    .eq('user_id', userId)
+    .eq('user_id', userData.id)
     .is('deleted_at', null)
     .order('created_at', { ascending: false });
 
@@ -33,9 +42,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
 
-  const userId = await resolvePublicUserId(supabase);
-  if (!userId) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { data: userData } = await supabase
+    .from('users')
+    .select('id')
+    .eq('auth_user_id', user.id)
+    .maybeSingle();
+
+  if (!userData) {
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
 
   let body: Partial<CoachNoteInsert>;
@@ -59,7 +78,7 @@ export async function POST(request: NextRequest) {
   }
 
   const insertData: CoachNoteInsert = {
-    user_id: userId,
+    user_id: userData.id,
     type: type || 'ad_hoc',
     content,
     action_label: action_label || null,
@@ -70,7 +89,7 @@ export async function POST(request: NextRequest) {
 
   const { data: coachNote, error } = await supabase
     .from('coach_notes')
-    .insert(insertData)
+    .insert([insertData])
     .select()
     .single();
 

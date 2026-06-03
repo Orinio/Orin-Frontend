@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./supabase";
 import type {
   User,
@@ -12,6 +13,19 @@ import type {
 
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
+}
+
+export async function resolvePublicUserId(supabase: SupabaseClient): Promise<string | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from('users')
+    .select('id')
+    .eq('auth_user_id', user.id)
+    .maybeSingle();
+
+  return data?.id ?? null;
 }
 
 type DbUser = Database["public"]["Tables"]["users"]["Row"];

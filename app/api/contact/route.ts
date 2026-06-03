@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
   const { data: contactMessage, error } = await supabase
     .from('contact_messages')
-    .insert(insertData)
+    .insert([insertData])
     .select()
     .single();
 

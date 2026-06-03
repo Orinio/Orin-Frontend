@@ -849,40 +849,7 @@ export type Database = {
         ];
       };
     };
-    Views: {
-      user_public_profiles: {
-        Row: {
-          id: string;
-          username: string;
-          full_name: string | null;
-          avatar_url: string | null;
-          headline: string | null;
-          bio: string | null;
-          location: string | null;
-          college: string | null;
-          year: 'first' | 'second' | 'third' | 'fourth' | 'graduate' | null;
-          website_url: string | null;
-          github_url: string | null;
-          linkedin_url: string | null;
-          twitter_url: string | null;
-          member_since: string;
-          public_proofs: Array<{
-            id: string;
-            title: string;
-            description: string | null;
-            source_type: string;
-            source_url: string | null;
-            thumbnail_url: string | null;
-            skills_extracted: string[];
-            what_it_proves: string[];
-            view_count: number;
-            created_at: string;
-          }>;
-          public_skills: string[];
-          total_profile_views: number;
-        };
-      };
-    };
+    Views: Record<string, never>;
     Functions: Record<string, never>;
     Enums: {
       user_role: 'user' | 'admin' | 'moderator';
@@ -902,6 +869,7 @@ export type Database = {
       subscription_status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'incomplete';
       opportunity_status: 'saved' | 'applied' | 'dismissed' | 'interviewing' | 'rejected' | 'offered';
     };
+    CompositeTypes: Record<string, never>;
   };
 };
 
