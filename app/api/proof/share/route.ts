@@ -27,10 +27,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'proofId is required' }, { status: 400 });
   }
 
-  const shareKind = (kind || 'link') as ProofShareInsert['kind'];
-  const validKinds = ['link', 'email', 'recruiter_invite'] as const;
-  if (!(validKinds as readonly string[]).includes(shareKind)) {
-    return NextResponse.json({ error: `kind must be one of: ${validKinds.join(', ')}` }, { status: 400 });
+  const shareKind = (kind || 'link') as 'link' | 'email' | 'recruiter_invite';
+  if (!['link', 'email', 'recruiter_invite'].includes(kind || 'link')) {
+    return NextResponse.json({ error: `kind must be one of: link, email, recruiter_invite` }, { status: 400 });
   }
 
   const { data: proof } = await supabase
