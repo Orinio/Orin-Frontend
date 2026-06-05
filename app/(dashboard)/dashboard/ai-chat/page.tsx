@@ -62,12 +62,25 @@ function AIChatContent() {
     setInput('');
     setLoading(true);
 
+    // Add placeholder for streaming response
+    const assistantId = (Date.now() + 1).toString();
+    const assistantMessage: Message = {
+      id: assistantId,
+      role: 'assistant',
+      content: '',
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, assistantMessage]);
+
     try {
       const history = messages.map(m => ({ role: m.role, content: m.content }));
 
-      const response = await fetch('/api/ai/chat', {
+      const response = await fetch('/api/ai/chat-stream', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/event-stream',
+        },
         body: JSON.stringify({ message: text.trim(), history }),
       });
 
@@ -76,26 +89,64 @@ function AIChatContent() {
         throw new Error(data.error || 'Failed to get response');
       }
 
-      const data = await response.json();
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('No response stream');
 
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.response.content,
-        thinking: data.response.thinking,
-        tokensUsed: data.response.tokensUsed,
-        timestamp: new Date(),
-      };
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let fullContent = '';
 
-      setMessages(prev => [...prev, assistantMessage]);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6).trim();
+            if (data === '[DONE]') {
+              break;
+            }
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.error) {
+                throw new Error(parsed.error);
+              }
+              if (parsed.content) {
+                fullContent += parsed.content;
+                setMessages(prev => prev.map(m => 
+                  m.id === assistantId 
+                    ? { ...m, content: fullContent }
+                    : m
+                ));
+              }
+            } catch (e) {
+              if (e instanceof Error && e.message !== 'Unexpected end of JSON input') {
+                throw e;
+              }
+            }
+          }
+        }
+      }
+
+      // If no content was streamed, use fallback
+      if (!fullContent) {
+        setMessages(prev => prev.map(m => 
+          m.id === assistantId 
+            ? { ...m, content: 'I apologize, but I was unable to generate a response. Please try again.' }
+            : m
+        ));
+      }
     } catch (error) {
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      console.error('Chat error:', error);
+      setMessages(prev => prev.map(m => 
+        m.id === assistantId 
+          ? { ...m, content: 'Sorry, I encountered an error. Please try again.' }
+          : m
+      ));
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import ProofCard from '@/components/ProofCard';
+import ProfileSuggestions from '@/components/ProfileSuggestions';
 import { mapDbUserToUser, mapDbProofToProof, getProofTypeColor } from '@/lib/utils';
 import type { User, Proof } from '@/lib/types';
 
@@ -128,6 +129,13 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
           </div>
         )}
       </section>
+
+      <ProfileSuggestions
+        username={user.username}
+        skills={allSkills}
+        proofCount={proofs.length}
+        verifiedCount={proofs.filter(p => p.verificationStatus === 'verified').length}
+      />
 
       {allSkills.length > 0 && (
         <section className="mt-8">
