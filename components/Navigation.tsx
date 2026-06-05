@@ -17,6 +17,7 @@ import {
   ChevronDown,
   Check,
   Sparkles,
+  MessageCircle,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth-context';
@@ -149,6 +150,7 @@ export default function Navigation() {
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
     { href: '/dashboard/coach', label: 'AI Coach', icon: Sparkles },
+    { href: '/dashboard/ai-chat', label: 'AI Chat', icon: MessageCircle },
     { href: '/opportunities', label: 'Opportunities', icon: Briefcase },
     { href: '/dashboard/sources/new', label: 'Add Source', icon: PlusCircle },
     { href: '/settings', label: 'Settings', icon: Settings },

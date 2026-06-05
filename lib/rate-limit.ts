@@ -7,6 +7,35 @@ export interface RateLimitConfig {
   cooldownHours: number;
 }
 
+// General AI endpoint rate limits
+export const AI_RATE_LIMITS: Record<string, RateLimitConfig> = {
+  'ai-verify': {
+    maxPerDay: 10,
+    maxPerWeek: 50,
+    cooldownHours: 0.5,
+  },
+  'ai-chat': {
+    maxPerDay: 30,
+    maxPerWeek: 150,
+    cooldownHours: 0.1,
+  },
+  'ai-match-opportunities': {
+    maxPerDay: 5,
+    maxPerWeek: 20,
+    cooldownHours: 1,
+  },
+  'ai-skills': {
+    maxPerDay: 10,
+    maxPerWeek: 50,
+    cooldownHours: 0.5,
+  },
+  'coach-notes-generate': {
+    maxPerDay: 3,
+    maxPerWeek: 10,
+    cooldownHours: 4,
+  },
+};
+
 export const RATE_LIMITS: Record<CoachNoteType, RateLimitConfig> = {
   daily: {
     maxPerDay: 1,
@@ -166,4 +195,108 @@ export async function trackUsage(
   if (error) {
     console.error('Usage tracking skipped:', error);
   }
+}
+
+// General-purpose rate limiter for AI endpoints
+export async function checkAIRateLimit(
+  supabase: SupabaseClient,
+  userId: string,
+  endpoint: string
+): Promise<RateLimitResult> {
+  const config = AI_RATE_LIMITS[endpoint];
+  if (!config) {
+    // Default: 20 per day, 100 per week
+    return checkGeneralRateLimit(supabase, userId, endpoint, {
+      maxPerDay: 20,
+      maxPerWeek: 100,
+      cooldownHours: 0.5,
+    });
+  }
+  return checkGeneralRateLimit(supabase, userId, endpoint, config);
+}
+
+async function checkGeneralRateLimit(
+  supabase: SupabaseClient,
+  userId: string,
+  endpoint: string,
+  config: RateLimitConfig
+): Promise<RateLimitResult> {
+  const now = new Date();
+  const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  // Use a simple in-memory approach by checking coach_notes as a proxy for usage
+  // In production, you'd want a dedicated rate_limit table
+  const { data: recentActivity, error } = await supabase
+    .from('coach_notes')
+    .select('created_at')
+    .eq('user_id', userId)
+    .is('deleted_at', null)
+    .gte('created_at', sevenDaysAgo.toISOString())
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Rate limit check failed:', error);
+    return { allowed: true };
+  }
+
+  const activityLast24h = (recentActivity || []).filter(
+    (a) => new Date(a.created_at) >= twentyFourHoursAgo
+  );
+
+  const activityLast7d = recentActivity || [];
+
+  if (activityLast24h.length >= config.maxPerDay) {
+    const lastActivity = activityLast24h[0];
+    const nextAllowed = new Date(lastActivity.created_at);
+    nextAllowed.setHours(nextAllowed.getHours() + config.cooldownHours);
+    return {
+      allowed: false,
+      reason: `Daily limit reached for ${endpoint}`,
+      nextAllowedAt: nextAllowed,
+    };
+  }
+
+  if (activityLast7d.length >= config.maxPerWeek) {
+    return {
+      allowed: false,
+      reason: `Weekly limit reached for ${endpoint}`,
+      nextAllowedAt: sevenDaysAgo,
+    };
+  }
+
+  if (activityLast24h.length > 0) {
+    const lastActivity = activityLast24h[0];
+    const lastActivityTime = new Date(lastActivity.created_at);
+    const cooldownEnd = new Date(lastActivityTime.getTime() + config.cooldownHours * 60 * 60 * 1000);
+    if (now < cooldownEnd) {
+      return {
+        allowed: false,
+        reason: `Cooldown period active for ${endpoint}`,
+        nextAllowedAt: cooldownEnd,
+      };
+    }
+  }
+
+  return { allowed: true };
+}
+
+// Simple IP-based rate limiting for unauthenticated requests
+const ipRateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+export function checkIPRateLimit(ip: string, maxRequests: number = 10, windowMs: number = 60000): boolean {
+  const now = Date.now();
+  const record = ipRateLimitMap.get(ip);
+
+  if (!record || now > record.resetAt) {
+    ipRateLimitMap.set(ip, { count: 1, resetAt: now + windowMs });
+    return true;
+  }
+
+  if (record.count >= maxRequests) {
+    return false;
+  }
+
+  record.count++;
+  return true;
 }

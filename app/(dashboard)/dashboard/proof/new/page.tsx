@@ -72,6 +72,8 @@ export default function NewProofPage() {
   const [description, setDescription] = useState('');
   const [skills, setSkills] = useState<string[]>([]);
   const [customSkill, setCustomSkill] = useState('');
+  const [autoVerify, setAutoVerify] = useState(true);
+  const [verifying, setVerifying] = useState(false);
 
   const selectedSource = sourceTypes.find((s) => s.value === sourceType);
   const suggestedForType = suggestedSkills[sourceType];
@@ -140,6 +142,37 @@ export default function NewProofPage() {
         const data = await res.json();
         throw new Error(data.error || 'Failed to create proof card');
       }
+      const proofData = await res.json();
+
+      if (autoVerify && sourceUrl && (sourceType === 'github' || sourceType === 'certificate' || sourceType === 'kaggle')) {
+        setVerifying(true);
+        try {
+          const authRes = await fetch('/api/auth/session');
+          const sessionData = await authRes.json();
+          const token = sessionData?.access_token;
+
+          if (token) {
+            await fetch('/api/ai/verify', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                action: 'verify',
+                proofId: proofData.id,
+                proofUrl: sourceUrl,
+                sourceType: sourceType,
+              }),
+            });
+          }
+        } catch (verifyErr) {
+          console.warn('Auto-verification failed, proof created successfully:', verifyErr);
+        } finally {
+          setVerifying(false);
+        }
+      }
+
       router.push('/dashboard');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong');
@@ -438,6 +471,27 @@ export default function NewProofPage() {
                   </div>
                 </div>
               )}
+
+              {sourceUrl && (sourceType === 'github' || sourceType === 'certificate' || sourceType === 'kaggle') && (
+                <div className="rounded-lg border border-[var(--color-primary-emerald)]/20 bg-[var(--color-primary-soft)]/10 p-4">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoVerify}
+                      onChange={(e) => setAutoVerify(e.target.checked)}
+                      className="h-4 w-4 rounded border-[var(--color-neutral-border)] text-[var(--color-primary-emerald)] focus:ring-[var(--color-primary-emerald)]"
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-[var(--color-neutral-text)]">
+                        Auto-verify with AI after submission
+                      </p>
+                      <p className="text-xs text-[var(--color-neutral-text-secondary)]">
+                        AI will verify your {sourceType === 'github' ? 'repository' : sourceType === 'certificate' ? 'certificate' : 'notebook'} exists and is valid
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -475,13 +529,18 @@ export default function NewProofPage() {
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting}
+            disabled={submitting || verifying}
             className="btn-green inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
           >
             {submitting ? (
               <>
                 <Loader2 size={16} className="animate-spin" />
                 Submitting...
+              </>
+            ) : verifying ? (
+              <>
+                <Loader2 size={16} className="animate-spin" />
+                Verifying with AI...
               </>
             ) : (
               <>

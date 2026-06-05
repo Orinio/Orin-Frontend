@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Sparkles, ArrowRight } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/lib/supabase";
 import { mapDbProofToProof, mapDbOpportunityToOpportunity, mapDbCoachNoteToCoachNote, mapDbUserToUser, formatNumber, getProofTypeColor } from "@/lib/utils";
@@ -188,20 +189,27 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {coachNote && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-[var(--color-neutral-text)]">AI Career Coach</h2>
-                <Link
-                  href="/dashboard/coach"
-                  className="text-sm text-[var(--color-primary-emerald)] hover:underline"
-                >
-                  View all notes →
-                </Link>
-              </div>
-              <CoachNote note={coachNote} />
-            </div>
-          )}
+           {coachNote && (
+             <div className="space-y-4">
+               <div className="flex items-center justify-between">
+                 <h2 className="text-lg font-semibold text-[var(--color-neutral-text)] flex items-center gap-3">
+                   <Sparkles className="w-4 h-4 text-[var(--color-spark)]" />
+                   AI Career Coach
+                 </h2>
+                 <Link
+                   href="/dashboard/coach"
+                   className="text-sm text-[var(--color-primary-emerald)] hover:underline flex items-center gap-2"
+                 >
+                   View all notes
+                   <ArrowRight className="w-3 h-3" />
+                 </Link>
+               </div>
+               <CoachNote
+                 note={coachNote}
+                 isLatest={true}
+               />
+             </div>
+           )}
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
             <div>

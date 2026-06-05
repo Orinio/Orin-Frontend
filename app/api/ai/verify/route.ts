@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { runAgent, verifyProof, analyzeProofQuality, extractSkillsFromText, checkUrlSafety, analyzeGitHubProfile } from '@/lib/ai/agent';
+import { checkAIRateLimit } from '@/lib/rate-limit';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -33,6 +34,15 @@ export async function POST(req: NextRequest) {
 
     if (!userProfile) {
       return NextResponse.json({ error: 'User profile not found' }, { status: 404 });
+    }
+
+    // Check rate limit
+    const rateLimitResult = await checkAIRateLimit(supabase, userProfile.id, 'ai-verify');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded', reason: rateLimitResult.reason, nextAllowedAt: rateLimitResult.nextAllowedAt },
+        { status: 429 }
+      );
     }
 
     const body = await req.json();

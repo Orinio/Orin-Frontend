@@ -6,10 +6,17 @@ import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { mapDbProofToProof, getStatusConfig, formatNumber, formatRelativeTime, getProofTypeColor } from "@/lib/utils";
 import type { Proof } from "@/lib/types";
+import { Sparkles, RefreshCw, AlertCircle } from "lucide-react";
 
 interface StatusConfig {
   label: string;
   className: string;
+}
+
+interface AIAnalysis {
+  thinking: string;
+  answer: string;
+  tokensUsed: number;
 }
 
 export default function ProofDetailPage() {
@@ -17,6 +24,9 @@ export default function ProofDetailPage() {
   const id = params.id as string;
   const [proof, setProof] = useState<Proof | null>(null);
   const [loading, setLoading] = useState(true);
+  const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchProof() {
@@ -127,6 +137,46 @@ export default function ProofDetailPage() {
   };
 
   const evidenceItems = getEvidenceItems();
+
+  const analyzeProofQuality = async () => {
+    if (!proof) return;
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const response = await fetch('/api/ai/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'analyze',
+          proofData: {
+            title: proof.title,
+            description: proof.description,
+            sourceType: proof.sourceType,
+            sourceUrl: proof.sourceUrl,
+            skills: proof.skillsExtracted,
+            whatItProves: proof.whatItProves,
+            metadata: proof.metadata,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to analyze proof');
+      }
+
+      const data = await response.json();
+      setAiAnalysis({
+        thinking: data.result.thinking,
+        answer: data.result.answer,
+        tokensUsed: data.result.tokensUsed,
+      });
+    } catch (e) {
+      setAiError(e instanceof Error ? e.message : 'Failed to analyze proof');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   return (
     <article className="mx-auto max-w-5xl space-y-6">
@@ -273,6 +323,53 @@ export default function ProofDetailPage() {
                 <span className="text-sm font-semibold text-[var(--color-neutral-text)]">{proof.createdAt.toLocaleDateString()}</span>
               </div>
             </div>
+          </div>
+
+          <div className="rounded-lg border border-[var(--color-neutral-border)] bg-[var(--color-neutral-surface)] p-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold font-serif">AI Quality Analysis</h2>
+              <button
+                onClick={analyzeProofQuality}
+                disabled={aiLoading}
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-primary-emerald)] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[var(--color-primary-emerald)]/90 disabled:opacity-60"
+              >
+                {aiLoading ? (
+                  <RefreshCw className="h-3 w-3 animate-spin" />
+                ) : (
+                  <Sparkles className="h-3 w-3" />
+                )}
+                {aiLoading ? 'Analyzing...' : 'Analyze Quality'}
+              </button>
+            </div>
+
+            {aiError && (
+              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-red-700">{aiError}</p>
+              </div>
+            )}
+
+            {aiAnalysis && (
+              <div className="mt-4 space-y-3">
+                <div className="rounded-lg bg-[var(--color-neutral-bg)] p-3">
+                  <p className="text-xs font-medium text-[var(--color-neutral-text-secondary)] mb-1">AI Assessment</p>
+                  <p className="text-sm text-[var(--color-neutral-text)] whitespace-pre-wrap">{aiAnalysis.answer}</p>
+                </div>
+                {aiAnalysis.thinking && (
+                  <div className="rounded-lg bg-[var(--color-neutral-bg)] p-3">
+                    <p className="text-xs font-medium text-[var(--color-neutral-text-secondary)] mb-1">Reasoning</p>
+                    <p className="text-xs text-[var(--color-neutral-text-tertiary)] italic">{aiAnalysis.thinking}</p>
+                  </div>
+                )}
+                <p className="text-xs text-[var(--color-neutral-text-tertiary)]">Tokens used: {aiAnalysis.tokensUsed}</p>
+              </div>
+            )}
+
+            {!aiAnalysis && !aiLoading && !aiError && (
+              <p className="mt-3 text-xs text-[var(--color-neutral-text-tertiary)]">
+                Get AI-powered feedback on your proof quality, description, and skills.
+              </p>
+            )}
           </div>
         </div>
       </section>

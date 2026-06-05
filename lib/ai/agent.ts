@@ -2,6 +2,7 @@ import { allTools, getToolByName, type Tool, type ToolResult, type ToolCall, typ
 
 const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY!;
 const NVIDIA_BASE_URL = 'https://integrate.api.nvidia.com/v1';
+const BEST_MODEL = 'meta/llama-3.1-8b-instruct';
 
 export interface AgentConfig {
   model?: string;
@@ -19,7 +20,7 @@ export interface AgentResult {
 }
 
 const DEFAULT_CONFIG: AgentConfig = {
-  model: 'meta/llama-3.1-8b-instruct',
+  model: BEST_MODEL,
   maxIterations: 5,
   temperature: 0.3,
   maxTokens: 500
@@ -191,11 +192,14 @@ export async function verifyProof(proofUrl: string, sourceType: string): Promise
     case 'blog':
       query = `Fetch and analyze this blog post: ${proofUrl}. Use fetch_webpage tool.`;
       break;
+    case 'linkedin':
+      query = `Verify this LinkedIn profile: ${proofUrl}. Use verify_linkedin tool.`;
+      break;
     default:
       query = `Verify this URL is safe and accessible: ${proofUrl}. Use check_url_safety and fetch_webpage tools.`;
   }
 
-  return runAgent(query, { model: 'meta/llama-3.1-8b-instruct', maxIterations: 3 });
+  return runAgent(query, { model: BEST_MODEL, maxIterations: 3 });
 }
 
 export async function analyzeProofQuality(proof: {
@@ -213,26 +217,26 @@ export async function analyzeProofQuality(proof: {
   if (proof.url) query += `URL: ${proof.url}\n`;
   query += `\nProvide constructive feedback on how to improve this proof card. Use extract_skills to analyze the description.`;
 
-  return runAgent(query, { model: 'meta/llama-3.1-8b-instruct', maxIterations: 2 });
+  return runAgent(query, { model: BEST_MODEL, maxIterations: 2 });
 }
 
 export async function extractSkillsFromText(text: string): Promise<AgentResult> {
   return runAgent(
     `Extract all technical skills from this text: "${text}". Use the extract_skills tool.`,
-    { model: 'meta/llama-3.1-8b-instruct', maxIterations: 1 }
+    { model: BEST_MODEL, maxIterations: 1 }
   );
 }
 
 export async function checkUrlSafety(url: string): Promise<AgentResult> {
   return runAgent(
     `Check if this URL is safe: ${url}. Use check_url_safety tool and provide a safety assessment.`,
-    { model: 'meta/llama-3.1-8b-instruct', maxIterations: 2 }
+    { model: BEST_MODEL, maxIterations: 2 }
   );
 }
 
 export async function analyzeGitHubProfile(username: string): Promise<AgentResult> {
   return runAgent(
     `Analyze this GitHub profile: ${username}. Use verify_github_user tool to get their profile information.`,
-    { model: 'meta/llama-3.1-8b-instruct', maxIterations: 2 }
+    { model: BEST_MODEL, maxIterations: 2 }
   );
 }
